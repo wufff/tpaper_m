@@ -28,13 +28,13 @@
 		          <div class="scrollwrap">
 				          <div class="recommend">
 				                 <ul class="list">
-				                      <router-link to="/paperDtail" tag="li">
-				                          <h4>湖北省新华小学三年级期中数学考试试题</h4>
+				                      <router-link to="/paperDtail" tag="li" v-for="(item,index) in datalist">
+				                          <h4>{{item.paper_title}}</h4>
 				                          <div class="info">
-				                              <span>浏览：30</span>
-				                              <span>下载：2</span>
+				                              <span>浏览：{{item.view_count}}</span>
+				                              <span>下载：{{item.download_count}}</span>
 				                          </div>
-				                          <span class="time">2019-1-2</span>
+				                          <span class="time">{{item.paper_creation_offset}}</span>
 				                      </router-link>                                                                           
 				                 </ul>
 				           </div>                        
@@ -112,7 +112,8 @@ export default {
           grade.unshift({id:"",name:"全部年级"});
           Arry.push(data.sort_type_list);   
           Arry.push(grade);
-          this.downlistData = Arry;
+          this.downlist = Arry;
+          console.log(this.datalist)
       })
   },
   mounted(){
@@ -121,22 +122,22 @@ export default {
   methods:{
      back(){
      	window.history.go(-1);
-     }
-
-
-
-	// select(name,id,tpye,index){
- //        this.selectValue[tpye].name = name;
- //        this.selectValue[tpye].id = id;
- //        this.selectValue[tpye].current = index;
- //        this.selectValue[tpye].open = false;
- //        this.downlistVisble = false;
- //     },
- //  selectTitle(index,current){
- //        this.selectValue[index].open = true;
- //        this.downlistVisble = true;
- //        this.downlistData.current = current;
- //     }    
+     },
+    select(name,id,index){
+        this.selectValue[this.currentSelect].name = name;
+        this.selectValue[this.currentSelect].id = id;
+        this.selectValue[this.currentSelect].open = false;
+        this.selectdowinIndex[this.currentSelect] =  index;
+        this.downlistVisble = false;
+        this.page.current = 1;
+        // this.renderItems(1,"first");
+     },
+    selectTitle(index,current){
+        this.selectValue[index].open = !this.selectValue[index].open;
+        this.downlistVisble = !this.downlistVisble;
+        this.downlistData = this.downlist[index];
+        this.currentSelect = index;
+     }      
   },
   components: {
      foot
