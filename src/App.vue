@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view/>  
   </div>
 </template>
 
@@ -27,6 +27,9 @@ body, html, #app {
    width: 100%;    
  }
 
+.before-trigger {
+    color:#999;
+}
 //===========单件
 .head {
     height: 50px;
@@ -231,9 +234,66 @@ h3{
 
 
 
+//==================loading===========================
+    .mint-indicator {
+          -webkit-transition: opacity .2s linear;
+          transition: opacity .2s linear;
+      }
+      .mint-indicator-wrapper {
+          top: 50%;
+          left: 50%;
+          position: fixed;
+          -webkit-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+          border-radius: 5px;
+          background: rgba(0,0,0,.7);
+          color: #fff;
+          box-sizing: border-box;
+          text-align: center;
+          z-index: 9999
+      }
+      .mint-indicator-mask {
+            top: 0;
+            left: 0;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            background: transparent;
+            z-index: 9999
+       }
 
 
-
+      .mint-indicator-spin {
+          display: inline-block;
+          text-align: center;
+      }
+      .mint-spinner-snake {
+          -webkit-animation: mint-spinner-rotate .8s infinite linear;
+          animation: mint-spinner-rotate .8s infinite linear;
+          border: 4px solid transparent;
+          border-radius: 50%;
+      }
+      @-webkit-keyframes mint-spinner-rotate {
+          0% {
+              -webkit-transform: rotate(0deg);
+                      transform: rotate(0deg);
+          }
+          100% {
+              -webkit-transform: rotate(360deg);
+                      transform: rotate(360deg);
+          }
+          }
+        @keyframes mint-spinner-rotate {
+          0% {
+              -webkit-transform: rotate(0deg);
+                      transform: rotate(0deg);
+          }
+          100% {
+              -webkit-transform: rotate(360deg);
+                      transform: rotate(360deg);
+          }
+}
 
 
 // ==================动画===========================
@@ -245,7 +305,12 @@ h3{
      opacity: 0
 }
 
-
+.noneData {
+   text-align: center;
+   padding-top: 50px;
+   color: #999999;
+   font-size: 16px;
+}
 
 .moveLeft-enter-active, .moveLeft-leave-active {
      transition: .3s;

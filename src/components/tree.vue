@@ -4,24 +4,24 @@
       <transition name="up">
           <div class="list"  v-show="visble">
              <div class="scrollwrap">
-                <div  v-for="(item,index) in data">
-                   <div class="treeItem">
+                <div  v-for="(item,index) in  treeList">
+                   <div class="treeItem" @click="selectItem(item.name,item.id)">
                     <span class="img-tree">
-                      <img src="../assets/tree_open.png" alt="" v-show="!item.opened" v-if="item.children" @click="open(index)">
-                      <img src="../assets/tree_close.png" alt="" v-show="item.opened"  v-if="item.children"  @click="close(index)">
+                      <img src="../assets/tree_open.png" alt="" v-show="!item.open" v-if="item.children" @click.stop="open(index)">
+                      <img src="../assets/tree_close.png" alt="" v-show="item.open"  v-if="item.children"  @click.stop="close(index)">
                     </span>
-                    {{item.text}}
+                    {{item.name}}
                   </div>
-                  <div v-for="(item2,index2) in item.children" v-show="item.opened"> 
-                      <div class="treeItem2">
+                  <div v-for="(item2,index2) in item.children" v-show="item.open"> 
+                      <div class="treeItem2" @click="selectItem(item2.name,item2.id)">
                         <span class="img-tree">
-                          <img src="../assets/tree_open.png" alt="" v-show="!item2.opened" v-if="item2.children" @click="open(index,index2)">
-                          <img src="../assets/tree_close.png" alt="" v-show="item2.opened" v-if="item2.children" @click="close(index,index2)"> 
+                          <img src="../assets/tree_open.png" alt="" v-show="!item2.open" v-if="item2.children" @click.stop="open(index,index2)">
+                          <img src="../assets/tree_close.png" alt="" v-show="item2.open" v-if="item2.children" @click.stop="close(index,index2)"> 
                         </span>
-                       {{item2.text}}
+                       {{item2.name}}
                       </div> 
-                      <div  v-for="(item3,index3) in item2.children" v-show="item2.opened"> 
-                          <div class="treeItem3">{{item3.text}}</div>
+                      <div  v-for="(item3,index3) in item2.children" v-show="item2.open"> 
+                          <div class="treeItem3" @click="selectItem(item3.name,item3.id)">{{item3.name}}</div>
                       </div>
                   </div>                 
                 </div>
@@ -34,13 +34,43 @@
 <script>
 export default {
   name: 'tree',
-  props: {
-    msg: String
-  },
+  props:{
+     treeList: {
+       type:Array,
+       default: []
+    }
+  },  
   data() {
     return {
-        visble:false,
-        data: [
+        visble:false  
+    }
+  },
+  methods:{
+     show(){
+        this.visble = !this.visble;
+     },
+     open(index,index2){
+       if(index2 || index2 == 0){
+         this.treeList[index].children[index2].open = true;
+       }else{
+          this.treeList[index].open = true;
+       }
+     },
+     close(index,index2){
+        if(index2 || index2 == 0){
+             this.treeList[index].children[index2].open = false;
+       }else{
+          this.treeList[index].open = false;
+       }        
+     },
+     selectItem(name,id){
+        this.$emit('func',{name:name,id:id})
+        this.show();
+     }
+  }
+}
+</script>
+<!-- [
          {
           "text": "一层1",
           "opened":true,
@@ -65,30 +95,7 @@ export default {
           "text": "一层2",
           "opened":false,
         }
-      ] 
-    }
-  },
-  methods:{
-     show(){
-        this.visble = !this.visble;
-     },
-     open(index,index2){
-       if(index2){
-         this.data[index].children[index2].opened= true;
-       }else{
-          this.data[index].opened = true;
-       }
-     },
-     close(index,index2){
-        if(index2){
-             this.data[index].children[index2].opened= false;
-       }else{
-          this.data[index].opened = false;
-       }        
-     }
-  }
-}
-</script>
+      ]  -->
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
@@ -100,7 +107,11 @@ export default {
       right: 0;
       top:0;
       z-index:99;
+      
   }
+
+
+
 
 
 
@@ -112,6 +123,7 @@ export default {
         background-color: #fff;
         width: 100%;
         height: 100%;
+        overflow-y:auto;
      }
   }
   .scrollwrap {
@@ -141,6 +153,9 @@ export default {
       color:#474747;
       background: url("../assets/arrow_right.png") no-repeat center right;
       background-size:6px  10px;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
   }
   .treeItem2 {
       padding-left: 30px;

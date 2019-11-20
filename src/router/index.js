@@ -22,6 +22,7 @@ import congfig from "../views/congfig"
 import login_ma from "../views/login_ma"
 import find from "../views/find"
 
+
 Vue.use(VueRouter);
 const routes = [
   {
@@ -83,11 +84,6 @@ const routes = [
     component: history_ct
   },   
   {
-    path: '/history_ct',
-    name: 'history_ct',
-    component: history_ct
-  },
-  {
     path: '/buy',
     name: 'buy',
     component: buy
@@ -145,7 +141,7 @@ router.beforeEach((to,from,next) => {
    })
    if(bl){
       let vm = router.app;
-      console.log(vm.$local);
+      // console.log(vm.$local);
       next();
    }else{
       next();

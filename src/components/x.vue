@@ -22,9 +22,12 @@
 <script>
 export default {
   name: 'tree',
-  props: {
-    msg: String
-  },
+  props:{
+     treeData: {
+       type:Array,
+       default: []
+    }
+  },  
   data() {
     return {
         data: [

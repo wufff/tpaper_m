@@ -4,7 +4,7 @@
           <span class="moreBt" @click="showTree">
             <img src="../assets/more.png" alt="">
           </span>
-          初中 <span class="space">·</span> 数学
+          知识点： <span class="space"></span>{{treeValue.name}}
      </div>  	 
   	 <div class="filter clearfix">
          <div class="item" v-for="(item,index) in selectValue"  @click="selectTitle(index,item.current)">
@@ -15,171 +15,80 @@
             </span>
             <span class="border-right" v-show="index < 2"></span>
          </div>
-         
      </div>
    <div class="main">
       <div class="list">
           <cube-scroll
           ref="scroll"
           :data="datalist" 
-          :options="options">
+          :options="options"
+          @pulling-up="onPullingUp">
         <div>
           
         </div>  
         <div class="scrollwrap">
-        <div class="test">
-            <div class="title">
-               1. 计算: (0-3)x5的结果是 (   )
-            </div>
-            <ul class="aswerbox">
+        <div v-show="datalist.length < 1" class="noneData">无数据－!</div>
+        <div class="test" v-for="(item,index) in datalist">
+
+            <div class="title" v-html = "item.context"> </div>
+           <!--  <div class="fj">
+                <video src="http://images.dev.dodoedu.com/resource/4aaf30161bcff084.mp4" 
+                    width="100%" 
+                    height="180" 
+                    controls>
+                </video>
+            </div> -->
+            <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题' || $local.getQ_Zh(item.qtp_code) == '多选题'">
+               <li v-for="(item2,index2) in item.option">
+                  <span>{{$local.ABC_Zh(index2)}}.</span>
+                  <span>{{item2}}</span>
+                </li>                               
+            </ul>
+            <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">
                <li>
-                  <span>A.</span>
-                  <span>-15</span>
+                  <span>对</span>
                </li>
                 <li>
-                  <span>B.</span>
-                  <span>-15</span>
-               </li> 
-                <li>
-                  <span>C.</span>
-                  <span>-15</span>
-                </li>
-                <li>
-                  <span>D.</span>
-                  <span>-15</span>
-               </li>                                             
-            </ul>
-            
- <div class="bottom">
-                <span class="type">单选题</span>
-                <span>使用 0 次</span>
-                <span class="addItemBt" @click="addNum_num">
+                  <span>错</span>
+               </li>                                       
+            </ul>            
+            <div class="bottom">
+                <span class="type">{{$local.getQ_Zh(item.qtp_code)}}</span>
+                <span>使用 {{item.usage_count}} 次</span>
+                <span class="addItemBt" @click="addNum_num" v-show="item.is_add_qtrunk == 1">
                   <span class="img add-img">
                     <img src="../assets/add.png" alt="">
                   </span> 
                   试题栏
                 </span>
-            </div>            
-        </div>
-         <div class="test">
-            <div class="title">
-               1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-            </div>
-            <ul class="aswerbox">
-               <li>
-                  <span class="sort">A.</span>
-                  <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-               </li>
-                <li>
-                  <span class="sort">B.</span>
-                  <span class="option">-15</span>
-               </li> 
-                <li>
-                  <span class="sort">C.</span>
-                  <span class="option">-15</span>
-                </li>
-                <li>
-                  <span class="sort">D.</span>
-                  <span class="option">-15</span>
-               </li>                                             
-            </ul>
-            <div class="bottom">
-                <span class="type">单选题</span>
-                <span>使用 0 次</span>
-                <span class="addItemBt_y">
+                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0">
                     <span class="img add-img_y">
                       <img src="../assets/yes.png" alt="">
                     </span> 
                   已添加
-                </span>                  
+                </span>             
             </div>            
         </div>
-        <div class="test">
-            <div class="title">
-               1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-            </div>
-            <ul class="aswerbox">
-               <li>
-                  <span class="sort">A.</span>
-                  <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-               </li>
-                <li>
-                  <span class="sort">B.</span>
-                  <span class="option">-15</span>
-               </li> 
-                <li>
-                  <span class="sort">C.</span>
-                  <span class="option">-15</span>
-                </li>
-                <li>
-                  <span class="sort">D.</span>
-                  <span class="option">-15</span>
-               </li>                                             
-            </ul>
-            <div class="bottom">
-                <span class="type">单选题</span>
-                <span>使用 0 次</span>
-                <span class="addItemBt"  @click="addNum_num">
-                  <span class="img add-img">
-                    <img src="../assets/add.png" alt="">
-                  </span> 
-                  试题栏
-                </span>
-            </div>
-        </div>
-       <div class="test">
-            <div class="title">
-               1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-            </div>
-            <ul class="aswerbox">
-               <li>
-                  <span class="sort">A.</span>
-                  <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-               </li>
-                <li>
-                  <span class="sort">B.</span>
-                  <span class="option">-15</span>
-               </li> 
-                <li>
-                  <span class="sort">C.</span>
-                  <span class="option">-15</span>
-                </li>
-                <li>
-                  <span class="sort">D.</span>
-                  <span class="option">-15</span>
-               </li>                                             
-            </ul>
-            <div class="bottom">
-                <span class="type">单选题</span>
-                <span>使用 0 次</span>
-                <span class="addItemBt">
-                  <span class="img add-img">
-                    <img src="../assets/add.png" alt="">
-                  </span> 
-                  试题栏
-                </span>
-            </div>
-        </div> 
         </div>   
          </cube-scroll>             
       </div>
      
    </div>
-     <foot  ref="foot" ></foot>	
-      <tree ref="tree"></tree>
-     <div class="downlist" v-show="downlistVisble">
-      <transition name="up">
-        <ul class="content" v-if="downlistData.data.length > 0"  v-show="downlistVisble">
-            <li class="item" 
-            :class="{active:index == downlistData.current}" 
-            v-for="(item,index) in downlistData.data"
-            @click="select(item.name,item.id,downlistData.type,index)"
-            >
-            {{item.name}}
-          </li>
-        </ul>  
-      </transition>       
-     </div>
+      <foot ref="foot"></foot>	
+      <tree ref="tree" :treeList = "tree" @func="selectTree"></tree>
+       <div class="downlist" v-show="downlistVisble">
+            <transition name="up">
+              <ul class="content"  v-show="downlistVisble">
+                  <li class="item" 
+                  :class="{active:index == selectdowinIndex[currentSelect]}" 
+                  v-for="(item,index) in downlistData"
+                  @click="select(item.name,item.id,index)"
+                  >
+                  {{item.name}}
+                </li>
+              </ul>  
+            </transition>       
+       </div>
   </div>
 </template>
 
@@ -187,48 +96,94 @@
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
 import tree from '@/components/tree.vue'
+import {treeData,fitterData,items} from '@/api';
+
 export default {
   name: 'items',
   data(){
      return {
        options:{
          click:true,
-         bounce:false
+         bounce:false,
+         pullUpLoad: {
+          threshold: 100,
+          txt: {
+            more: '加载更多',
+            noMore: '没有更多的数据啦'
+          }
+        }
        },
+       head_s:this.$local.fetch("head_s"),
        datalist:[],
        downlistVisble:false,
-       selectValue:[{name:"全部题型",id:0,open:false,current:0},{name:"全部难度",id:0,open:false,current:0},{name:"全部年级",id:0,open:false,current:0}]
+       selectValue:[{name:"全部题型",id:"",open:false},{name:"全部难度",id:"",open:false},{name:"全部年级",id:"",open:false}],
+       selectdowinIndex:[0,0,0],
+       currentSelect:"",
+       downlist:[],
+       downlistData:[],
+       tree:[],
+
+       treeValue:{id:"",name:"全部"},
+       page:{
+          current:1,
+          totle:1
+       }
      }
   },
-  created(){
-    this.downlistData = {
-        type:0,
-        data:[{name:"精选试题",id:"3"},{name:"历年正在整体",id:"2"},{name:"黄冈一种",id:"8"}],
-        current:0
-    }
-    // const downlist = this.$createDownlist({
-    //      $props: {
-    //       selectData: this.downlistData
-    //     }
-    //   });
+  computed:{
+     
   },
-   mounted(){
+  // watch:{
+  //   selectValue:{
+  //       handler(newVal, objVal){
+  //           console.log(123);
+  //       },
+  //       deep:true
+  //   }
+  // },
+  created(){
+    treeData(3,this.head_s).then((data)=>{
+        console.log(this.head_s);
+        data.unshift({id:"",name:"全部"});
+        this.tree = data;
+    })
+    fitterData(3,this.head_s).then((data)=>{
+       var value = [];
+       var TempArry = [];
+       for (let x in data){
+          for (let y in data[x]){
+             TempArry.push({id:y,name:data[x][y]});     
+          }
+          if (x == "diff_list"){TempArry.unshift({id:"",name:"全部难度"})}
+          if (x == "grade_list"){TempArry.unshift({id:"",name:"全部年级"})}
+          if (x == "qtp_list"){TempArry.unshift({id:"",name:"全部题型"})}
+          value.push(TempArry);
+          TempArry = [];
+       }
+       this.downlist = value;
+    }) 
+    this.renderItems(1);
+  },
+  mounted(){
     if(this.$route.query.tree){
          this.showTree();
     }
   },
   methods:{
-     select(name,id,tpye,index){
-        this.selectValue[tpye].name = name;
-        this.selectValue[tpye].id = id;
-        this.selectValue[tpye].current = index;
-        this.selectValue[tpye].open = false;
+     select(name,id,index){
+        this.selectValue[this.currentSelect].name = name;
+        this.selectValue[this.currentSelect].id = id;
+        this.selectValue[this.currentSelect].open = false;
+        this.selectdowinIndex[this.currentSelect] =  index;
         this.downlistVisble = false;
+        this.page.current = 1;
+        this.renderItems(1,"first");
      },
      selectTitle(index,current){
-        this.selectValue[index].open = true;
-        this.downlistVisble = true;
-        this.downlistData.current = current;
+        this.selectValue[index].open = !this.selectValue[index].open;
+        this.downlistVisble = !this.downlistVisble;
+        this.downlistData = this.downlist[index];
+        this.currentSelect = index;
      },
      addNum_num(event){
         this.$store.dispatch("add_num")
@@ -236,7 +191,43 @@ export default {
      },
     showTree(){
        this.$refs.tree.show();
-     }
+     },
+    selectTree(obj){
+       this.treeValue = obj;
+       this.page.current = 1;
+       this.renderItems(1,"first");
+    },
+    renderItems(type,first){
+       var aDate = {
+          qtp_code:this.selectValue[0].id,
+          diff:this.selectValue[1].id,
+          grade_code:this.selectValue[2].id,
+          know_node:this.treeValue.id,
+          ...this.head_s,
+          page:this.page.current  
+       }
+       items(type,aDate).then((data)=>{
+          console.log(data)
+          if(first){
+             this.datalist = data.data;
+          }else{
+            this.datalist.push(...data.data);
+          }
+          if(data.data.length == 0){
+              this.$refs.scroll.forceUpdate();
+              return;
+          }          
+          this.page.totle = data.total_page;
+          this.page.current ++;
+       })
+    },
+    onPullingUp(){
+       if(this.page.current == this.page.totle+1){
+          this.$refs.scroll.forceUpdate();
+       }else{
+          this.renderItems(3); 
+       }
+    }
   },
   components: {
      foot,
@@ -245,6 +236,12 @@ export default {
 }
 </script>
 <style scoped lang="less">
+
+   .head {
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
+   }
    .add-img { 
         width: 11px;
         height: 11px;
@@ -362,5 +359,42 @@ export default {
         height: 100%;
      }
 
+
+
+      // <div class="test">
+      //       <div class="title">
+      //          1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
+      //       </div>
+
+      //       <ul class="aswerbox">
+      //          <li>
+      //             <span class="sort">A.</span>
+      //             <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
+      //          </li>
+      //           <li>
+      //             <span class="sort">B.</span>
+      //             <span class="option">-15</span>
+      //          </li> 
+      //           <li>
+      //             <span class="sort">C.</span>
+      //             <span class="option">-15</span>
+      //           </li>
+      //           <li>
+      //             <span class="sort">D.</span>
+      //             <span class="option">-15</span>
+      //          </li>                                             
+      //       </ul>
+      //       <div class="bottom">
+      //           <span class="type"></span>
+      //           <span>使用 0 次</span>
+      //           <span class="addItemBt_y">
+      //               <span class="img add-img_y">
+      //                 <img src="../assets/yes.png" alt="">
+      //               </span> 
+      //             已添加
+      //           </span>                  
+      //       </div>            
+      //   </div> 
+        
    
 </style>

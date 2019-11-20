@@ -1,10 +1,10 @@
 <template>
   <div class="page">
   	 <div class="head">
-  	 	<span class="moreBt">
+  	 	<span class="moreBt" @click="showStduy">
   	 		<img src="../assets/more.png" alt="">
   	 	</span>
-  	 	初中 <span class="space">·</span> 数学
+  	 	{{$local.stage_zh(head_s.stage_code)}} <span class="space">·</span> {{head_s.subject_name}}
   	 </div>
   	 <div class="main">
       <div class="list">
@@ -12,7 +12,7 @@
           ref="scroll" 
           :options="options">        
   	 	    <div class="scrollwrap">
-              <router-link to="/" tag="div" class="goVip">
+              <router-link to="/" tag="div" class="goVip" v-show="!vip">
                       <span class="vipImg img">
                         <img src="../assets/vip.png" alt="">
                       </span>
@@ -35,56 +35,16 @@
                <div class="recommend">
                  <h3>
                   精选试卷
-                  <router-link to="/allpaper" tag="span" class="more">更多</router-link>
+                    <router-link to="/allpaper" tag="span" class="more">更多</router-link>
                  </h3>
                  <ul class="list">
-                      <router-link to="/" tag="li">
-                          <h4>湖北省新华小学三年级期中数学考试试题</h4>
+                      <router-link to="/" tag="li" v-for="(item,index) in paper_list" :key="index">
+                          <h4>{{item.paper_title}}</h4>
                           <div class="info">
-                              <span>浏览：30</span>
-                              <span>下载：2</span>
+                              <span>浏览：{{item.view_count}}</span>
+                              <span>下载：{{item.download_count}}</span>
                           </div>
-                          <span class="time">2019-1-2</span>
-                      </router-link> 
-                      <router-link to="/" tag="li">
-                          <h4>湖北省新华小学三年级期中数学考试试题中数学考试试题中数学考试试题</h4>
-                          <div class="info">
-                              <span>浏览：30</span>
-                              <span>下载：2</span>
-                          </div>
-                          <span class="time">2019-1-2</span>
-                      </router-link>  
-                      <router-link to="/" tag="li">
-                          <h4>湖北省新华小学三年级期中数学考试试题中数学 考试试题中数学考试试题</h4>
-                          <div class="info">
-                              <span>浏览：30</span>
-                              <span>下载：2</span>
-                          </div>
-                          <span class="time">2019-1-2</span>
-                      </router-link>    
-                      <router-link to="/" tag="li">
-                          <h4>湖北省新华小学三年级期中数学考试试题中数学考试试题中数学考试试题</h4>
-                          <div class="info">
-                              <span>浏览：30</span>
-                              <span>下载：2</span>
-                          </div>
-                          <span class="time">2019-1-2</span>
-                      </router-link>  
-                      <router-link to="/" tag="li">
-                          <h4>湖北省新华小学三年级期中数学考试试题中数学 考试试题中数学考试试题</h4>
-                          <div class="info">
-                              <span>浏览：30</span>
-                              <span>下载：2</span>
-                          </div>
-                          <span class="time">2019-1-2</span>
-                      </router-link> 
-                       <router-link to="/" tag="li">
-                          <h4>湖北省新华小学三年级期中数学考试试题中数学 考试试题中数学考试试题</h4>
-                          <div class="info">
-                              <span>浏览：30</span>
-                              <span>下载：2</span>
-                          </div>
-                          <span class="time">2019-1-2</span>
+                          <span class="time">{{item.paper_creation_offset}}</span>
                       </router-link>                                                                         
                  </ul>
                </div>             
@@ -92,42 +52,31 @@
        </cube-scroll>  
   	  </div>
       <foot></foot>	
-      <div class="selectBox" v-show="secetVisb">
-        <transition name="up">
-            <div class="content">
-                <div class="item">
-                    <h6>小学</h6>
-                    <ul class="clearfix">
-                       <li>语文</li>
-                       <li>数学</li>
-                       <li>英语</li>
-                       <li>生命安全</li>
-                       <li>心里健康</li>
-                    </ul>
-                </div>
-                <div class="item">
-                    <h6>初中</h6>
-                    <ul class="clearfix">
-                       <li>语文</li>
-                       <li>数学</li>
-                       <li>英语</li>
-                       <li>生命安全</li>
-                       <li>心里健康</li>
-                    </ul>
-                </div> 
-                  <div class="item">
-                    <h6>高中</h6>
-                    <ul class="clearfix">
-                       <li>语文</li>
-                       <li>数学</li>
-                       <li>英语</li>
-                       <li>生命安全</li>
-                       <li>心里健康</li>
-                    </ul>
-                </div>                           
-            </div>
-        </transition> 
-      </div>
+     </div>
+     <div class="selectBox" v-show="secetVisb">
+       <div class="list">
+        <cube-scroll
+          ref="scroll" 
+          :options="options">        
+          <div class="scrollwrap">  
+            <transition name="up">        
+                 <div class="content" v-show="secetVisb">
+                    <div class="item" v-for="(item,index) in subject_" >
+                        <h5>{{$local.stage_zh(index+1)}}</h5>
+                        <div class="inner clearfix">
+                           <span 
+                           v-for="(item1,index2) in item" 
+                           :class="{active:head_s.subject_code == item1.subject_code && head_s.stage_code == index+1}" 
+                           @click="selectSub(item1.subject_code,item1.subject_name,index)"
+                           >{{item1.subject_name}}</span>         
+                        </div>
+                    </div>           
+                 </div>
+            </transition>
+          </div>
+         
+           </cube-scroll>          
+        </div>
      </div>
   </div>
 </template>
@@ -135,7 +84,8 @@
 <script>
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
-
+import { indexApi, subList } from '@/api';
+import  { mapState }  from 'vuex'
 export default {
   name: 'home',
   data(){
@@ -144,8 +94,68 @@ export default {
            click:true,
            bounce:false           
         },
-        secetVisb:false
+        secetVisb:false,
+        paper_list:[],
+        is_vip:1,
+        subject_:[],
+        head_s:{},
      }
+  },
+  computed:{
+     vip(){
+        if(this.is_vip == 0){
+            return false;
+        }else{
+           return true;
+        }
+     },
+     ...mapState(['head_']),
+  },
+  created(){
+     subList(3).then((res)=>{
+        var data = res;
+        for(let k in data) {  
+            this.subject_.push(data[k]); 
+        } 
+       var head_save = this.$local.fetch("head_s"); 
+       if(!head_save.stage_code){
+           this.head_s  = {
+              stage_code:1,
+              subject_code: this.subject_[0][0].subject_code,
+              subject_name: this.subject_[0][0].subject_name
+           }
+          this.$local.save("head_s",this.head_s)          
+       }else{
+          this.head_s = head_save;
+       }
+     })
+
+    indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code}).then((res)=>{
+        // console.log(res);
+        this.paper_list = res.paper_list;
+        this.is_vip = res.is_vip;
+     })
+  },
+
+  methods:{
+    showStduy(){
+       this.secetVisb =  !this.secetVisb;
+    },
+    selectSub(code,name,index){
+      this.head_s = {
+          stage_code:index + 1,
+          subject_code: code,
+          subject_name: name
+       }        
+       this.$local.save("head_s",this.head_s)
+       this.showStduy();
+       this.refList();
+    },
+    refList(){
+      indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code}).then((res)=>{
+          this.paper_list = res.paper_list;
+      })       
+    }
   },
   components: {
      foot
@@ -227,10 +237,41 @@ export default {
        top:0;
        z-index: 90;
        background-color: rgba(0,0,0,0.5);
-       padding-top: 49px;
+       padding-top: 53px;
+       .list {
+          width: 100%;
+          height: 100%;
+          background: #fff;
+       }
+       .item {
+          h5 {
+             height: 35px;
+             line-height: 35px;
+             margin-bottom: 5px;
+          }
+          .inner {
+            span {
+               float: left;
+               margin-right: 10px;
+               margin-bottom: 10px;
+               width: 78px;
+               height: 33px;
+               line-height: 36px;
+               display: block;
+               text-align: center;
+               background-color: #f1f1f1;
+               font-size: 14px;
+               &.active {
+                  background-color: #37aafd;
+                  color:#fff;
+               }
+            }
+          }
+       }
        .content {
           background-color: #fff;
-          padding: 4px 15px;
+          padding: 15px 0px 4px 15px;
+          height: 100%;
           h6 {
              font-size: 15px;
              color:#000;

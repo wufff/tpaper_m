@@ -1,23 +1,69 @@
 import axios from 'axios';
+import qs from 'qs';
 
+var loading = document.getElementById("loading");
 var instance = axios.create({
-  baseURL: 'http://www.wayperfect.com:888/',
-  timeout: 5000,
+  baseURL: 'http://libo5050.tpaper.dev.dodoedu.com/',
+  timeout: 3000,
   headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 });
 
-
-export function get(url) {
-	 return function (params){
-	      return axios.get(url,{
-	      	 params
-	      }).then((res) => {
-	      	 const { errno,data } = res.data;
-	      	 if(errno == 0){
-	      	 	  return data;
+export default {
+    get:function (url) {
+	 return function (load,params){
+	 	  if(load == 1 || load == 2) {
+	 	  	  loading.style.display = "block";
+	 	  }
+	      return instance.get(url,		
+	      	 qs.stringify({param:params})
+	      ).then((res) => {
+	      	 const {type,data,message } = res.data;
+	      	 if(type == "success"){
+			   if(load == 1 || load == 3) {
+	 	  	         loading.style.display = "none";
+	 	        }                  
+	      	 	 return data;
 	      	 }
-	      }).catch(()=>{
-	      	 
+           if(type == "error"){
+			   if(load == 1 || load == 3) {
+	 	  	         loading.style.display = "none";
+	 	        }            
+	 	        // console.log(message)
+	 	        return message;      
+	      	 }	      	 
+	      }).catch((res)=>{
+	      	  alert(res);
 	      })
 	 }
+   },
+   
+   post:function(url){
+	return function (load,params){
+ 		 if(load == 1 || load == 2) {
+	 	  	  loading.style.display = "block";
+	 	  }		  
+	      return instance.post(url,
+	      	  qs.stringify({param:params})
+	      ).then((res) => {
+	      	    
+	           const {type,data,message } = res.data;
+		      	 if(type == "success"){
+				   if(load == 1 || load == 3) {
+		 	  	         loading.style.display = "none";
+		 	        }                  
+		      	 	 return message;
+		      	 }
+	           if(type == "error"){
+				   if(load == 1 || load == 3) {
+		 	  	         loading.style.display = "none";
+		 	        }            
+		 	        // console.log(message)
+		 	        return message;      
+		      	 }	      	 
+	         }).catch(()=>{
+	      	 
+	      })
+	 }   	  
+   }
 }
+
