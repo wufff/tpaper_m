@@ -69,13 +69,14 @@
 <script>
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
-
+import {PaperList} from '@/api';
 
 
 export default {
   name: 'items',
   data(){
      return {
+       datalist:[],
        options:{
          click:true,
          bounce:false,
@@ -85,25 +86,34 @@ export default {
        downlistVisble:false,
        selectdowinIndex:[0,0],
        selectValue:[{name:"最新",id:3,open:false},{name:"全部年级",id:"",open:false}],
-       downlistData:[
-       [{id:3,name:"最新"},{id:1,name:"下载"},{id:2,name:"浏览"}],
-       [{id:"",name:"全部年级"},{id:1,name:"一年级"},{id:2,name:"二年级"}
-       ,{id:3,name:"三年级"},{id:4,name:"四年级"}
-       ,{id:5,name:"五年级"},{id:6,name:"六年级"}
-       ]
-       ],
+       downlistData:[],
        downlist:[],
        currentSelect:0,
-       
+
        page:{
           current:1,
-          totle:1
+          total:1
        }, 
        
      }
   },
   created(){
-    
+      var obj = {
+          sort_type:this.selectValue[0].id,
+          grade_code:this.selectValue[1].id,
+          page:this.page.current,
+          ...this.head_s
+      }
+      PaperList(1,obj).then((data)=>{
+          this.datalist = data.data;
+          this.page.total = data.total_page;
+          var Arry = [];
+          var grade =  data.grade_list
+          grade.unshift({id:"",name:"全部年级"});
+          Arry.push(data.sort_type_list);   
+          Arry.push(grade);
+          this.downlistData = Arry;
+      })
   },
   mounted(){
     
