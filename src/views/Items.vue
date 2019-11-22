@@ -24,12 +24,10 @@
           :options="options"
           @pulling-up="onPullingUp">
         <div>
-          
         </div>  
         <div class="scrollwrap">
-        <div v-show="datalist.length < 1" class="noneData">无数据－!</div>
+        <div v-show="datalist.length < 1" class="noneData" v-html="text.noneText"></div>
         <div class="test" v-for="(item,index) in datalist">
-
             <div class="title" v-html = "item.context"> </div>
            <!--  <div class="fj">
                 <video src="http://images.dev.dodoedu.com/resource/4aaf30161bcff084.mp4" 
@@ -55,7 +53,7 @@
             <div class="bottom">
                 <span class="type">{{$local.getQ_Zh(item.qtp_code)}}</span>
                 <span>使用 {{item.usage_count}} 次</span>
-                <span class="addItemBt" @click="addNum_num" v-show="item.is_add_qtrunk == 1">
+                <span class="addItemBt" v-on:click="addNum_num({qtp_code:item.qtp_code,master_code:item.master_code,index:index},$event)" v-show="item.is_add_qtrunk == 1">
                   <span class="img add-img">
                     <img src="../assets/add.png" alt="">
                   </span> 
@@ -96,12 +94,17 @@
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
 import tree from '@/components/tree.vue'
-import {treeData,fitterData,items} from '@/api';
+import {treeData,fitterData,items,additem} from '@/api';
+import  { mapState }  from 'vuex'
 
 export default {
   name: 'items',
   data(){
      return {
+       text:{
+           noneText:""
+       },
+       ball_off:true,
        options:{
          click:true,
          bounce:false,
@@ -114,6 +117,7 @@ export default {
         }
        },
        head_s:this.$local.fetch("head_s"),
+       user:this.$local.fetch("user"),
        datalist:[],
        downlistVisble:false,
        selectValue:[{name:"全部题型",id:"",open:false},{name:"全部难度",id:"",open:false},{name:"全部年级",id:"",open:false}],
@@ -122,7 +126,7 @@ export default {
        downlist:[],
        downlistData:[],
        tree:[],
-
+       
        treeValue:{id:"",name:"全部"},
        page:{
           current:1,
@@ -142,8 +146,9 @@ export default {
   //   }
   // },
   created(){
+
+    console.log(this.user);
     treeData(3,this.head_s).then((data)=>{
-        console.log(this.head_s);
         data.unshift({id:"",name:"全部"});
         this.tree = data;
     })
@@ -185,10 +190,43 @@ export default {
         this.downlistData = this.downlist[index];
         this.currentSelect = index;
      },
-     addNum_num(event){
-        this.$store.dispatch("add_num")
-        this.$refs.foot.drop(event.target)
-     },
+    addNum_num(obj, event) {
+      if(!this.user.is_vip){
+          if(this.num_num == 30){
+              this.$createDialog({
+                type: 'confirm',
+                content: '<p class="vipContent">您的试题篮最多只能装30道试题，VIP用户可选50道试题，<br/>快开通VIP吧～</p>',
+                confirmBtn: {
+                  text: '去开通',
+                },
+                onConfirm:()=> {
+                    this.$router.push({path:"/buy"});
+                }
+               }).show();
+
+              this.ball_off = false;
+          }
+      }
+      if(this.user.is_vip){
+           if(this.num_num == 50){
+               this.$createDialog({
+                type: 'alert',
+                content: '<p class="vipContent">您的试题篮最多只能装50道试题，请组卷下载后再添加吧。</p>',
+              }).show()
+              this.ball_off = false;               
+          }          
+      }       
+      if (this.ball_off) {
+        this.ball_off = false;
+        additem(3, obj).then((data) => {
+          this.$refs.foot.drop(event.target);
+          setTimeout(() => {
+            this.datalist[obj.index].is_add_qtrunk = 0;
+             this.ball_off = true;
+          }, 300)
+        })
+      }
+    },
     showTree(){
        this.$refs.tree.show();
      },
@@ -197,6 +235,8 @@ export default {
        this.page.current = 1;
        this.renderItems(1,"first");
     },
+
+
     renderItems(type,first){
        var aDate = {
           qtp_code:this.selectValue[0].id,
@@ -207,7 +247,6 @@ export default {
           page:this.page.current  
        }
        items(type,aDate).then((data)=>{
-          console.log(data)
           if(first){
              this.datalist = data.data;
           }else{
@@ -216,7 +255,8 @@ export default {
           if(data.data.length == 0){
               this.$refs.scroll.forceUpdate();
               return;
-          }          
+          } 
+          this.initText();       
           this.page.totle = data.total_page;
           this.page.current ++;
        })
@@ -227,7 +267,13 @@ export default {
        }else{
           this.renderItems(3); 
        }
+    },
+    initText(){
+        this.text.noneText = "无数据！";   
     }
+  },
+  computed:{
+     ...mapState(['num_num']),
   },
   components: {
      foot,
@@ -354,10 +400,20 @@ export default {
 
    }
 
+
+
+
+
+
+ 
      .selectBox {
         width: 100%;
         height: 100%;
      }
+
+
+
+    
 
 
 

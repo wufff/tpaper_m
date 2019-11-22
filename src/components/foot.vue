@@ -82,7 +82,7 @@ export default {
         var rem = fontSize.match(reg)[0];
         const ball = this.dropBalls[this.dropBalls.length -1];
         const rect = ball.el.getBoundingClientRect();
-        var  AdaX =  4.8 * rem;
+        var  AdaX =  5.8 * rem;
         var AdaY = 0.586667 * rem;
         const x = rect.left - AdaX;
         const y = -(window.innerHeight - rect.top - AdaY);
@@ -100,11 +100,12 @@ export default {
      },
      afterEnter(el){
         const ball = this.dropBalls.shift();
+        this.$store.dispatch("add_num");
         if(ball){
            ball.show = false;
            el.style.display = "none"
         }
-     },
+     }
   }
 }
 </script>
@@ -144,23 +145,22 @@ export default {
       }
    }
 
- 
 
-.ball-container {
+   .ball-container {
    .ball {
       position:fixed;
-      left:220px;
-      bottom:22px;
+      left:246px;
+      bottom:32px;
       z-index:900;
-      transition:all 0.4s cubic-bezier(0.49,-0.29,0.75,0.41);
+      transition:all 0.3s cubic-bezier(0.49,-0.29,0.75,0.41);
       .inner {
           width:16px;
           height:16px;
           border-radius: 50%;
           background:rgb(0,160,220);
-          transition:all 0.4s linear;
+          transition:all 0.3s linear;
       }      
    }
 }
-  
+
 </style>

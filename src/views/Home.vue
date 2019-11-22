@@ -38,7 +38,7 @@
                     <router-link to="/allpaper" tag="span" class="more">更多</router-link>
                  </h3>
                  <ul class="list">
-                      <router-link to="/" tag="li" v-for="(item,index) in paper_list" :key="index">
+                      <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="li" v-for="(item,index) in paper_list" :key="index">
                           <h4>{{item.paper_title}}</h4>
                           <div class="info">
                               <span>浏览：{{item.view_count}}</span>
@@ -124,7 +124,8 @@ export default {
               subject_code: this.subject_[0][0].subject_code,
               subject_name: this.subject_[0][0].subject_name
            }
-          this.$local.save("head_s",this.head_s)          
+          this.$local.save("head_s",this.head_s);
+               
        }else{
           this.head_s = head_save;
        }
@@ -133,7 +134,12 @@ export default {
     indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code}).then((res)=>{
         // console.log(res);
         this.paper_list = res.paper_list;
-        this.is_vip = res.is_vip;
+        this.is_vip  = res.is_vip;
+        var is = res.is_vip == 1? true : false;
+        var user = {
+            is_vip:is
+        }
+        this.$local.save("user",user);
      })
   },
 

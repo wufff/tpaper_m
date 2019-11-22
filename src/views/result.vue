@@ -11,10 +11,10 @@
           </div>
       </div>
       <div class="timebox">
-         <div class="title">初中数学试卷2019年09月12日</div>
+         <div class="title">{{paperTitle.paper_title}}</div>
          <div class="info">
-            <span class="space">共用时：00:00:02</span> 
-            <span>正确率：94.7%</span>
+            <span class="space">共用时：{{paperTitle.exam_time}}</span> 
+            <span>正确率：{{paperTitle.right_percent}}</span>
          </div>
          <span class="img img-time"  @click="showCard">
              <img src="../assets/time.png" alt="">
@@ -24,139 +24,38 @@
          <div class="list">
             <cube-scroll
             ref="scroll"
-            :data="datalist" 
             :options="options"> 
             <div class="scrollwrap">
-                <div class="type">
-                   <div class="test_title">单选题</div>
-                   <div class="test_test">
+                <div class="type" v-for="(val, key) in datalist">
+                   <div class="test_title">{{$local.getQ_Zh(key)}}</div>
+                   <div class="test_test" v-for="(item,index) in val">
                         <div class="title">
-                          <span class="sort">1.</span>
-                          <span class="question">计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )</span>
+                          <span class="sort">{{index+1}}.</span>
+                          <span class="question" v-html='item.context' :class="{wrong:item.is_right == 0}"></span>
                         </div>
-                          <ul class="aswerbox">
-                             <li class="wrong">
-                                <span class="sort">A.</span>
-                                <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                                <div class="yesorno">
-                                   <span class="img img-false">
-                                      <img src="../assets/false_b.png" alt="">
-                                    </span>
-                                </div>                                     
-                             </li>
-                            <li class="right">
-                                <span class="sort">B.</span>
-                                <span class="option">-15</span>
-                                 <div class="yesorno">
-                                   <span class="img">
-                                      <img src="../assets/yes.png" alt="">
-                                    </span>
-                                </div>                                  
-                             </li> 
-                              <li>
-                                <span class="sort">C.</span>
-                                <span class="option">-15</span>
-                              </li>
-                              <li>
-                                <span class="sort">D.</span>
-                                <span class="option">-15</span>
-                             </li>                                             
+                          <ul class="aswerbox" v-if=" key == 'QTP_OBJ_003'">
+                             <li :class="{active:index2 == item.select_answer}" v-for="(item2,index2) in item.option">
+                                <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
+                                <span class="option">{{item2}}</span>    
+                             </li>                                      
                           </ul>
+                          <ul class="aswerbox" v-if=" key == 'QTP_OBJ_004'">
+                             <li :class="{active:item.select_answer[index2] == 1}"  v-for="(item2,index2) in item.option">
+                                <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
+                                <span class="option">{{item2}}</span>    
+                             </li>                                      
+                          </ul>
+                          <ul class="aswerbox" v-if=" key == 'QTP_OBJ_006'">
+                             <li :class="{active:index2 == item.select_answer }"   v-for="(item2,index2) in pdda">
+                                <span class="sort"></span>
+                                <span >{{item2}}</span>    
+                             </li>                                      
+                          </ul>                                                        
+                          <div class="rightbox">正确答案： <span class="ringtSpan">{{item.right_answer}}</span></div>
                           <!-- <div class="angls">查看解析</div> -->
                           <div class="angls_y">
                              <div class="title">解析</div>
-                             <p>3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结结结</p>
-                          </div>
-                    </div>
-                    <div class="test_test">
-                        <div class="title">
-                          <span class="sort">1.</span>
-                          <span class="question">计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )</span>
-                        </div>
-                          <ul class="aswerbox">
-                             <li class="active">
-                                <span class="sort">A.</span>
-                                <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                             </li>
-                              <li>
-                                <span class="sort">B.</span>
-                                <span class="option">-15</span>
-                             </li> 
-                              <li>
-                                <span class="sort">C.</span>
-                                <span class="option">-15</span>
-                              </li>
-                              <li>
-                                <span class="sort">D.</span>
-                                <span class="option">-15</span>
-                             </li>                                             
-                          </ul>
-                          <!-- <div class="angls">查看解析</div> -->
-                          <div class="angls_y">
-                             <div class="title">解析</div>
-                             <p>3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结结结</p>
-                          </div>
-                    </div>                                                 
-                </div>
-               <div class="type">
-                   <div class="test_title">多选题</div>
-                   <div class="test_test">
-                        <div class="title">
-                          <span class="sort">1.</span>
-                          <span class="question">计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )</span>
-                        </div>
-                          <ul class="aswerbox">
-                             <li class="active">
-                                <span class="sort">A.</span>
-                                <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                             </li>
-                              <li>
-                                <span class="sort">B.</span>
-                                <span class="option">-15</span>
-                             </li> 
-                              <li>
-                                <span class="sort">C.</span>
-                                <span class="option">-15</span>
-                              </li>
-                              <li>
-                                <span class="sort">D.</span>
-                                <span class="option">-15</span>
-                             </li>                                             
-                          </ul>
-                          <!-- <div class="angls">查看解析</div> -->
-                          <div class="angls_y">
-                             <div class="title">解析</div>
-                             <p>3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结结结</p>
-                          </div>
-                    </div>
-                     <div class="test_test">
-                        <div class="title">
-                          <span class="sort">1.</span>
-                          <span class="question">计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )</span>
-                        </div>
-                          <ul class="aswerbox">
-                             <li class="active">
-                                <span class="sort">A.</span>
-                                <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                                                          
-                             </li>
-                              <li>
-                                <span class="sort">B.</span>
-                                <span class="option">-15</span>
-                             </li> 
-                              <li>
-                                <span class="sort">C.</span>
-                                <span class="option">-15</span>
-                              </li>
-                              <li>
-                                <span class="sort">D.</span>
-                                <span class="option">-15</span>
-                             </li>                                             
-                          </ul>
-                          <!-- <div class="angls">查看解析</div> -->
-                          <div class="angls_y">
-                             <div class="title">解析</div>
-                             <p>3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结结结</p>
+                             <p v-html="item.detailed_answer"></p>
                           </div>
                     </div>                                                 
                 </div>                              
@@ -196,7 +95,7 @@
   </div>
 </template>
 <script>
-
+import { result , resultCrad } from '@/api'
  export default { 
     name: 'result',
     data(){
@@ -205,17 +104,33 @@
              click:true,
              bounce:false
            },
-           datalist:[],
+           datalist:{},
+           pdda:["对","错"],
+           paperTitle:{},
+           // user:this.$local.fetch("user"),
+           user:{
+              is_vip:false
+           },
            cardshow:false
          }
+    },
+    created(){
+       var id = this.$route.query.id;
+       result(1,{paper_code_crc32:id}).then((data)=>{
+          this.datalist = data.exam_data;
+          this.paperTitle = data.paper_info;
+       })
+       resultCrad(3,{paper_code_crc32:id}).then((data)=>{
+          console.log(data);
+       })
     },
     methods:{
        back(){
          window.history.go(-1);
        },
-       goMyTest(){
-           this.$router.push({path:"/myTest"});
-       },
+      
+      
+
        showCard(){
           this.cardshow = !this.cardshow;
        }
@@ -300,6 +215,7 @@
              &.disable{
                color:#c6c6c6;
              }
+                     
           }
         }
         .notice {
@@ -312,6 +228,7 @@
      margin-bottom: 5px;
     .test_title{
         padding: 15px 18px;
+       
     }
     .angls {
        padding-left: 10px;
@@ -327,6 +244,15 @@
            color:#474747;
         }
     }
+   .rightbox {
+            padding-left:10px; 
+            color:#37aafd;
+            margin-bottom: 10px;
+            .ringtSpan {
+                color:#000;
+            }
+         }     
+
  }
 
 
@@ -355,14 +281,19 @@
            display: block;  
            font-size: 16px;   
            color:#000000; 
-           margin-bottom: 15px;      
+           margin-bottom: 15px;
+         &.wrong { 
+            // background: 
+            color:#c85a63;              
+        }                 
       }    
     .aswerbox {
          padding-left:12px; 
          .sort{
            position: absolute;
            left:16px;
-         }        
+         }     
+
         .yesorno{
            position: absolute;
            right:12px;
@@ -382,7 +313,8 @@
          .option {
            padding-left: 20px;
            display: block;
-           padding-right:20px;
+           padding-right:10px;
+          
          }
          li {
            border-radius: 2px;
@@ -398,6 +330,9 @@
            &.right {
               background-color: #b9eb79;
            }
+           &.active{
+                background: #a3d3f6;
+            }                
 
          }
          margin-bottom: 20px;
@@ -426,6 +361,7 @@
            border-radius: 2px;
            padding: 6px  9px;           
         }
+                
      }
 
    }

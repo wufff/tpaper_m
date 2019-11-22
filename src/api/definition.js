@@ -45,7 +45,6 @@ export default {
 	      return instance.post(url,
 	      	  qs.stringify({param:params})
 	      ).then((res) => {
-	      	    
 	           const {type,data,message } = res.data;
 		      	 if(type == "success"){
 				   if(load == 1 || load == 3) {

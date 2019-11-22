@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-  	 num_num:100,
+  	 num_num:28,
      head_:{
       stage: "",
       subject_code: "",
@@ -29,7 +29,7 @@ export default new Vuex.Store({
   },
   actions: {
   	add_num({commit}){
-       commit("addnum",{n:5})
+       commit("addnum",{n:1})
   	}
   },
   modules: {

@@ -6,12 +6,12 @@
           <img src="../assets/arrow_left_b.png" alt="">
         </span>
       </span>
-        <div class="inner">
+        <div class="inner" @click="test">
           在线自测
         </div>
      </div> 
      <div class="timebox">
-         已用时：00:00:02
+         已用时：{{time}}</span>
          <span class="img img-time"  @click="showCard">
              <img src="../assets/time.png" alt="">
          </span>
@@ -19,38 +19,36 @@
      <div class="main">
         <div class="list">
            <swiper :options="swiperOption" ref="mySwiper">
-            <swiper-slide v-for="(slide, index) in testItems " :key="index">
+            <swiper-slide v-for="(item,index) in datalist " :key="index">
                <div class="inner">            
-                  <div class="test_title">单选题</div>
+                  <div class="test_title">{{$local.getQ_Zh(item.qtp_code)}}</div>
                   <div class="test_test">
                         <div class="title">
-                          <span class="sort">1.</span>
-                          <span class="question">计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )</span>
-                        </div>
-                          <ul class="aswerbox">
-                             <li class="active">
-                                <span class="sort">A.</span>
-                                <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                             </li>
-                              <li>
-                                <span class="sort">B.</span>
-                                <span class="option">-15</span>
-                             </li> 
-                              <li>
-                                <span class="sort">C.</span>
-                                <span class="option">-15</span>
-                              </li>
-                              <li>
-                                <span class="sort">D.</span>
-                                <span class="option">-15</span>
-                             </li>                                             
+                          <span class="sort">{{index + 1}}.</span>
+                          <span class="question" v-html="item.context"></span>
+                         </div> 
+                          <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题'">
+                               <li v-for="(item2,index2) in item.option" :class="{active:index2 === item.answer}" @click="asDx(index,index2)">
+                                  <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
+                                  <span class="option">{{item2}}</span>
+                                </li>                               
                           </ul>
+                           <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '多选题'">
+                                <li v-for="(item2,index2) in item.option" :class="{active:item.answer[index2] == 1}" @click="asDd(index,index2)">
+                                  <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
+                                  <span class="option">{{item2}}</span>
+                                </li>                                                               
+                          </ul>                                                      
+                          <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">
+                               <li v-for="(item2,index2) in pdoption" :class="{active:index2 === item.answer}" @click="asPd(index,index2)">
+                                   <span>{{item2}}</span>
+                                </li>                               
+                          </ul>                            
                     </div>                    
                </div>
             </swiper-slide>
             <!-- <div class="swiper-pagination" slot="pagination"></div> -->
-         </swiper>   
-                   
+         </swiper>    
         </div>
      </div>
     <div class="control">
@@ -58,35 +56,27 @@
                 上一题
                 <span class="border-right"></span>
               </div> -->
-              <div class="item disabled">
+            <div class="item disabled" v-show="currut == 0">
                 上一题
                 <span class="border-right"></span>
-              </div>             
-             <div class="item">                  
+            </div>
+            <div class="item" v-show="currut > 0" @click="preSile">
+                上一题
+                <span class="border-right"></span>
+            </div>            
+            <div class="item" @click="nextSile" v-show="datalist.length > currut + 1">                  
                下一题
-             </div>
+            </div>
+             <div class="item disabled" v-show="datalist.length == currut + 1 ">                  
+               下一题
+            </div>            
       </div>
       <transition name="moveLeft">
-            <div class="card" v-show="cardshow">
-                <div class="card-items">
-                    <h5>单选</h5>
+            <div class="card" v-show="cardshow" id="card">
+                <div class="card-items" v-for="(val, key) in cardData">
+                    <h5>{{$local.getQ_Zh(key)}}</h5>
                     <ul class="asw clearfix">
-                       <li>1</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li>11</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li class="active">11</li>                 
-                    </ul>
-                </div>
-                <div class="card-items">
-                    <h5>单选</h5>
-                    <ul class="asw clearfix">
-                       <li></li>
+                       <li v-for="(item,index) in val">{{index+1}}</li>               
                     </ul>
                 </div>
                 <div class="sumbitBt" @click="sumbit">
@@ -99,33 +89,48 @@
 <script>
 import foot from '@/components/foot.vue'; 
 import { swiper, swiperSlide } from 'vue-awesome-swiper';  
+import { myTest,subimtTest } from '@/api';
 import 'swiper/dist/css/swiper.css'
+
+
 export default {
   name: 'myTest',
-  props: {
-    msg: String
-  },
   data() {
+    var _this = this;
     return {
-        testItems:[{name:1},{name:2}],
-        options:{
-         click:true,
-         bounce:false
-       },
+       time:"00:00:00",
+       datalist:[],
+       currut:0,
+       second:0,
+       cardData:{},
+       cardshow:false,
+       pdoption:["对","错"],
        swiperOption:{
-          // some swiper options/callbacks
-          // 所有的参数同 swiper 官方 api 参数
-          // ...
-         speed:180,
-         on:{
-          slideChange: function () {
-            
-            }
-          },
-          cancelable:false
-        },
-      cardshow:false            
-    }
+           speed:180,
+           nextButton:'.item',
+           on:{
+            slideChange: function () {
+                 _this.currut = this.activeIndex;
+              }
+            },
+            cancelable:false
+          },                 
+      }
+  },
+  created() {
+     var id =  this.$route.query.id; 
+     myTest(1,{paper_code_crc32:id}).then((data)=>{
+        this.startTime();
+        this.cardData = data;
+        this.initCart();
+        for (var x in data){
+           this.datalist.push(...data[x]);
+        }
+     })
+
+  },
+  mounted(){
+      
   },
   computed: {
       swiper() {
@@ -140,8 +145,118 @@ export default {
         this.cardshow = !this.cardshow;
      },
      sumbit(){
-         this.$router.push({path:"/result"});
-     }
+         this.showAlert();
+
+     },
+     startTime(){
+          var count = 0;
+          var _this = this;
+          var timer = setInterval(function(){
+          var h = parseInt(_this.second / 60 / 60);
+          var m = parseInt(_this.second / 60) % 60;
+          var s = parseInt(_this.second) % 60;
+          var ms = "";
+          h = h < 10 ? '0' + h : h;
+          m = m < 10 ? '0' + m : m;
+          s = s < 10 ? '0' + s : s;
+          _this.time = h + ':' + m + ':' + s;
+          _this.second += 1;
+        }, 1000)         
+     },
+     asDx(index,index2){
+          var parent =  document.getElementById("card");
+          var lis = parent.getElementsByTagName("li");          
+          this.datalist[index].answer = index2;
+          lis[index].className = "active";
+     },
+     asDd(index,index2){
+        var parent =  document.getElementById("card");
+        var lis = parent.getElementsByTagName("li");         
+        var _this = this;
+        var v = _this.datalist[index].answer[index2];
+        if(v == 1){
+           this.$set(_this.datalist[index].answer,index2,"");
+            var arry = _this.datalist[index].answer;
+           let is_kong = arry.some(item =>{
+               return item == 1
+           })
+           if(!is_kong){
+                lis[index].className = "";
+           }
+        }else{
+           this.$set(_this.datalist[index].answer,index2,1);
+           lis[index].className = "active";
+        }
+     },     
+     asPd(index,index2){
+        var parent =  document.getElementById("card");
+        var lis = parent.getElementsByTagName("li");        
+        this.datalist[index].answer = index2;
+        lis[index].className = "active";
+     },
+       
+     nextSile(){
+        this.swiper.slideNext();
+     },
+     preSile(){
+         this.swiper.slidePrev();
+     },
+     test(){
+       this.initCart();
+     },
+     initCart(){
+        var _this = this;
+        this.$nextTick(function(){
+           setTimeout(function(){
+              var parent =  document.getElementById("card");
+              var lis = parent.getElementsByTagName("li");
+              for(var i = 0;i<lis.length; i++){
+                 lis[i].index = i;
+                 lis[i].innerHTML = (i+1);
+                 lis[i].onclick = function(){
+                    var index = this.index;
+                    _this.swiper.slideTo(index,0)
+                    _this.showCard()
+                 }
+              }                          
+           },10)               
+       });
+     },
+   showAlert() {
+          var parent =  document.getElementById("card");
+          var lis = parent.getElementsByTagName("li");  
+          var parentId = document.querySelector("#card");
+          var actives = parentId.querySelectorAll(".active");
+          this.$createDialog({
+            type: 'confirm',
+            title: '确认交卷？您的答题数为:',
+            content:actives.length +'/'+lis.length,
+            onConfirm:()=>{
+                var aswdata =  this.datalist.map(item => {
+                        return {
+                            master_code:item.master_code,
+                            answer:this.$local.fomartAnswer(item.qtp_code,item.answer)
+                        }
+                });
+                var obj = {
+                    answer_time:this.second,
+                    paper_code_crc32:this.$route.query.id,
+                    answer_data:aswdata
+                }
+                subimtTest(1,obj).then(res=>{
+                   this.$router.replace({path:"/result",query:{id:this.$route.query.id}});
+                })
+            }
+         }).show();
+         if(lis.length > actives.length) {
+             var text =  document.querySelector(".cube-dialog-content-def");
+             text.style.color = "red";
+         } 
+       if(lis.length == actives.length) {
+             var text =  document.querySelector(".cube-dialog-content-def");
+             text.style.color = "#85c630";
+         }            
+    }      
   },
   components:{
     foot,
@@ -149,6 +264,9 @@ export default {
     swiperSlide
   }
 }
+
+
+
 
 </script>
 
@@ -165,6 +283,12 @@ export default {
      
   }
 
+
+.cube-dialog-title .cube-dialog-title-def {
+    text-align: center;
+    white-space:normal;
+ }
+
 .card {
         position: fixed;
         left: 0;
@@ -174,7 +298,7 @@ export default {
         bottom: 0;
         top:109px;
         background: #fff;
-        z-index: 999;
+        z-index: 99;
         padding: 16px 28px;
         .card-items {
             margin-bottom: 20px;

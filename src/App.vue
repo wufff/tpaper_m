@@ -184,6 +184,18 @@ h3{
    }    
     .title {
        margin-bottom: 8px;
+       position: relative;
+       .sort {
+         position: absolute;
+
+       }
+       > p { 
+         padding-left: 15px;
+      }
+      > div {
+         display: inline-block;
+         padding-left: 15px;
+      }
     }
     .aswerbox {
          padding-left:12px; 
@@ -295,6 +307,8 @@ h3{
           }
 }
 
+//============== 小球=============
+
 
 // ==================动画===========================
 .up-enter-active, .up-leave-active {
@@ -310,6 +324,23 @@ h3{
    padding-top: 50px;
    color: #999999;
    font-size: 16px;
+}
+
+// cub-ui
+
+.cube-dialog-btn_highlight {
+   color:#37aafd;
+}
+
+
+.vipContent {
+    text-align: center;
+    line-height: 1.6;
+}
+
+
+.cube-dialog-content-def > p {
+   font-size: 15px;
 }
 
 .moveLeft-enter-active, .moveLeft-leave-active {

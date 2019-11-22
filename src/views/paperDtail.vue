@@ -17,138 +17,52 @@
             :data="datalist" 
             :options="options">
           <div class="scrollwrap">
-          <div class="test">
-              <div class="title">
-                 1. 计算: (0-3)x5的结果是 (   )
-              </div>
-              <ul class="aswerbox">
-                 <li>
-                    <span>A.</span>
-                    <span>-15</span>
-                 </li>
-                  <li>
-                    <span>B.</span>
-                    <span>-15</span>
-                 </li> 
-                  <li>
-                    <span>C.</span>
-                    <span>-15</span>
-                  </li>
-                  <li>
-                    <span>D.</span>
-                    <span>-15</span>
-                 </li>                                             
-              </ul>
-              <div class="bottom">
-                  <span class="type">单选题</span>
-                  <span>使用 0 次</span>
-                  <span class="addItemBt" @click="addCart">
-                    <span class="img add-img">
-                      <img src="../assets/add.png" alt="">
+           <div class="head-title">
+               <h5>{{paperTitle.paper_remark}}</h5>
+               <span>{{paperTitle.paper_stage_descript}}{{paperTitle.subject_name}} 共{{paperTitle.paper_q_count}}题</span>
+               <span class="time">{{paperTitle.paper_creation_offset}}</span>
+           </div>
+        <div v-show="datalist.length < 1" class="noneData" v-html="text.noneText"></div>
+        <div class="test" v-for="(item,index) in datalist">
+            <div class="title" v-html = "'<span class=sort>'+(index+1) +'. </span>'+ item.context"> </div>
+           <!--  <div class="fj">
+                <video src="http://images.dev.dodoedu.com/resource/4aaf30161bcff084.mp4" 
+                    width="100%" 
+                    height="180" 
+                    controls>
+                </video>
+            </div> -->
+            <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题' || $local.getQ_Zh(item.qtp_code) == '多选题'">
+               <li v-for="(item2,index2) in item.option">
+                  <span>{{$local.ABC_Zh(index2)}}.</span>
+                  <span>{{item2}}</span>
+                </li>                               
+            </ul>
+            <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">
+               <li>
+                  <span>对</span>
+               </li>
+                <li>
+                  <span>错</span>
+               </li>                                       
+            </ul>            
+            <div class="bottom">
+                <span class="type">{{$local.getQ_Zh(item.qtp_code)}}</span>
+                <span>使用 {{item.usage_count}} 次</span>
+                <span class="addItemBt"  v-on:click="addNum_num({qtp_code:item.qtp_code,master_code:item.master_code,index:index},$event)" v-show="item.is_add_qtrunk == 1">
+                  <span class="img add-img">
+                    <img src="../assets/add.png" alt="">
+                  </span> 
+                  试题栏
+                </span>
+                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0">
+                    <span class="img add-img_y">
+                      <img src="../assets/yes.png" alt="">
                     </span> 
-                    试题栏
-                  </span>                                   
-              </div>
-          </div>
-           <div class="test">
-              <div class="title">
-                 1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-              </div>
-              <ul class="aswerbox">
-                 <li>
-                    <span class="sort">A.</span>
-                    <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                 </li>
-                  <li>
-                    <span class="sort">B.</span>
-                    <span class="option">-15</span>
-                 </li> 
-                  <li>
-                    <span class="sort">C.</span>
-                    <span class="option">-15</span>
-                  </li>
-                  <li>
-                    <span class="sort">D.</span>
-                    <span class="option">-15</span>
-                 </li>                                             
-              </ul>
-              <div class="bottom">
-                  <span class="type">单选题</span>
-                  <span>使用 0 次</span>
-                  <span class="addItemBt_y">
-                      <span class="img add-img_y">
-                        <img src="../assets/yes.png" alt="">
-                      </span> 
-                    已添加
-                  </span>                  
-              </div>
-          </div>
-          <div class="test">
-              <div class="title">
-                 1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-              </div>
-              <ul class="aswerbox">
-                 <li>
-                    <span class="sort">A.</span>
-                    <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                 </li>
-                  <li>
-                    <span class="sort">B.</span>
-                    <span class="option">-15</span>
-                 </li> 
-                  <li>
-                    <span class="sort">C.</span>
-                    <span class="option">-15</span>
-                  </li>
-                  <li>
-                    <span class="sort">D.</span>
-                    <span class="option">-15</span>
-                 </li>                                             
-              </ul>
-              <div class="bottom">
-                  <span class="type">单选题</span>
-                  <span>使用 0 次</span>
-                  <span class="addItemBt">
-                    <span class="img add-img">
-                      <img src="../assets/add.png" alt="">
-                    </span> 
-                    试题栏
-                  </span>
-              </div>
-          </div>
-         <div class="test">
-              <div class="title">
-                 1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-              </div>
-              <ul class="aswerbox">
-                 <li>
-                    <span class="sort">A.</span>
-                    <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                 </li>
-                  <li>
-                    <span class="sort">B.</span>
-                    <span class="option">-15</span>
-                 </li> 
-                  <li>
-                    <span class="sort">C.</span>
-                    <span class="option">-15</span>
-                  </li>
-                  <li>
-                    <span class="sort">D.</span>
-                    <span class="option">-15</span>
-                 </li>                                             
-              </ul>
-              <div class="bottom">
-                  <span class="type">单选题</span>
-                  <span>使用 0 次</span>
-                  <span class="addItemBt">
-                    <span class="img add-img">
-                      <img src="../assets/add.png" alt="">
-                    </span> 
-                    试题栏
-                  </span>
-              </div>
-          </div> 
+                  已添加
+                </span>             
+            </div>            
+          </div>           
           </div>   
            </cube-scroll>                         
          </div>
@@ -159,8 +73,20 @@
                <img src="../assets/myCart_rukou.png" alt="">
             </span>
             试题篮
+            <div class="ball-container">
+                <div v-for="(item,index) in balls" :key="index">
+                  <transition 
+                  @after-enter="afterEnter" 
+                  @enter="enter" 
+                  @before-enter="beforeEnter">
+                    <div v-show="item.show" class="ball">
+                      <div class="inner inner-hook"></div>
+                    </div>
+                  </transition>                     
+                </div>
+            </div>            
             <span class="border-right"></span>
-            <span class="num_num">1</span>
+            <span class="num_num">{{num_num}}</span>
           </div>
          <div class="item">
             <span class="img downLoad_b">
@@ -179,24 +105,159 @@
   </div>
 </template>
 <script>
+import { paperDtail,additem } from '@/api'
+import  { mapState }  from 'vuex'
+
+function createBalls (){
+    let ret = [];
+    for (let i = 0;i<10;i++){
+       ret.push({show:false})
+    }
+    return ret;
+}
 
  export default { 
     name: 'paperDtail',
     data(){
-         return {
-           options:{
-             click:true,
-             bounce:false
-           }
-         }
+      return {
+        text: {
+          noneText: "",
+          dialgText:"在线自测仅支持客观题（单选题、多选题、判断）",
+          dialgText_:"试卷中如含有主观题,点击确定,后系统将会自动过滤掉主观题"
+        },
+        datalist: [],
+        ball_off:true,
+        paperTitle:{
+
+        },
+        user:this.$local.fetch("user"),
+        options: {
+          click: true,
+          bounce: false,
+          pullUpLoad: {
+            threshold: 100,
+            txt: {
+              more: '加载更多',
+              noMore: '没有更多的数据啦'
+            }
+          },
+        },
+        head_s: this.$local.fetch("head_s"),
+        is_online_qtrunk:1,   //有  没有
+        dropBalls:[],
+        balls:createBalls(),
+        page: {
+          current: 1,
+          total: 1
+        }
+      }
+    },
+    computed:{
+       ...mapState(['num_num']),
+    },
+    created(){
+       var id = this.$route.query.id;
+       paperDtail(1,{paper_code_crc32:id}).then((data)=>{
+
+          this.paperTitle =  data.paper_info;
+          var qtrunk_list = data.qtrunk_list;
+          this.is_online_qtrunk = data.is_online_qtrunk;
+          for (var x in  qtrunk_list) {
+              this.datalist.push(...qtrunk_list[x]);
+          }
+          // console.log(this.datalist);
+       })
     },
     methods:{
        back(){
          window.history.go(-1);
        },
        goMyTest(){
-           this.$router.push({path:"/myTest"});
+           // this.$router.push({path:"/myTest"});
+           this.showAlert();
+       },
+       addNum_num(obj, event) {
+          if(!this.user.is_vip){
+                if(this.num_num == 30){
+                    this.$createDialog({
+                      type: 'confirm',
+                      content: '<p class="vipContent">您的试题篮最多只能装30道试题，VIP用户可选50道试题，<br/>快开通VIP吧～</p>',
+                      confirmBtn: {
+                        text: '去开通',
+                      },
+                      onConfirm:()=> {
+                          this.$router.push({path:"/buy"});
+                      }
+                     }).show();
+                    this.ball_off = false;
+                }
+            }          
+
+            if (this.ball_off) {
+              this.ball_off = false;
+              additem(3, obj).then((data) => {
+                this.drop(event.target)
+                setTimeout(() => {
+                  this.datalist[obj.index].is_add_qtrunk = 0;
+                   this.ball_off = true;
+                }, 300)
+              })
+            }
+          },       
+      drop(el){
+       for (let i = 0; i<this.balls.length;i++){
+         const ball = this.balls[i];
+         if(!ball.show){
+            ball.show=true;
+            ball.el = el;
+            this.dropBalls.push(ball);
+            return
+         }
        }
+     },
+     beforeEnter(el){
+        var html = document.querySelector("html");
+        var  fontSize = html.style.fontSize;
+        var reg = /\d+/;
+        var rem = fontSize.match(reg)[0];
+        const ball = this.dropBalls[this.dropBalls.length -1];
+        const rect = ball.el.getBoundingClientRect();
+        var  AdaX =  1.8 * rem;
+        var AdaY = 0.586667 * rem;
+        const x = rect.left - AdaX;
+        const y = -(window.innerHeight - rect.top - AdaY);
+        el.style.display = '';
+        el.style.transform  = `translate3d(0,${y}px,0)`;
+        const inner = el.getElementsByClassName('inner-hook')[0];
+        inner.style.transform = `translate3d(${x}px,0,0)`;
+     },
+     enter(el,done){
+       this._reflow = document.body.offsetHeight  //触发重绘
+       el.style.transform = `translate3d(0,0,0)`;
+       const inner = el.getElementsByClassName('inner-hook')[0];
+       inner.style.transform = `translate3d(0,0,0)`;
+       el.addEventListener("transitionend",done) //监听结束触发下个钩子
+     },
+     afterEnter(el){
+        const ball = this.dropBalls.shift();
+        this.$store.dispatch("add_num");
+        if(ball){
+           ball.show = false;
+           el.style.display = "none"
+        }
+     },
+     showAlert() {
+          this.$createDialog({
+            type: 'confirm',
+            title: this.text.dialgText,
+            content: this.text.dialgText_,
+            onConfirm:()=>{
+               if(this.is_online_qtrunk == 1) {
+                  this.$router.push({path:"/myTest",query:{id:this.$route.query.id}});
+               }
+            }
+          }).show()
+        }   
     }
   }  
 </script>
@@ -205,6 +266,32 @@
    padding-top: 49px;
    padding-bottom: 0;
  }
+
+  .head-title {
+    background: #fff;
+    padding:10px 15px;
+    font-size: 15px;
+    position: relative;
+    h5 {
+       margin-bottom: 5px;
+    }
+    span {
+       font-size: 14px;
+       color:#919191;
+    }
+    .time {
+       position: absolute;
+       bottom:10;
+       right: 15px;
+    }
+  }
+
+
+.cube-dialog-title .cube-dialog-title-def {
+    text-align: left;
+    white-space:normal;
+ }
+
 
 .border-right{
       display: block;
@@ -276,6 +363,26 @@
       top:3px;
       margin-right: 2px;     
    }
+
+.ball-container {
+   .ball {
+      position:fixed;
+      left:92px;
+      bottom:28px;
+      z-index:2;
+      transition:all 0.4s cubic-bezier(0.49,-0.29,0.75,0.41);
+      .inner {
+          width:16px;
+          height:16px;
+          border-radius: 50%;
+          background:rgb(0,160,220);
+          transition:all 0.4s linear;
+      }      
+   }
+}
+
+
+
 
 
 

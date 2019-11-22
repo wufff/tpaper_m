@@ -24,11 +24,12 @@
      	 <div class="list">
 	          <cube-scroll
 		          ref="scroll" 
-		          :options="options">
+		          :options="options"
+              @pulling-up="onPullingUp">
 		          <div class="scrollwrap">
-				          <div class="recommend">
+				          <div class="recommend" v-show="datalist.length > 0">
 				                 <ul class="list">
-				                      <router-link to="/paperDtail" tag="li" v-for="(item,index) in datalist">
+				                      <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="li" v-for="(item,index) in datalist">
 				                          <h4>{{item.paper_title}}</h4>
 				                          <div class="info">
 				                              <span>浏览：{{item.view_count}}</span>
@@ -38,11 +39,12 @@
 				                      </router-link>                                                                           
 				                 </ul>
 				           </div>                        
-		          </div>       	 	
+		          </div>
+              <div v-show="datalist.length < 1" class="noneData" >{{text.noneText}}</div>     	 	
 	          </cube-scroll>
      	 </div>
      </div>
-    
+
         <div class="downlist" v-show="downlistVisble">
                 <transition name="up">
                   <ul class="content"  v-show="downlistVisble">
@@ -71,31 +73,48 @@
 import foot from '@/components/foot.vue'
 import {PaperList} from '@/api';
 
-
 export default {
   name: 'items',
   data(){
      return {
-       datalist:[],
-       options:{
-         click:true,
-         bounce:false,
-       },
-       head_s:this.$local.fetch("head_s"),
-      
-       downlistVisble:false,
-       selectdowinIndex:[0,0],
-       selectValue:[{name:"最新",id:3,open:false},{name:"全部年级",id:"",open:false}],
-       downlistData:[],
-       downlist:[],
-       currentSelect:0,
+      text:{
+         noneText:""
+      },      
+      datalist: [],
+      options: {
+        click: true,
+        bounce: false,
+        pullUpLoad: {
+          threshold: 100,
+          txt: {
+            more: '加载更多',
+            noMore: '没有更多的数据啦'
+          }
+        }
+      },
+      head_s: this.$local.fetch("head_s"),
+      downlistVisble: false,
 
-       page:{
-          current:1,
-          total:1
-       }, 
-       
-     }
+      selectdowinIndex: [0, 0],
+      selectValue: [{
+        name: "最新",
+        id: 3,
+        open: false
+      }, {
+        name: "全部年级",
+        id: "",
+        open: false
+      }],
+      downlistData: [],
+      downlist: [],
+      currentSelect: 0,
+
+      page: {
+        current: 1,
+        total: 1
+      }
+
+    }
   },
   created(){
       var obj = {
@@ -106,14 +125,16 @@ export default {
       }
       PaperList(1,obj).then((data)=>{
           this.datalist = data.data;
-          this.page.total = data.total_page;
+          // console.log(this.datalist);
           var Arry = [];
           var grade =  data.grade_list
           grade.unshift({id:"",name:"全部年级"});
-          Arry.push(data.sort_type_list);   
+          Arry.push(data.sort_type_list);  
           Arry.push(grade);
           this.downlist = Arry;
-          console.log(this.datalist)
+          this.page.total = data.total_page;
+          this.page.current ++;
+          this.initText();
       })
   },
   mounted(){
@@ -121,7 +142,7 @@ export default {
   },
   methods:{
      back(){
-     	window.history.go(-1);
+     	   window.history.go(-1);
      },
     select(name,id,index){
         this.selectValue[this.currentSelect].name = name;
@@ -130,14 +151,45 @@ export default {
         this.selectdowinIndex[this.currentSelect] =  index;
         this.downlistVisble = false;
         this.page.current = 1;
-        // this.renderItems(1,"first");
+        this.renderItems(1,"first");
      },
     selectTitle(index,current){
         this.selectValue[index].open = !this.selectValue[index].open;
         this.downlistVisble = !this.downlistVisble;
         this.downlistData = this.downlist[index];
         this.currentSelect = index;
-     }      
+     },
+     renderItems(type,fisrt){
+       var obj = {
+            sort_type:this.selectValue[0].id,
+            grade_code:this.selectValue[1].id,
+            page:this.page.current,
+            ...this.head_s
+        }
+       PaperList(type,obj).then((data)=>{
+          if(fisrt){
+             this.datalist = data.data;
+          }else{
+             this.datalist.push(...data.data)
+          }
+          if(data.data.length == 0){
+              this.$refs.scroll.forceUpdate();
+              return;
+          }          
+          this.page.total = data.total_page; 
+          this.page.current ++;
+      })        
+    },
+    onPullingUp(){
+       if(this.page.current == this.page.totle+1){
+          this.$refs.scroll.forceUpdate();
+       }else{
+          this.renderItems(3); 
+       }
+    },
+    initText(){
+        this.text.noneText = "无数据！";   
+    }              
   },
   components: {
      foot
