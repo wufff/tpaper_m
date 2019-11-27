@@ -11,7 +11,7 @@
           <router-link to="/cart" tag="li">
               <div class="icon icon-cart"></div>
               <div class="name">试题篮</div>
-              <span class="num_num">{{num_num}}</span>
+              <span class="num_num" v-show="num_num > 0">{{num_num}}</span>
               <div class="ball-container">
                 <div v-for="(item,index) in balls" :key="index">
                   <transition 
@@ -36,6 +36,7 @@
 // v-on:enter="enter"（动画进入时）
 // v-on:after-enter="afterEnter" （动画进入完后）
 import  { mapState ,mapGetters }  from 'vuex'
+import  { cartNum }  from  '@/api'
 
 function createBalls (){
     let ret = [];
@@ -46,15 +47,17 @@ function createBalls (){
 }
 
 export default {
-  name: 'tree',
+  name: 'foot',
   data() {
     return {
       balls:createBalls(),
-      dropBalls:[]          
+      dropBalls:[]       
     }
   },
   created(){
-    
+     cartNum().then((data)=>{
+          this.$store.dispatch("set_num",data);
+     })
   },
   computed:{
      numGets(){

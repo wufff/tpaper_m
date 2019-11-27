@@ -343,6 +343,10 @@ h3{
    font-size: 15px;
 }
 
+body .cube-radio_selected .cube-radio-ui {
+    background-color: #37aafd;
+  }
+
 .moveLeft-enter-active, .moveLeft-leave-active {
      transition: .3s;
 }

@@ -18,13 +18,16 @@
             :options="options">
           <div class="scrollwrap">
            <div class="head-title">
-               <h5>{{paperTitle.paper_remark}}</h5>
+               <h5>{{paperTitle.paper_title}}</h5>
                <span>{{paperTitle.paper_stage_descript}}{{paperTitle.subject_name}} 共{{paperTitle.paper_q_count}}题</span>
                <span class="time">{{paperTitle.paper_creation_offset}}</span>
            </div>
         <div v-show="datalist.length < 1" class="noneData" v-html="text.noneText"></div>
         <div class="test" v-for="(item,index) in datalist">
-            <div class="title" v-html = "'<span class=sort>'+(index+1) +'. </span>'+ item.context"> </div>
+            <div class="title"> 
+              <span class="sort">{{index+1}}. </span>
+              <div v-html="item.context"></div>
+            </div>
            <!--  <div class="fj">
                 <video src="http://images.dev.dodoedu.com/resource/4aaf30161bcff084.mp4" 
                     width="100%" 
@@ -55,7 +58,7 @@
                   </span> 
                   试题栏
                 </span>
-                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0">
+                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0" v-on:click="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
                     <span class="img add-img_y">
                       <img src="../assets/yes.png" alt="">
                     </span> 
@@ -68,7 +71,8 @@
          </div>
       </div>
      <div class="control">
-         <div class="item">
+
+         <router-link to="/cart" tag="div" class="item">
             <span class="img myCart_rukou">
                <img src="../assets/myCart_rukou.png" alt="">
             </span>
@@ -86,9 +90,9 @@
                 </div>
             </div>            
             <span class="border-right"></span>
-            <span class="num_num">{{num_num}}</span>
-          </div>
-         <div class="item">
+            <span class="num_num" v-show="num_num > 0">{{num_num}}</span>
+          </router-link>
+         <div class="item" @click="goDown">
             <span class="img downLoad_b">
                <img src="../assets/downLoad_b.png" alt="">
             </span>                     
@@ -105,7 +109,7 @@
   </div>
 </template>
 <script>
-import { paperDtail,additem } from '@/api'
+import { paperDtail,additem,deleItems } from '@/api'
 import  { mapState }  from 'vuex'
 
 function createBalls (){
@@ -158,7 +162,7 @@ function createBalls (){
     created(){
        var id = this.$route.query.id;
        paperDtail(1,{paper_code_crc32:id}).then((data)=>{
-
+          console.log(data);
           this.paperTitle =  data.paper_info;
           var qtrunk_list = data.qtrunk_list;
           this.is_online_qtrunk = data.is_online_qtrunk;
@@ -195,7 +199,7 @@ function createBalls (){
 
             if (this.ball_off) {
               this.ball_off = false;
-              additem(3, obj).then((data) => {
+              additem(3,obj).then((data) => {
                 this.drop(event.target)
                 setTimeout(() => {
                   this.datalist[obj.index].is_add_qtrunk = 0;
@@ -203,7 +207,14 @@ function createBalls (){
                 }, 300)
               })
             }
-          },       
+          },   
+      deletItem(obj){
+         deleItems(3,obj).then((data)=>{
+             this.datalist[obj.index].is_add_qtrunk = 1;
+             this.$store.dispatch("sub_num");
+             this.ball_off = true;
+         })
+      },
       drop(el){
        for (let i = 0; i<this.balls.length;i++){
          const ball = this.balls[i];
@@ -257,7 +268,11 @@ function createBalls (){
                }
             }
           }).show()
-        }   
+        },
+       goDown(){
+          var id = this.$route.query.id;
+          this.$router.push({path:"/myDown",query:{id:this.$route.query.id}});
+       }      
     }
   }  
 </script>

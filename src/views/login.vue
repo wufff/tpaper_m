@@ -16,16 +16,17 @@
                 <input type="text" v-model="usename" class="usename" placeholder="请输入手机号">
                 <div class="item clearfix">
                    <input type="text" v-model="code" class="code" placeholder="输入验证码">
-                   <span class="codeBtn">( 4 )</span>
+                   <span class="codeBtn" v-show="!show" @click="getcode()">获取验证码</span>
+                   <span class="codeBtn" v-show="show">( {{startTime}} )</span>
                 </div>    
                 <div class="notice">
                     若该手机号未注册，我们会自动为您注册
                 </div>            
              </div>
-             <div class="btn_subimt">
+             <div class="btn_subimt" @click="login">
                  登录
              </div>
-             <div class="type">
+             <div class="type" @click="goToyz">
                  <span>使用密码登录</span>
              </div>
          </div>
@@ -34,36 +35,94 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import foot from '@/components/foot.vue'
-import tree from '@/components/tree.vue'
+
+import { getCode,LOGIN } from '@/api'
 
 
 export default {
   name: 'items',
   data(){
      return {
+       startTime:60,
+       code:"",
        usename:"",
-       passwrod:""
+       passwrod:"",
+       show:false
      }
   },
-
+  computed:{
+     
+  },
   created(){
-    
+     
   },
   mounted(){
-    if(this.$route.query.tree){
-         this.showTree();
-    }
+  
   },
   methods:{
      back(){
        window.history.go(-1);
-     }     
+     },
+     timeStart(){
+      var time =  setInterval(()=>{
+         this.startTime --;
+         if (this.startTime == 0){
+            clearInterval(time);
+            this.startTime = 60;
+            this.show = false;
+         }
+       },1000)
+     },
+     getcode(){
+       if(!this.usename){
+          return
+       }else{
+          var obj = {
+             user_mobile:this.usename,
+             code_type:1
+          }
+          getCode(3,obj).then((data)=>{
+              this.show = true;
+              this.timeStart();                
+          })    
+       }
+     },
+     login(){
+       var hash = this.$route.query.redr;
+       if(this.usename != "" && this.code != ""){
+          var obj = {
+             user_mobile:this.usename,
+             code:this.code
+          }
+          LOGIN(3,obj).then((data)=>{
+              var is_pwd = data.is_pwd;
+              if(is_pwd == 1){
+                  var token = data.sid;
+                  this.$local.save("token",token);
+                  // this.$router.push({path:hash});
+              }else if (is_pwd == 0 ){
+                  var token = data.sid;
+                  console.log(token);
+                  this.$local.save("token",token)
+                  this.$router.push({path:'/congfig',query:{redr:hash}});
+              }else {
+                 this.$createToast({
+                        type: 'none',
+                        time: 800,
+                        txt: data
+                 }).show();   
+                 this.code = "";                 
+              }        
+          })
+       }
+     },
+     goToyz(){
+        var id = this.$route.query.redr;
+        this.$router.push({path:"/login_ma",query:{redr:id}});
+     }
   },
   components: {
-     foot,
-     tree
+   
   }
 }
 </script>
@@ -73,7 +132,6 @@ export default {
        background-color: #fff;
     }
   
-
    .pionter {
        padding-left: 15px;
        color: #919191;

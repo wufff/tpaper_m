@@ -14,158 +14,58 @@
         <div class="list">
             <cube-scroll
             ref="scroll"
-            :data="datalist" 
             :options="options">
           <span class="pionter">非会员只保留3个月错题记录，请及时整理错题。</span>
           <div class="scrollwrap">
-          <div class="test">
-              <div class="title">
-                 1. 计算: (0-3)x5的结果是 (   )
+              <div class="test">
+                  <div class="title">
+                     1. 计算: (0-3)x5的结果是 (   )
+                  </div>
+                  <ul class="aswerbox">
+                     <li>
+                        <span>A.</span>
+                        <span>-15</span>
+                     </li>
+                      <li>
+                        <span>B.</span>
+                        <span>-15</span>
+                     </li> 
+                      <li>
+                        <span>C.</span>
+                        <span>-15</span>
+                      </li>
+                      <li>
+                        <span>D.</span>
+                        <span>-15</span>
+                     </li>                                             
+                  </ul>
+                  <div class="bottom">
+                      <span class="type">单选题</span>
+                      <span>使用 0 次</span>
+                      <span class="addItemBt" @click="addCart">
+                        <span class="img add-img">
+                          <img src="../assets/add.png" alt="">
+                        </span> 
+                        试题栏
+                      </span>                                   
+                  </div>
               </div>
-              <ul class="aswerbox">
-                 <li>
-                    <span>A.</span>
-                    <span>-15</span>
-                 </li>
-                  <li>
-                    <span>B.</span>
-                    <span>-15</span>
-                 </li> 
-                  <li>
-                    <span>C.</span>
-                    <span>-15</span>
-                  </li>
-                  <li>
-                    <span>D.</span>
-                    <span>-15</span>
-                 </li>                                             
-              </ul>
-              <div class="bottom">
-                  <span class="type">单选题</span>
-                  <span>使用 0 次</span>
-                  <span class="addItemBt" @click="addCart">
-                    <span class="img add-img">
-                      <img src="../assets/add.png" alt="">
-                    </span> 
-                    试题栏
-                  </span>                                   
-              </div>
-          </div>
-           <div class="test">
-              <div class="title">
-                 1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-              </div>
-              <ul class="aswerbox">
-                 <li>
-                    <span class="sort">A.</span>
-                    <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                 </li>
-                  <li>
-                    <span class="sort">B.</span>
-                    <span class="option">-15</span>
-                 </li> 
-                  <li>
-                    <span class="sort">C.</span>
-                    <span class="option">-15</span>
-                  </li>
-                  <li>
-                    <span class="sort">D.</span>
-                    <span class="option">-15</span>
-                 </li>                                             
-              </ul>
-              <div class="bottom">
-                  <span class="type">单选题</span>
-                  <span>使用 0 次</span>
-                  <span class="addItemBt_y">
-                      <span class="img add-img_y">
-                        <img src="../assets/yes.png" alt="">
-                      </span> 
-                    已添加
-                  </span>                  
-              </div>
-          </div>
-          <div class="test">
-              <div class="title">
-                 1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-              </div>
-              <ul class="aswerbox">
-                 <li>
-                    <span class="sort">A.</span>
-                    <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                 </li>
-                  <li>
-                    <span class="sort">B.</span>
-                    <span class="option">-15</span>
-                 </li> 
-                  <li>
-                    <span class="sort">C.</span>
-                    <span class="option">-15</span>
-                  </li>
-                  <li>
-                    <span class="sort">D.</span>
-                    <span class="option">-15</span>
-                 </li>                                             
-              </ul>
-              <div class="bottom">
-                  <span class="type">单选题</span>
-                  <span>使用 0 次</span>
-                  <span class="addItemBt">
-                    <span class="img add-img">
-                      <img src="../assets/add.png" alt="">
-                    </span> 
-                    试题栏
-                  </span>
-              </div>
-          </div>
-         <div class="test">
-              <div class="title">
-                 1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-              </div>
-              <ul class="aswerbox">
-                 <li>
-                    <span class="sort">A.</span>
-                    <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                 </li>
-                  <li>
-                    <span class="sort">B.</span>
-                    <span class="option">-15</span>
-                 </li> 
-                  <li>
-                    <span class="sort">C.</span>
-                    <span class="option">-15</span>
-                  </li>
-                  <li>
-                    <span class="sort">D.</span>
-                    <span class="option">-15</span>
-                 </li>                                             
-              </ul>
-              <div class="bottom">
-                  <span class="type">单选题</span>
-                  <span>使用 0 次</span>
-                  <span class="addItemBt">
-                    <span class="img add-img">
-                      <img src="../assets/add.png" alt="">
-                    </span> 
-                    试题栏
-                  </span>
-              </div>
-          </div> 
           </div>   
            </cube-scroll>             
         </div>
-       
      </div>
+     <router-link class="cart_rk" to="/cart" tag="div">
+              <img src="../assets/cart_rk.png" alt="">
+              <span class="num_num">1</span>
+       </router-link>         
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import foot from '@/components/foot.vue'
-import tree from '@/components/tree.vue'
-
+import { history_ct } from '@/api';
 
 export default {
-  name: 'items',
+  name: 'history_ct',
   data(){
      return {
        options:{
@@ -174,54 +74,41 @@ export default {
        },
        datalist:[],
        downlistVisble:false,
-       selectValue:[{name:"全部题型",id:0,open:false,current:0},{name:"全部难度",id:0,open:false,current:0},{name:"全部年级",id:0,open:false,current:0}]
+       page:{
+          current:1,
+          totle:1
+       }       
      }
   },
 
   created(){
-    this.downlistData = {
-        type:0,
-        data:[{name:"精选试题",id:"3"},{name:"历年正在整体",id:"2"},{name:"黄冈一种",id:"8"}],
-        current:0
-    }
-    // const downlist = this.$createDownlist({
-    //      $props: {
-    //       selectData: this.downlistData
-    //     }
-    //   });
-
+      this.renderlist(1,"first")
   },
   mounted(){
-    if(this.$route.query.tree){
-         this.showTree();
-    }
+  
   },
   methods:{
-     select(name,id,tpye,index){
-        this.selectValue[tpye].name = name;
-        this.selectValue[tpye].id = id;
-        this.selectValue[tpye].current = index;
-        this.selectValue[tpye].open = false;
-        this.downlistVisble = false;
-     },
-     selectTitle(index,current){
-        this.selectValue[index].open = true;
-        this.downlistVisble = true;
-        this.downlistData.current = current;
-     },
-     showTree(){
-       this.$refs.tree.show();
-     },
-     addCart(event){
-       this.$refs.foot.drop(event.target);   
-     },
      back(){
        window.history.go(-1);
-     }     
+     },
+     renderlist(type,first){
+        history_ct(1,{page:this.page.current}).then((data)=>{
+           if(first){
+              this.datalist = data;
+           }else{
+            this.datalist.push(...data.data);
+          } 
+          this.page.totle = data.total_page;
+          this.page.current ++;          
+
+        })         
+     },
+     addCart(){
+      
+     } 
   },
   components: {
-     foot,
-     tree
+    
   }
 }
 </script>
@@ -284,6 +171,25 @@ export default {
         width: 100%;
         height: 100%;
      }
+
+
+  .cart_rk {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 60px;
+    left:40px;
+    z-index: 99999;
+    img {
+       width: 100%;
+       height: 100%;
+    }
+    .num_num {
+       color:#fff;
+       right: -5px;
+    }
+ }
 
    
 </style>

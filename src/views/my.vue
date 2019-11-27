@@ -2,7 +2,7 @@
   <div class="page">
        <div class="top">
           <img src="http://wufff.static.dev.dodoedu.com/fztkPage/frontend/images/headbj.png" alt="" class="headimg">
-          <span>用户名</span>
+          <span @click="goLogin">用户名</span>
           <div class="govip" @click="goVip">
              <span class="img vip">
                <img src="../assets/vip.png" alt="">
@@ -16,7 +16,7 @@
        <div class="space"></div>
        <div class="content">
              <ul class="list">
-                 <router-link to="/history_zj" exact tag="li">
+                 <router-link to="/my/history_zj" exact tag="li">
                    <span class="img hostory">
                       <img src="../assets/hostory.png" alt="">
                    </span>
@@ -25,7 +25,7 @@
                     <img src="../assets/arrow_right.png" alt="">
                   </span>
                  </router-link>  
-                 <router-link to="/history_xz" exact tag="li">
+                 <router-link to="/my/history_xz" exact tag="li">
                     <span class="img downLoad">
                       <img src="../assets/downLoad.png" alt="">
                    </span>                  
@@ -34,7 +34,7 @@
                     <img src="../assets/arrow_right.png" alt="">
                   </span>
                 </router-link> 
-                <router-link to="/history_ct" exact tag="li">
+                <router-link to="/my/history_ct" exact tag="li">
                     <span class="img wrongs">
                       <img src="../assets/wrongPaper.png" alt="">
                    </span>                  
@@ -54,7 +54,7 @@
                 </router-link>                                                                          
              </ul>
        </div>
-       <div class="outBtn">
+       <div class="outBtn" @click="out">
           退出当前账号
        </div>
       <foot></foot>
@@ -62,6 +62,7 @@
 </template>
 <script>
 import foot from '@/components/foot.vue' 
+import { MY,OUT } from '@/api'
 export default {
   name: 'my',
   data() {
@@ -69,9 +70,25 @@ export default {
         data: [] 
     }
   },
+  created(){
+       // MY(1).then((data)=>{
+       //   console.log(data);
+       // })
+  },
   methods:{
     goVip(){
        this.$router.push({path:"/buy"});
+    },
+    goLogin(){
+      var url = window.location.href;
+      var hash = url.split("#")[1];
+      var str = hash.substring(1);
+      this.$router.push({path:"/login",query:{redr:hash}})
+    },
+    out(){
+       OUT(1).then((data)=>{
+         console.log(data);
+       })
     }
   },
   components:{

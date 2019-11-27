@@ -77,46 +77,17 @@
              <div class="item">                  
                下一题
              </div>
-      </div>
-      <transition name="moveLeft">
-            <div class="card" v-show="cardshow">
-                <div class="card-items">
-                    <h5>单选</h5>
-                    <ul class="asw clearfix">
-                       <li>1</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li>11</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li>1</li>
-                       <li class="active">11</li>                 
-                    </ul>
-                </div>
-                <div class="card-items">
-                    <h5>单选</h5>
-                    <ul class="asw clearfix">
-                       <li></li>
-                    </ul>
-                </div>
-                <div class="sumbitBt" @click="sumbit">
-                     交卷
-                </div>                    
-            </div> 
-      </transition>         
+      </div>        
   </div>
 </template>
 <script>
 import foot from '@/components/foot.vue'; 
 import { swiper, swiperSlide } from 'vue-awesome-swiper';  
-import 'swiper/dist/css/swiper.css'
+import { analysis } from '@/api';
+import 'swiper/dist/css/swiper.css';
+
 export default {
-  name: 'myTest',
-  props: {
-    msg: String
-  },
+  name: 'analysis',
   data() {
     return {
         testItems:[{name:1},{name:2}],
@@ -124,10 +95,8 @@ export default {
          click:true,
          bounce:false
        },
+       user:this.$local.fetch("user"),
        swiperOption:{
-          // some swiper options/callbacks
-          // 所有的参数同 swiper 官方 api 参数
-          // ...
          speed:180,
          on:{
           slideChange: function () {
@@ -135,9 +104,13 @@ export default {
             }
           },
           cancelable:false
-        },
-      cardshow:false            
+        }    
     }
+  },
+  created(){
+     analysis(1,{master_code_crc32:this.$route.query.id}).then((data)=>{
+        console.log(data);
+     })
   },
   computed: {
       swiper() {
@@ -410,6 +383,7 @@ export default {
         height: 49px;
         line-height: 49px;
         padding-left:10px;
+        color:#7f5010;
        
      }
    }
@@ -417,6 +391,8 @@ export default {
  .arrow_right {
             width: 6px;
             height:10px;
+            float:right;
+            margin-right: 12px;
         }   
 
   .vip {

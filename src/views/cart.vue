@@ -5,7 +5,7 @@
              <cube-scroll
             ref="scroll"
             :options="options">  
-             <div class="wrapscroll" v-show="datalist.length < 1">
+             <div class="wrapscroll" v-show="lengths < 1 && ready">
                    <div class="noneWarp">
                        <span class="img none_items">
                          <img src="../assets/none_items.png" alt="">
@@ -16,135 +16,50 @@
                         </router-link>
                    </div>                 
              </div>          
-             <div class="wrapscroll" v-show="datalist.length > 0">
-                <div class="itemClassfiy" >
-                    <div class="title">一、单选题</div>
-                    <span class="img closeBtn">
-                        <img src="" alt="">
-                        <img src="../assets/arrow_down.png" alt="">
-                    </span>
-                    <div class="items">
-                       <div class="test">
+             <div class="wrapscroll" v-show="lengths > 0">
+                <div class="itemClassfiy" v-for="(val,key,index) in datalist" :class="{padding:open[index]}">
+                    <div class="title">{{$local.getQ_Nu(index)}}、{{$local.getQ_Zh(key)}}</div>
+                    <div class="closeBtndiv"  @click="up_down(index)">
+                        <span class="img closeBtn">
+                            <img src="../assets/arrow_up.png" alt="" v-show="open[index]">
+                            <img src="../assets/arrow_down.png" alt="" v-show="!open[index]">
+                        </span>
+                    </div>
+                    <div class="items" v-show="open[index]">
+                       <div class="test" v-for="(item,index) in val.data">
                            <div class="test_title">
-                               1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-                          </div> 
-                           <ul class="aswerbox">
+                               <span>{{index+1}} .</span>
+                               <div v-html="item.context"></div>
+                          </div>
+
+                             <ul class="aswerbox" v-if="$local.getQ_Zh(key) == '单选题' || $local.getQ_Zh(key) == '多选题'">
+                               <li v-for="(item2,index2) in item.option">
+                                  <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
+                                  <span class="option">{{item2}}</span>
+                                </li>                               
+                            </ul>
+                            <ul class="aswerbox" v-if="$local.getQ_Zh(key) == '判断题'">
                                <li>
-                                  <span class="sort">A.</span>
-                                  <span class="option">-15</span>
+                                  <span>对</span>
                                </li>
                                 <li>
-                                  <span class="sort">B.</span>
-                                  <span class="option">-15</span>
-                               </li> 
-                                <li>
-                                  <span class="sort">C.</span>
-                                  <span class="option">-15</span>
-                                </li>
-                                <li>
-                                  <span class="sort">D.</span>
-                                  <span class="option">-15-15-1-15-15-15-15-15-15-15-15-115-15-1-15-15-15-15-15-15-15-115-15-1-15-15-15-15-15-15-15-15-155-15-15-15</span>
-                               </li>                                             
-                            </ul>
-                             <span class="img dele_h">
+                                  <span>错</span>
+                               </li>                                       
+                            </ul>                             
+
+                             <span class="img dele_h" @click="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
                                 <img src="../assets/dele_h.png" alt="">
                             </span>                              
-                       </div>
-                       <div class="test">
-                           <div class="test_title">
-                               1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-                          </div> 
-                           <ul class="aswerbox">
-                               <li>
-                                  <span class="sort">A.</span>
-                                  <span class="option">-15</span>
-                               </li>
-                                <li>
-                                  <span class="sort">B.</span>
-                                  <span class="option">-15</span>
-                               </li> 
-                                <li>
-                                  <span class="sort">C.</span>
-                                  <span class="option">-15</span>
-                                </li>
-                                <li>
-                                  <span class="sort">D.</span>
-                                  <span class="option">-15</span>
-                               </li>                                             
-                            </ul>
-                             <span class="img dele_h">
-                                <img src="../assets/dele_h.png" alt="">
-                            </span>                                                                                 
                        </div>                       
                     </div>
                 </div>
-                <div class="itemClassfiy">
-                    <div class="title">二、多选题</div>
-                    <span class="img closeBtn">
-                        <img src="" alt="">
-                        <img src="../assets/arrow_down.png" alt="">
-                    </span>
-                    <div class="items">
-                       <div class="test">
-                           <div class="test_title">
-                               1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-                          </div> 
-                           <ul class="aswerbox">
-                               <li>
-                                  <span class="sort">A.</span>
-                                  <span class="option">-15</span>
-                               </li>
-                                <li>
-                                  <span class="sort">B.</span>
-                                  <span class="option">-15</span>
-                               </li> 
-                                <li>
-                                  <span class="sort">C.</span>
-                                  <span class="option">-15</span>
-                                </li>
-                                <li>
-                                  <span class="sort">D.</span>
-                                  <span class="option">-15</span>
-                               </li>                                             
-                            </ul>
-                              <span class="img dele_h">
-                                <img src="../assets/dele_h.png" alt="">
-                            </span>                                                                               
-                       </div>
-                       <div class="test">
-                           <div class="test_title">
-                               1. 计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )
-                          </div> 
-                           <ul class="aswerbox">
-                               <li>
-                                  <span class="sort">A.</span>
-                                  <span class="option">-15</span>
-                               </li>
-                                <li>
-                                  <span class="sort">B.</span>
-                                  <span class="option">-15</span>
-                               </li> 
-                                <li>
-                                  <span class="sort">C.</span>
-                                  <span class="option">-15</span>
-                                </li>
-                                <li>
-                                  <span class="sort">D.</span>
-                                  <span class="option">-15</span>
-                               </li>                                             
-                            </ul>
-                             <span class="img dele_h">
-                                <img src="../assets/dele_h.png" alt="">
-                            </span>                                                                                 
-                       </div>                       
-                    </div>
-                </div>                
+                             
              </div>
              </cube-scroll>
           </div>
       </div>  
-     <div class="control"  v-show="datalist.length > 0">
-         <div class="item">
+     <div class="control"  v-show="lengths > 0">
+         <div class="item" @click="delAll">
             <span class="img dele_b">
                <img src="../assets/dele_b.png" alt="">
             </span>
@@ -158,7 +73,7 @@
          下载试卷
           <span class="border-right"></span>
          </div>
-         <div class="item">
+         <div class="item"  @click="saveAll">
             <span class="img save_b">
                <img src="../assets/save_b.png" alt="">
             </span>            
@@ -169,24 +84,86 @@
   </div>
 </template>
 <script>
-import foot from '@/components/foot.vue' 
+import foot from '@/components/foot.vue';
+import { cart,deleItems,deleAll,savaCart} from '@/api';
 export default {
-  name: 'tree',
-  props: {
-    msg: String
-  },
+  name: 'cart',
   data() {
     return {
         data:"",
         options:{
          click:true,
-         bounce:false
-       },        
-       datalist:[]
+         bounce:false,
+       },     
+       ready:false,   
+       datalist:{},
+       head_s:this.$local.fetch("head_s"),
+       open:[true,true,true,true,true,true]
     }
   },
+  created(){
+    cart(1).then((data)=>{
+       this.datalist = data;
+       this.ready = true;
+    })
+  },
   methods:{
-     
+     up_down(index){
+        var bl = !this.open[index];
+        var _this = this;
+        this.$set(_this.open,index,bl);
+     },
+    deletItem(obj) {
+      var qtp_code = obj.qtp_code;
+      var index = obj.index;
+      deleItems(3, obj).then((data) => {
+        this.datalist[qtp_code].data.splice(index, 1);
+        this.$store.dispatch("sub_num");
+        if (this.datalist[qtp_code].data.length == 0) {
+          this.$delete(this.datalist, qtp_code)
+        }
+      })
+    },
+    delAll(){
+       deleAll(3).then((data)=>{
+           this.datalist = {};
+           this.$store.dispatch("set_num",0);
+       })
+    },
+    saveAll(){
+       this.dialog = this.$createDialog({
+        type: 'prompt',
+        title: '请输入试卷标题',
+        prompt: {
+          value: '',
+          placeholder: '输入试卷标题'
+        },
+        onConfirm: (e, promptValue) => {
+          if(!promptValue){
+             this.dialog.show();
+             return false;
+          }
+           var obj = {
+              paper_title:promptValue,
+              ...this.head_s
+           }
+          savaCart(3,obj).then((data)=>{
+              this.$createToast({
+                        type: 'none',
+                        time: 500,
+                        txt: `保存成功`
+               }).show();  
+               this.datalist  = {};          
+          })
+        }
+      }).show()
+    }
+  },
+  computed:{
+     lengths(){
+         var arr = Object.keys(this.datalist);
+         return arr.length        
+     }
   },
   components:{
     foot
@@ -194,6 +171,10 @@ export default {
 }
 
 </script>
+
+
+
+
 
 <style scoped lang="less">
   .page{
@@ -223,11 +204,14 @@ export default {
      }
   }
 
-
   .itemClassfiy {
      background: #fff;
-     padding: 0 15px 15px 15px;
+     padding: 0 15px 0px 15px;
      margin-top: 10px;
+     position: relative;
+     &.padding {
+         padding:  0 15px 10px 15px;
+     }
      .title {
         font-size: 18px;
         height: 57px;
@@ -239,9 +223,16 @@ export default {
      .closeBtn {
          height: 8px;
          width: 15px;
+         margin: 0 auto;
+         display: block;
+     }
+     .closeBtndiv{
          position: absolute;
          right: 15px;
-         top:28px;
+         top:10px;   
+         width: 40px;
+         height: 40px;   
+         padding-top:8px;
      }
     .test {
         padding: 16px 16px 25px 16px;
@@ -259,6 +250,16 @@ export default {
         .test_title {
            font-size: 15px;
            margin-bottom: 8px;
+           position: relative;
+           > span {
+             position: absolute;
+             left:0;
+             top:2px;
+           }
+           > div {
+              padding-left: 20px;
+              padding-top:2px;
+           }
         }
         .aswerbox {
              padding-left:12px; 
@@ -281,6 +282,11 @@ export default {
            }     
        }                
   }
+
+
+
+
+
 
  .noneWarp {
     text-align: center;

@@ -7,25 +7,16 @@
           </span>
         </span>
           <div class="inner">
-            登录
+            设置密码
       </div>
      </div>      
      <div class="main">
          <div class="list">
              <div class="content">
-                <input type="text" v-model="usename" class="usename" placeholder="请输入手机号">
-                <div class="item clearfix">
-                   <input type="text" v-model="password" class="usename" placeholder="请输入密码">
-                </div>
-                <div class="notice">
-                    <span>忘记密码</span>
-                </div>                              
+                <input type="text" v-model="passwrod" class="usename" placeholder="请设置密码">     
              </div>
-             <div class="btn_subimt" @click="subimt">
-                 登录
-             </div>
-             <div class="type" @click="goToyz">
-                 <span>手机验证码登录</span>
+             <div class="btn_subimt" @click="submit">
+                 确定
              </div>
          </div>
      </div>
@@ -34,51 +25,40 @@
 
 <script>
 // @ is an alias to /src
-import foot from '@/components/foot.vue'
-import tree from '@/components/tree.vue'
-import encode from 'nodejs-base64-encode'
-import md5 from 'md5'
+
+import { SETPWD } from '@/api'
 
 export default {
   name: 'items',
   data(){
      return {
-       usename:"",
-       password:""
+       passwrod:""
      }
   },
 
   created(){
-    console.log(md5)
+     
   },
   mounted(){
-    if(this.$route.query.tree){
-         this.showTree();
-    }
+  
   },
   methods:{
      back(){
        window.history.go(-1);
      },
-     goToyz(){
-        var id = this.$route.query.redr;
-        this.$router.push({path:"/login",query:{redr:id}});
-     },
-     subimt(){
-        if(this.usename != "" && this.password != ""){
-           var statTime_ =  Date.parse(new Date());
-           var statTime =  statTime_ / 1000;
-           var overTime = statTime + 300;
-           var str = 'user_mobile='+this.usename + '&start_time=' + statTime +'&end_time=' + overTime
-           var salt_ = encode.decode(str,'base64');
-           var salt = md5(salt_);
-           console.log(salt);
+     submit(){
+        if(this.passwrod != ""){
+            var obj = {
+               user_pwd:this.passwrod
+            }
+           SETPWD(3,obj).then((data)=>{
+              console.log(data);
+           })
         }
-     }
+     }  
   },
   components: {
-     foot,
-     tree
+     
   }
 }
 </script>
@@ -109,7 +89,7 @@ export default {
 
    .content {
      padding-top: 85px;
-     margin-bottom: 90px;
+     margin-bottom: 150px;
      input {
           background-color: #f6f6f6;
           height: 50px;
@@ -148,8 +128,6 @@ export default {
         padding-left: 32px;
         color:#777777;
         margin-bottom: 81px;
-        text-align: right;
-        padding-right: 30px;
      }
    }
 

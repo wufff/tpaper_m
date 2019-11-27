@@ -23,11 +23,11 @@
                   <img src="../assets/bases.png" alt="">
                   <div class="name">知识点选题</div>
                 </router-link>
-                <router-link to="/" tag="div">
+                <router-link to="/allpaper" tag="div">
                   <img src="../assets/selects.png" alt="">
                   <div class="name">试卷选题</div>
                 </router-link>
-                <router-link to="/" tag="div">
+                <router-link to="/my/history_ct" tag="div">
                   <img src="../assets/wrongs.png" alt="">
                   <div class="name">错题本</div>
                 </router-link>  
@@ -132,7 +132,6 @@ export default {
      })
 
     indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code}).then((res)=>{
-        // console.log(res);
         this.paper_list = res.paper_list;
         this.is_vip  = res.is_vip;
         var is = res.is_vip == 1? true : false;

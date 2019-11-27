@@ -1,7 +1,7 @@
 <template>
   <div class="page">
       <div class="head">
-        <span class="back" @click="back">
+        <span class="back" @click="back" >
           <span class="img back-bt">
             <img src="../assets/arrow_left_b.png" alt="">
           </span>
@@ -9,212 +9,171 @@
           <div class="inner">
              下载记录
           </div>
-     </div>   	  
-  	 <div class="main">
+     </div>       
+     <div class="main">
       <div class="list">
        <cube-scroll
           ref="scroll" 
-          :options="options">        
-  	 	    <div class="scrollwrap">
+          :options="options"
+          @pulling-up="onPullingUp"
+          >        
+          <div class="scrollwrap">
                <div class="recommend">
                  <ul class="list">
-                      <li>
-                         <div class="top">
-                            <h4>湖北省新华小学三年级期中数学考试试题</h4>
+                      <li v-for="(item,index) in datalist">
+                         <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="div" class="top">
+                            <h4>{{item.paper_title}}</h4>
                             <div class="info">
-                                <span>初中数学</span>
+                                <span>{{item.stage_descript}} {{item.subject_name}}</span>
                                 <span>共 6 题</span>
                             </div>
-                            <span class="time">2019-1-2</span>                             
-                         </div>
+                            <span class="time">{{item.paper_creation_offset}}</span>                             
+                         </router-link>
                          <div class="bottom clearfix">
-                             <div class="tab">
+                             <div class="tab" @click="delet({paper_code_crc32:item.paper_code_crc32},index)">
                                 <span class="img dele_h">
                                     <img src="../assets/dele_h.png" alt="">
                                 </span>
                                 删除试卷
                                 <div class="border-right"></div>
                              </div>
-                              <div class="tab">
+                              <div class="tab" @click="goDown(item.paper_code_crc32)">
                                 <span class="img save_h">
                                     <img src="../assets/save_h.png" alt="">
                                 </span>
                                 下载试卷
                              </div>                             
                          </div>
-                      </li>
-                       <li>
-                         <div class="top">
-                            <h4>湖北省新华小学三年级期中数学考试试题</h4>
-                            <div class="info">
-                                <span>初中数学</span>
-                                <span>共 6 题</span>
-                            </div>
-                            <span class="time">2019-1-2</span>                             
-                         </div>
-                         <div class="bottom clearfix">
-                             <div class="tab">
-                                <span class="img dele_h">
-                                    <img src="../assets/dele_h.png" alt="">
-                                </span>
-                                删除试卷
-                                <div class="border-right"></div>
-                             </div>
-                              <div class="tab">
-                                <span class="img save_h">
-                                    <img src="../assets/save_h.png" alt="">
-                                </span>
-                                下载试卷
-                             </div>                             
-                         </div>
-                      </li>
-                       <li>
-                         <div class="top">
-                            <h4>湖北省新华小学三年级期中数学考试试题级期中数学考级期中数学考 湖北省新华小学三年级期中数学考试试题级期中数学考级期中数学考考级期中数学考考级期中数学考</h4>
-                            <div class="info">
-                                <span>初中数学</span>
-                                <span>共 6 题</span>
-                            </div>
-                            <span class="time">2019-1-2</span>                             
-                         </div>
-                         <div class="bottom clearfix">
-                             <div class="tab">
-                                <span class="img dele_h">
-                                    <img src="../assets/dele_h.png" alt="">
-                                </span>
-                                删除试卷
-                                <div class="border-right"></div>
-                             </div>
-                              <div class="tab">
-                                <span class="img save_h">
-                                    <img src="../assets/save_h.png" alt="">
-                                </span>
-                                下载试卷
-                             </div>                             
-                         </div>
-                      </li>
-                       <li>
-                         <div class="top">
-                            <h4>湖北省新华小学三年级期中数学考试试题</h4>
-                            <div class="info">
-                                <span>初中数学</span>
-                                <span>共 6 题</span>
-                            </div>
-                            <span class="time">2019-1-2</span>                             
-                         </div>
-                         <div class="bottom clearfix">
-                             <div class="tab">
-                                <span class="img dele_h">
-                                    <img src="../assets/dele_h.png" alt="">
-                                </span>
-                                删除试卷
-                                <div class="border-right"></div>
-                             </div>
-                              <div class="tab">
-                                <span class="img save_h">
-                                    <img src="../assets/save_h.png" alt="">
-                                </span>
-                                下载试卷
-                             </div>                             
-                         </div>
-                         <li>
-                         <div class="top">
-                            <h4>湖北省新华小学三年级期中数学考试试题</h4>
-                            <div class="info">
-                                <span>初中数学</span>
-                                <span>共 6 题</span>
-                            </div>
-                            <span class="time">2019-1-2</span>                             
-                         </div>
-                         <div class="bottom clearfix">
-                             <div class="tab">
-                                <span class="img dele_h">
-                                    <img src="../assets/dele_h.png" alt="">
-                                </span>
-                                删除试卷
-                                <div class="border-right"></div>
-                             </div>
-                              <div class="tab">
-                                <span class="img save_h">
-                                    <img src="../assets/save_h.png" alt="">
-                                </span>
-                                下载试卷
-                             </div>                             
-                         </div>
-                      </li>        
-                      </li>                                                                                                                                                 
+                      </li>                                                                                                             
                  </ul>
                </div>             
           </div>
        </cube-scroll>  
-  	  </div>
+      </div>
+      
      </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import foot from '@/components/foot.vue'
 
+import { history_xz,deledown} from '@/api'
 export default {
   name: 'home',
   data(){
      return {
         options:{
            click:true,
-           bounce:false           
+           bounce:false,
+           pullUpLoad: {
+                    threshold: 100,
+                    txt: {
+                      more: '加载更多',
+                      noMore: '没有更多的数据啦'
+              }
+           }                      
         },
-        secetVisb:false
+        datalist:[],
+        hasNext:true
      }
   },
+  computed:{
+     lastId(){
+        if(this.datalist.length == 0) {
+           return 0;
+        }else{
+          return this.datalist[this.datalist.length-1].id;
+        }
+     }
+  },
+  created(){
+     this.renderPages(1,true);
+  },  
   methods:{
      back(){
        window.history.go(-1);
-     }
-  },
+     },
+     goDown(id){
+        this.$router.push({path:"/mydown",query:{id:id}})
+     },
+     delet(obj,index){
+         deledown(3,obj).then((data)=>{
+               this.datalist.splice(index,1)
+        })
+     },
+     renderPages(tpye,isfisrt,fun){
+         history_xz(tpye,{id:this.lastId}).then((data)=>{
+            
+            if(isfisrt){
+               this.datalist = data;
+            }else{
+               this.datalist.push(...data);
+            }
+            if( data.length == 0 ){
+                this.$refs.scroll.forceUpdate();
+            }   
+            this.hasNext =  data.length == 0 ?  true : false ; 
+            if(fun){
+               fun(this.hasNext);
+            }
+        })       
+     },
+     onPullingUp(){
+        var _this  = this;
+        this.renderPages(3,false,function(has){
+            console.log(has);
+            if(!has){
+                _this.$refs.scroll.forceUpdate();
+            }else{
+                _this.$refs.scroll.refresh();
+            }
+        }); 
+      }    
+  },  
   components: {
-     foot
+   
   }
 }
 </script>
 <style scoped lang="less">
     .main {
-       padding-top: 45px;
+       padding-top: 35px;
        padding-bottom: 0px;
     }
    .goVip {
-   	   height: 34px;
-   	   color:#7f5010;
-   	   line-height: 35px;
-   	   padding:0 15px;
-   	   background:url("../assets/arrow_right_z.png") no-repeat #dcaf72;
-   	   background-size:  6px 15px;
-   	   background-position: 97% 10px;;
-   	   .vipImg { 
+       height: 34px;
+       color:#7f5010;
+       line-height: 35px;
+       padding:0 15px;
+       background:url("../assets/arrow_right_z.png") no-repeat #dcaf72;
+       background-size:  6px 15px;
+       background-position: 97% 10px;;
+       .vipImg { 
           width: 16px;
           height: 14px;
-   	    }
+        }
    }
    .nav { 
-   	  width: 100%;
-   	  padding: 30px 15px 20px 15px;
-   	  background-color: #fff;
-   	  margin-bottom: 9px;
-   	  > div {
-   	  	 float: left;
-   	  	 width: 33.33%;
-   	  	 text-align: center;
-   	  	 img {
-   	  	 	 width: 38px;
-   	  	 	 height: 38px;
-   	  	 	 margin-bottom: 17px;
-   	  	 }
-   	  	 .name { 
+      width: 100%;
+      padding: 30px 15px 20px 15px;
+      background-color: #fff;
+      margin-bottom: 9px;
+      > div {
+         float: left;
+         width: 33.33%;
+         text-align: center;
+         img {
+           width: 38px;
+           height: 38px;
+           margin-bottom: 17px;
+         }
+         .name { 
                font-size: 14px;
                // font-weight: bold;
                color:#000000;
-   	  	  }
-   	  }
+          }
+      }
    }
 
  .border-right{
@@ -230,16 +189,16 @@ export default {
 
 
    .recommend {
-   	 padding: 6px 0;
-   	 .more {
-   	 	 font-size: 15px;
-   	 	 color:#5e5e5e;
-   	 }
+     padding: 6px 0 0 0;
+     .more {
+       font-size: 15px;
+       color:#5e5e5e;
+     }
      .list > li{
         padding: 16px 10px 0 10px;
         position: relative;
         background-color: #fff;
-        margin-bottom: 10px;
+        margin-top: 10px;
         .top{
            padding-bottom: 18px;
         }

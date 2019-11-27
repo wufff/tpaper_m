@@ -13,9 +13,9 @@
      <div class="main">
          <div class="list">
              <div class="content">
-                <input type="text" v-model="passwrod" class="usename" placeholder="请设置密码">     
+                <input type="password" v-model="passwrod" class="usename" placeholder="请设置密码">     
              </div>
-             <div class="btn_subimt">
+             <div class="btn_subimt" @click="submit">
                  确定
              </div>
          </div>
@@ -25,9 +25,8 @@
 
 <script>
 // @ is an alias to /src
-import foot from '@/components/foot.vue'
-import tree from '@/components/tree.vue'
 
+import { SETPWD } from '@/api'
 
 export default {
   name: 'items',
@@ -38,7 +37,7 @@ export default {
   },
 
   created(){
-    
+     
   },
   mounted(){
   
@@ -46,11 +45,21 @@ export default {
   methods:{
      back(){
        window.history.go(-1);
-     }     
+     },
+     submit(){
+        if(this.passwrod != ""){
+            var obj = {
+               user_pwd:this.passwrod
+            }
+           SETPWD(3,obj).then((data)=>{
+              var token = data.token;
+              this.$local.save("token",token)
+           })
+        }
+     }  
   },
   components: {
-     foot,
-     tree
+     
   }
 }
 </script>

@@ -26,6 +26,12 @@ let local = {
       if(str == "QTP_SUB_006") {return "简答题"};
    
   },
+  getQ_Nu(num){
+      if(num == 0) {return "一"};
+      if(num == 1) {return "二"};
+      if(num == 2) {return "三"};
+      if(num == 3) {return "四"};
+  },
   ABC_Zh(num){
       if(num == 0) {return "A"};
       if(num == 1) {return "B"};

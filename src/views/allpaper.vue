@@ -168,6 +168,7 @@ export default {
         }
        PaperList(type,obj).then((data)=>{
           if(fisrt){
+             this.$refs.scroll.scrollTo(0,0,0);
              this.datalist = data.data;
           }else{
              this.datalist.push(...data.data)

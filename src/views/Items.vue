@@ -59,7 +59,7 @@
                   </span> 
                   试题栏
                 </span>
-                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0">
+                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0" v-on:click="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
                     <span class="img add-img_y">
                       <img src="../assets/yes.png" alt="">
                     </span> 
@@ -94,7 +94,7 @@
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
 import tree from '@/components/tree.vue'
-import {treeData,fitterData,items,additem} from '@/api';
+import {treeData,fitterData,items,additem,deleItems} from '@/api';
 import  { mapState }  from 'vuex'
 
 export default {
@@ -126,7 +126,6 @@ export default {
        downlist:[],
        downlistData:[],
        tree:[],
-       
        treeValue:{id:"",name:"全部"},
        page:{
           current:1,
@@ -146,8 +145,6 @@ export default {
   //   }
   // },
   created(){
-
-    console.log(this.user);
     treeData(3,this.head_s).then((data)=>{
         data.unshift({id:"",name:"全部"});
         this.tree = data;
@@ -169,6 +166,7 @@ export default {
     }) 
     this.renderItems(1);
   },
+
   mounted(){
     if(this.$route.query.tree){
          this.showTree();
@@ -227,6 +225,13 @@ export default {
         })
       }
     },
+    deletItem(obj){
+         deleItems(3,obj).then((data)=>{
+             this.datalist[obj.index].is_add_qtrunk = 1;
+             this.$store.dispatch("sub_num");
+             this.ball_off = true;
+         })
+    },    
     showTree(){
        this.$refs.tree.show();
      },
@@ -248,6 +253,7 @@ export default {
        }
        items(type,aDate).then((data)=>{
           if(first){
+             this.$refs.scroll.scrollTo(0,0,0);
              this.datalist = data.data;
           }else{
             this.datalist.push(...data.data);

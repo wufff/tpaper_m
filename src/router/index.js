@@ -21,7 +21,8 @@ import login from "../views/login"
 import congfig from "../views/congfig"
 import login_ma from "../views/login_ma"
 import find from "../views/find"
-
+import myDown from "../views/myDown"
+import find_config from '../views/find_config'
 
 Vue.use(VueRouter);
 const routes = [
@@ -69,17 +70,17 @@ const routes = [
     component: my
   }, 
   {
-    path: '/history_zj',
+    path: '/my/history_zj',
     name: 'history_zj',
     component: history_zj
   },
   {
-    path: '/history_xz',
+    path: '/my/history_xz',
     name: 'history_xz',
     component: history_xz
   },
   {
-    path: '/history_ct',
+    path: '/my/history_ct',
     name: 'history_ct',
     component: history_ct
   },   
@@ -127,7 +128,17 @@ const routes = [
     path: '/find',
     name: 'find',
     component: find
-  }             
+  },
+  { 
+      path: '/myDown',
+      name: 'myDown',
+      component:myDown
+  },
+  { 
+    path: '/find_config',
+    name: 'find_config',
+    component:find_config
+  }                        
 ]
 
 const router = new VueRouter({

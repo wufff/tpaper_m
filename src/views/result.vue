@@ -65,32 +65,30 @@
      </div>
      <transition name="moveLeft">
                       <div class="card" v-show="cardshow">
-                          <div class="card-items">
-                              <h5>单选</h5>
+                          <div class="card-items" v-for="(item,index) in cardData">
+                              <h5>{{item.qtp_code_descript}}</h5>
                               <ul class="asw clearfix">
-                                 <li>1</li>
-                                 <li class="disable">1</li>
-                                 <li>1</li>
-                                 <li class="wrong">1</li>
-                                 <li>11</li>
-                                 <li>1</li>
-                                 <li class="disable">1</li>
-                                 <li>1</li>
-                                 <li>1</li>
-                                 <li class="wrong">11</li>                 
-                              </ul>
-                          </div>
-                          <div class="card-items">
-                              <h5>单选</h5>
-                              <ul class="asw clearfix">
-                                 <li></li>
+                                 <li v-for="(item2,index2) in item.data" 
+                                 :class="{disable:item2.is_right == 2,wrong:item2.is_right == 0}"
+                                 >{{index2+1}}</li>
                               </ul>
                           </div>
                          <div class="notice">
-                            注：标灰色的为试题无法在线答题,
-                            您可以查看解析
-                         </div>                 
-                      </div> 
+                            注：以下题目无法自测,可以查看解析
+                         </div>
+                         <div class="card-items" v-for="(item,index) in cardData2">
+                              <h5>{{item.qtp_code_descript}}</h5>
+                              <ul class="asw clearfix">
+                                 <li v-for="(item2,index2) in item.data" 
+                                 class="disable"
+                                 >{{index2+1}}</li>
+                              </ul>
+                          </div>  
+                           <div class="sumbitBt" @click="goAnal">
+                            查看试卷
+                           </div>                                                             
+                      </div>
+                                                
       </transition>                                        
   </div>
 </template>
@@ -108,6 +106,8 @@ import { result , resultCrad } from '@/api'
            pdda:["对","错"],
            paperTitle:{},
            // user:this.$local.fetch("user"),
+           cardData:{},
+           cardData2:{},
            user:{
               is_vip:false
            },
@@ -121,16 +121,18 @@ import { result , resultCrad } from '@/api'
           this.paperTitle = data.paper_info;
        })
        resultCrad(3,{paper_code_crc32:id}).then((data)=>{
-          console.log(data);
+          this.cardData = data.online_exam;
+          this.cardData2 = data.out_line_exam;
+          console.log(this.cardData2);
        })
     },
     methods:{
        back(){
          window.history.go(-1);
        },
-      
-      
-
+       goAnal(){
+           this.$router.replace({path:"/analysis",query:{id:this.$route.query.id}});
+       },
        showCard(){
           this.cardshow = !this.cardshow;
        }
@@ -190,6 +192,7 @@ import { result , resultCrad } from '@/api'
         background: #fff;
         z-index: 999;
         padding: 16px 28px;
+        overflow-y:auto; 
         .card-items {
             margin-bottom: 10px;
         }
@@ -207,7 +210,7 @@ import { result , resultCrad } from '@/api'
              text-align: center;
              line-height: 30px;
              margin-left: 15px;
-             margin-bottom: 15px;
+             margin-bottom: 10px;
              &.wrong{
                background: #c85a63;
                color:#fff;
@@ -220,8 +223,26 @@ import { result , resultCrad } from '@/api'
         }
         .notice {
            color :#c6c6c6;
+           margin-bottom: 20px;
         }
  } 
+
+
+
+ .sumbitBt {
+     height: 50px;
+     background: #37aafd;
+     color:#fff;
+     text-align: center;
+     position: absolute;
+     bottom: 0;
+     left:0;
+     right: 0;
+     width: 100%;;
+     line-height: 50px;
+     font-size: 18px;
+     letter-spacing: 2px;
+  }
 
 
  .type {
