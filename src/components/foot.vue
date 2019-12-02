@@ -56,7 +56,13 @@ export default {
   },
   created(){
      cartNum().then((data)=>{
-          this.$store.dispatch("set_num",data);
+          this.$store.dispatch("set_num",data.qtrunk_count);
+          this.$store.dispatch("set_vip",data.is_vip);
+          var is = data.is_vip == 1? true : false;
+          var user = {
+              is_vip:is
+          }
+          this.$local.save("user",user);      
      })
   },
   computed:{

@@ -2,12 +2,13 @@
   <div class="page">
        <div class="top">
           <img src="http://wufff.static.dev.dodoedu.com/fztkPage/frontend/images/headbj.png" alt="" class="headimg">
-          <span @click="goLogin">用户名</span>
-          <div class="govip" @click="goVip">
+          <span @click="goLogin">{{name}}</span>
+          <div class="govip" @click="goVip" >
              <span class="img vip">
                <img src="../assets/vip.png" alt="">
              </span>
-             开通vip享更多会员特权
+                <span  v-show="!is_vip">{{text.vip_no}}</span>
+                <span  v-show="is_vip">{{text.vip}}</span> 
              <span class="img arrow_right_z">
               <img src="../assets/arrow_right_z.png" alt="">
             </span>
@@ -63,36 +64,73 @@
 <script>
 import foot from '@/components/foot.vue' 
 import { MY,OUT } from '@/api'
+import { mapState } from 'vuex'
 export default {
   name: 'my',
   data() {
     return {
-        data: [] 
+      data: [],
+      name: "",
+      is_vip: false,
+      text: {
+        vip: "",
+        vip_no: ""
+      }
     }
   },
-  created(){
-       // MY(1).then((data)=>{
-       //   console.log(data);
-       // })
+  created() {
+    var is_order = this.$route.query.is_order ? this.$route.query.is_order : "";
+    var obj = {
+       is_order:is_order
+    }
+    MY(1,obj).then((data) => {
+      // console.log(data);
+      this.name = data.user_name;
+      var is = data.is_vip == 1 ? true : false;
+      this.is_vip = is;
+      var user = {
+        is_vip: is
+      }
+      this.$local.save("user", user);
+      this.inText();
+    })
   },
-  methods:{
-    goVip(){
-       this.$router.push({path:"/buy"});
+  computed: {
+     
+  },
+  methods: {
+    goVip() {
+      this.$router.push({
+        path: "/buy"
+      });
     },
-    goLogin(){
+    goLogin() {
       var url = window.location.href;
       var hash = url.split("#")[1];
-      var str = hash.substring(1);
-      this.$router.push({path:"/login",query:{redr:hash}})
+      this.$router.push({
+        path: "/login",
+        query: {
+          redr: hash
+        }
+      })
     },
-    out(){
-       OUT(1).then((data)=>{
-         console.log(data);
-       })
+    out() {
+      OUT(1).then((data) => {
+        this.$local.save("token", "");
+        this.$router.push({
+          path: "/"
+        });
+      })
+    },
+    inText() {
+      this.text = {
+        vip: "您是尊享VIP",
+        vip_no: "开通vip享更多会员特权"
+      }
     }
   },
-  components:{
-      foot
+  components: {
+    foot
   }
 }
 </script>
@@ -137,7 +175,7 @@ export default {
       .vip {
           width: 19px;
           height: 16px;
-          margin-right: 2px;
+          margin-right: 10px;
           position: relative;
           top:2px;
 

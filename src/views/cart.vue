@@ -26,7 +26,7 @@
                         </span>
                     </div>
                     <div class="items" v-show="open[index]">
-                       <div class="test" v-for="(item,index) in val.data">
+                       <div class="test" v-for="(item,index) in val.data" @click="showDtail(item.master_code_crc32)">
                            <div class="test_title">
                                <span>{{index+1}} .</span>
                                <div v-html="item.context"></div>
@@ -47,7 +47,7 @@
                                </li>                                       
                             </ul>                             
 
-                             <span class="img dele_h" @click="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
+                             <span class="img dele_h" @click.stop="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
                                 <img src="../assets/dele_h.png" alt="">
                             </span>                              
                        </div>                       
@@ -66,7 +66,7 @@
             清空试题
             <span class="border-right"></span>
           </div>
-         <div class="item">
+         <div class="item" @click="downLoad_b">
             <span class="img downLoad_b">
                <img src="../assets/downLoad_b.png" alt="">
             </span>                     
@@ -80,12 +80,14 @@
          保存试卷
        </div>
      </div>
+     <itemDtail  ref="itemDtail" :data="itemOne"></itemDtail>
      <foot></foot>
   </div>
 </template>
 <script>
 import foot from '@/components/foot.vue';
-import { cart,deleItems,deleAll,savaCart} from '@/api';
+import itemDtail from '@/components/itemDtail.vue'
+import { cart,deleItems,deleAll,savaCart,ITEMDTAIL} from '@/api';
 export default {
   name: 'cart',
   data() {
@@ -97,12 +99,14 @@ export default {
        },     
        ready:false,   
        datalist:{},
+       itemOne:{},
        head_s:this.$local.fetch("head_s"),
        open:[true,true,true,true,true,true]
     }
   },
   created(){
     cart(1).then((data)=>{
+       console.log(data);
        this.datalist = data;
        this.ready = true;
     })
@@ -124,11 +128,43 @@ export default {
         }
       })
     },
+    showDtail(id){
+      this.$refs.itemDtail.show();
+      ITEMDTAIL(1,{master_code_crc32:id}).then((data)=>{
+          this.itemOne = data[0];
+          this.$refs.itemDtail.ready();
+          console.log(this.itemOne);
+      })
+    },     
     delAll(){
        deleAll(3).then((data)=>{
            this.datalist = {};
            this.$store.dispatch("set_num",0);
        })
+    },
+    downLoad_b(){
+       this.dialog = this.$createDialog({
+        type: 'prompt',
+        title: '请输入试卷标题',
+        prompt: {
+          value: '',
+          placeholder: '输入试卷标题'
+        },
+        onConfirm: (e, promptValue) => {
+          if(!promptValue){
+             this.dialog.show();
+             return false;
+          }
+           var obj = {
+              paper_title:promptValue,
+              ...this.head_s
+           }
+           savaCart(3,obj).then((data)=>{
+                var id = data.paper_id;
+                this.$router.push({path:"/myDown",query:{id:id}})  
+           })
+        }
+      }).show()        
     },
     saveAll(){
        this.dialog = this.$createDialog({
@@ -153,7 +189,9 @@ export default {
                         time: 500,
                         txt: `保存成功`
                }).show();  
-               this.datalist  = {};          
+               this.datalist  = {};  
+               var id = data.paper_id;
+               this.$router.push({path:"/paperDtail",query:{id:id}})        
           })
         }
       }).show()
@@ -166,7 +204,8 @@ export default {
      }
   },
   components:{
-    foot
+    foot,
+    itemDtail 
   }
 }
 

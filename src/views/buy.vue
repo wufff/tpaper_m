@@ -20,53 +20,28 @@
 				          <div class="author">
                       <img src="http://wufff.static.dev.dodoedu.com/fztkPage/frontend/images/headbj.png" alt="" class="headimg">
                       <div class="my">
-                         <div class="name">用户名</div>
-                         <div class="info">您暂未开通会员</div>
+                         <div class="name">{{user_info.user_name}}</div>
+                         <div class="info" v-show="!user.is_vip" v-if="ready">您暂未开通会员</div>
+                         <div class="info" v-show="user.is_vip" v-if="ready">会员到期时间:{{vip_end_time}}</div>
+                         <div class="info" v-show="user.is_vip"  v-if="ready">剩余下载次数:{{not_download_paper_count}}</div>
                       </div>                           
                   </div>
                   <div class="buybox">
                       <h3>开通包月会员</h3>
                       <ul class="buyType">
-                         <li class="buyItems active">
+                         <li class="buyItems active" v-for="(item,index) in vip_items">
                              <div class="type">
-                                <div class="mouth">1个月</div>
-                                <div class="can">可下载15分试卷</div>
+                                <div class="mouth">{{item.time}}</div>
+                                <div class="can">可下载 {{item.download_paper_count}} 分试卷</div>
                              </div>
-                             <div class="priceWrap">
-                                 ¥ 10
+                             <div class="priceWrap" @click="play(item.pay_type,item.time)">
+                                 ¥ {{item.order_amount / 100}}
                              </div>
-                         </li>
-                          <li class="buyItems">
-                             <div class="type">
-                                <div class="mouth">1个月</div>
-                                <div class="can">可下载15分试卷</div>
-                             </div>
-                             <div class="priceWrap">
-                                 ¥ 10
-                             </div>
-                         </li>
-                          <li class="buyItems">
-                             <div class="type">
-                                <div class="mouth">1个月</div>
-                                <div class="can">可下载15分试卷</div>
-                             </div>
-                             <div class="priceWrap">
-                                 ¥ 10
-                             </div>
-                         </li>
-                          <li class="buyItems">
-                             <div class="type">
-                                <div class="mouth">1个月</div>
-                                <div class="can">可下载15分试卷</div>
-                             </div>
-                             <div class="priceWrap">
-                                 ¥ 10
-                             </div>
-                         </li>                                                                            
+                         </li>                                                        
                       </ul>
-                      <div class="btnWrap">
+                   <!--    <div class="btnWrap">
                           <div class="btn">立即开通</div>
-                      </div>  
+                      </div>   -->
                       <div class="benefit">
                           <h3>会员权益</h3>
                           <ul class="benefit">
@@ -92,8 +67,8 @@
                       </div> 
                       <div class="noice">
                          <h3>开通说明</h3>
-                         <p>这里是说明这里是说明这里是说明这里是说明
-                         这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明</p>
+                          <p>1.购买后无法退款，敬请谅解；<br/>
+                          2.若充值后会员未能及时生效，请尝试退出长江题库组卷网后再次进入长江题库组卷网查看；若还是无法解决问题，请拨打客服电话400-0000-0000致电客服。</p>
                       </div>                   
                   </div> 
                   
@@ -102,29 +77,63 @@
 	          </cube-scroll>
      	 </div>
      </div>
-  
+     <div class="buy-mark" v-show="dialog">
+         <transition name="up">
+              <div class="buy-dialge" v-show="dialog">
+                   <span class="img vip_close" @click="closedailog">
+                      <img src="../assets/vip_close.png" alt="">
+                   </span>
+                   <span class="img vip">
+                      <img src="../assets/vip.png" alt="">
+                   </span>
+                   <div class="nitco">您将购买会员: {{buyTime}}</div>
+                   <div>
+                       <div class="buyBt" @click="payM">
+                           微信支付
+                       </div>
+                   </div>
+               </div>  
+        </transition>
+     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
-
+import {BUY,PAY} from '@/api';
 
 
 export default {
-  name: 'items',
+  name: 'BUY',
   data(){
      return {
        options:{
          click:true,
          bounce:false,
        },
-       selectValue:[{name:"综合排序",id:0,open:false,current:0},{name:"全部年级",id:0,open:false,current:0}]
+       user:this.$local.fetch("user"),
+       user_info:{},
+       vip_items:[],
+       buyTime:"",
+       buyType:"",
+       dialog:false,
+       vip_end_time:"",
+       not_download_paper_count:"",
+       ready:false
      }
   },
   created(){
-   
+     BUY(1).then((data)=>{
+        this.user_info = data.user_info;
+        this.vip_items = data.open_vip_type;
+        this.vip_end_time = data.vip_end_time;
+        this.not_download_paper_count = data.not_download_paper_count;
+        this.ready = true;
+        // console.log(data);
+     })
+
+     
   },
   mounted(){
     
@@ -133,21 +142,55 @@ export default {
     back(){
        	window.history.go(-1);
        },
-	  select(name,id,tpye,index){
-        this.selectValue[tpye].name = name;
-        this.selectValue[tpye].id = id;
-        this.selectValue[tpye].current = index;
-        this.selectValue[tpye].open = false;
-        this.downlistVisble = false;
-     },
-     selectTitle(index,current){
-        this.selectValue[index].open = true;
-        this.downlistVisble = true;
-        this.downlistData.current = current;
-     },
      goHistory(){
         this.$router.push("/buyhistory");
-     }   
+     },
+     play(type,time){
+        this.dialog = true;
+        this.buyType = type;
+        this.buyTime = time;
+     },
+     closedailog(){
+       this.dialog = false;
+     },
+     payM(){
+       var obj = {
+          pay_type:1,
+          vip_type:this.buyType
+       }
+       var _this = this;
+       PAY(1,obj).then(data=>{
+            function jsApiCall()
+            {
+                WeixinJSBridge.invoke('getBrandWCPayRequest',data,function (res) {
+                          if(res.err_msg == "get_brand_wcpay_request:ok" ){
+                          // 使用以上方式判断前端返回,微信团队郑重提示：
+                                //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                              _this.$router.push({path:"/my",query:{is_order:1}});
+                           }else{
+                             alert(res.err_code + res.err_desc + res.err_msg);
+                          }
+                    }
+                );
+
+            }
+
+            function callpay()
+            {
+                if (typeof WeixinJSBridge == "undefined") {
+                    if (document.addEventListener) {
+                        document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                    } else if (document.attachEvent) {
+                        document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                        document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                    }
+                } else {
+                    jsApiCall();
+                }
+            }          
+           callpay();
+       })
+     }
   },
   components: {
      foot
@@ -159,6 +202,63 @@ export default {
  	 padding-top: 53px;
  	 padding-bottom: 0;
  }
+
+
+ .vip_close {
+      width: 21px;
+      height: 21px;
+      position: absolute;
+      right:13px;
+      top:13px;
+ }
+ .vip {
+    width: 36px;
+    height: 32px;
+    margin:  0 auto;
+    display: block;
+    margin-bottom: 13px;
+ }
+.buy-mark {
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top:0;
+      z-index:999;
+      background: rgba(0,0,0,0.4);     
+      .buy-dialge {
+           width: 310px;
+           height: 200px;
+           border-radius: 10px;
+           background-color: #dcb073;
+           position: absolute;
+           margin-left: -155px;
+           margin-top: -100px;
+           left:50%;
+           top: 50%;
+           padding-top: 30px;
+           .nitco {
+              text-align: center;
+              color:#7c5724;
+              font-size: 16px;
+              margin-bottom: 20px;
+           }
+          .buyBt {
+              width: 252px;
+              color:#fff;
+              background-color: #a05f38;
+              text-align: center;
+              height: 43px;
+              line-height: 43px;
+              border-radius: 5px;
+              font-size: 16px;
+              margin: 0 auto;
+              letter-spacing: 2px;
+           }           
+      }
+ }
+
 
 #head {
    background-color: #ddb175;
@@ -264,7 +364,6 @@ export default {
     }
     .name {
        font-size: 18px;
-       margin-bottom: 5px;
        padding-top: 6px;
     }
     .info {
@@ -376,7 +475,7 @@ export default {
          font-size: 15px;
          padding: 0 30px 20px 30px;
           color:#777777;
-          text-indent: 2em;
+         
        }
      }        
    }

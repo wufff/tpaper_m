@@ -83,10 +83,7 @@
                                  class="disable"
                                  >{{index2+1}}</li>
                               </ul>
-                          </div>  
-                           <div class="sumbitBt" @click="goAnal">
-                            查看试卷
-                           </div>                                                             
+                          </div>                                                             
                       </div>
                                                 
       </transition>                                        

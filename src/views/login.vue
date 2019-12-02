@@ -61,7 +61,7 @@ export default {
   },
   methods:{
      back(){
-       window.history.go(-1);
+          this.$router.push({path:'/'});
      },
      timeStart(){
       var time =  setInterval(()=>{
@@ -95,14 +95,24 @@ export default {
              code:this.code
           }
           LOGIN(3,obj).then((data)=>{
+              console.log(data);
               var is_pwd = data.is_pwd;
               if(is_pwd == 1){
                   var token = data.sid;
                   this.$local.save("token",token);
-                  // this.$router.push({path:hash});
+                  //headUrl是授权登录
+                  var headUrl = data.header_url;
+                  if(headUrl){
+                      window.location.href = headUrl;
+                  }else{
+                    if(hash) {
+                       this.$router.push("/")
+                    }else{
+                        this.$router.push({path:hash});
+                    }                      
+                  }                 
               }else if (is_pwd == 0 ){
                   var token = data.sid;
-                  console.log(token);
                   this.$local.save("token",token)
                   this.$router.push({path:'/congfig',query:{redr:hash}});
               }else {

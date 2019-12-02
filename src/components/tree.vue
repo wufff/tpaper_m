@@ -5,7 +5,7 @@
           <div class="list"  v-show="visble">
              <div class="scrollwrap">
                 <div  v-for="(item,index) in  treeList">
-                   <div class="treeItem" @click="selectItem(item.name,item.id)">
+                   <div class="treeItem" @click="selectItem(item.name,item.search_node)">
                     <span class="img-tree">
                       <img src="../assets/tree_open.png" alt="" v-show="!item.open" v-if="item.children" @click.stop="open(index)">
                       <img src="../assets/tree_close.png" alt="" v-show="item.open"  v-if="item.children"  @click.stop="close(index)">
@@ -13,7 +13,7 @@
                     {{item.name}}
                   </div>
                   <div v-for="(item2,index2) in item.children" v-show="item.open"> 
-                      <div class="treeItem2" @click="selectItem(item2.name,item2.id)">
+                      <div class="treeItem2" @click="selectItem(item2.name,item2.search_node)">
                         <span class="img-tree">
                           <img src="../assets/tree_open.png" alt="" v-show="!item2.open" v-if="item2.children" @click.stop="open(index,index2)">
                           <img src="../assets/tree_close.png" alt="" v-show="item2.open" v-if="item2.children" @click.stop="close(index,index2)"> 
@@ -21,7 +21,7 @@
                        {{item2.name}}
                       </div> 
                       <div  v-for="(item3,index3) in item2.children" v-show="item2.open"> 
-                          <div class="treeItem3" @click="selectItem(item3.name,item3.id)">{{item3.name}}</div>
+                          <div class="treeItem3" @click="selectItem(item3.name,item3.search_node)">{{item3.name}}</div>
                       </div>
                   </div>                 
                 </div>

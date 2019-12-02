@@ -15,10 +15,10 @@
              <div class="content">
                 <input type="text" v-model="usename" class="usename" placeholder="请输入手机号">
                 <div class="item clearfix">
-                   <input type="text" v-model="password" class="usename" placeholder="请输入密码">
+                   <input type="password" v-model="password" class="usename" placeholder="请输入密码">
                 </div>
                 <div class="notice">
-                    <span>忘记密码</span>
+                    <span  @click="goForgaet">忘记密码</span>
                 </div>                              
              </div>
              <div class="btn_subimt" @click="subimt">
@@ -38,6 +38,7 @@ import foot from '@/components/foot.vue'
 import tree from '@/components/tree.vue'
 import encode from 'nodejs-base64-encode'
 import md5 from 'md5'
+import { LOGIN_M } from '@/api';
 
 export default {
   name: 'items',
@@ -49,12 +50,10 @@ export default {
   },
 
   created(){
-    console.log(md5)
+     
   },
   mounted(){
-    if(this.$route.query.tree){
-         this.showTree();
-    }
+    
   },
   methods:{
      back(){
@@ -69,11 +68,48 @@ export default {
            var statTime_ =  Date.parse(new Date());
            var statTime =  statTime_ / 1000;
            var overTime = statTime + 300;
-           var str = 'user_mobile='+this.usename + '&start_time=' + statTime +'&end_time=' + overTime
-           var salt_ = encode.decode(str,'base64');
-           var salt = md5(salt_);
-           console.log(salt);
+
+           // var str = 'user_mobile='+this.usename + '&start_time=' + statTime +'&end_time=' + overTime;
+           var obj = {
+              user_mobile:this.usename,
+              start_time:statTime,
+              end_time:overTime
+           }
+
+           var str = JSON.stringify(obj);
+           var salt_ = encode.encode(str,'base64');
+           var md = md5(this.usename+statTime+overTime+"tpaper@&%*$");
+           var salt = salt_ + "."+md;
+           var obj = {
+               salt:salt,
+               user_pwd:this.password,
+               user_mobile:this.usename,
+           }
+            LOGIN_M(3, obj).then((data) => {
+               // console.log(data);
+              if (typeof data == 'object') {
+                var token = data.sid;
+                var headUrl = data.header_url;
+                var hash = this.$route.query.redr ? this.$route.query.redr : "/"; 
+                this.$local.save("token", token);
+                if(headUrl){
+                   window.location.href = headUrl;
+                }else{
+                   this.$router.push({path:hash});
+                }
+              } else {
+                this.$createToast({
+                  type: 'none',
+                  time: 500,
+                  txt: data
+                }).show();
+              }
+            })
         }
+     },
+     goForgaet(){
+        var id = this.$route.query.redr;
+        this.$router.push({path:"/find",query:{redr:id}});         
      }
   },
   components: {

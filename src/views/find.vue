@@ -14,15 +14,16 @@
          <div class="list">
              <div class="content">
                 <input type="text" v-model="usename" class="usename" placeholder="请输入手机号">
-                <div class="item clearfix">
+                 <div class="item clearfix">
                    <input type="text" v-model="code" class="code" placeholder="输入验证码">
-                   <span class="codeBtn">( 4 )</span>
-                </div>    
-                <div class="notice" style="color:#fff">
+                   <span class="codeBtn" v-show="!show" @click="getcode()">获取验证码</span>
+                   <span class="codeBtn" v-show="show">( {{startTime}} )</span>
+                </div> 
+               <div class="notice">
                     若该手机号未注册，我们会自动为您注册
-                </div>            
+                </div>                                 
              </div>
-             <div class="btn_subimt">
+             <div class="btn_subimt" @click="login">
                  下一步
              </div>
          </div>
@@ -31,36 +32,84 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import foot from '@/components/foot.vue'
-import tree from '@/components/tree.vue'
-
-
+import { getCode,FIND } from '@/api'
 export default {
   name: 'items',
   data(){
      return {
+       startTime:60,
+       code:"",
        usename:"",
-       passwrod:""
+       passwrod:"",
+       show:false
      }
   },
-
+  computed:{
+     
+  },
   created(){
-    
+     
   },
   mounted(){
-    if(this.$route.query.tree){
-         this.showTree();
-    }
+  
   },
   methods:{
      back(){
        window.history.go(-1);
-     }     
+     },
+     timeStart(){
+      var time =  setInterval(()=>{
+         this.startTime --;
+         if (this.startTime == 0){
+            clearInterval(time);
+            this.startTime = 60;
+            this.show = false;
+         }
+       },1000)
+     },
+     getcode(){
+       if(!this.usename){
+          return
+       }else{
+          var obj = {
+             user_mobile:this.usename,
+             code_type:2
+          }
+          getCode(3,obj).then((data)=>{
+              this.show = true;
+              this.timeStart();                
+          })    
+       }
+     },
+     login(){
+       var hash = this.$route.query.redr;
+       if(this.usename != "" && this.code != ""){
+          var obj = {
+             user_mobile:this.usename,
+             user_code:this.code
+          }
+          FIND(3,obj).then((data)=>{
+               var id = this.$route.query.redr;
+               var user_id = data.user_id;
+               if(user_id) {
+                    this.$router.push({path:"/find_config",query:{redr:id,user_id:user_id}});
+               }else{
+                    this.$createToast({
+                        type: 'none',
+                        time: 800,
+                        txt: data
+                 }).show();                     
+               }
+          })
+       }
+     },
+     goToyz(){
+        var id = this.$route.query.redr;
+        this.$router.push({path:"/login_ma",query:{redr:id}});
+     }
   },
   components: {
-     foot,
-     tree
+   
   }
 }
 </script>
@@ -127,7 +176,7 @@ export default {
      }
      .notice{
         padding-left: 32px;
-        color:#777777;
+        color:#fff;
         margin-bottom: 81px;
      }
    }

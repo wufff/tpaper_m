@@ -11,10 +11,7 @@
           </div>
      </div>   	  
   	 <div class="main">
-      <div class="list">
-       <cube-scroll
-          ref="scroll" 
-          :options="options">        
+      <div class="list">        
   	 	    <div class="scrollwrap">
              <h4>问题描述</h4>
              <div class="textarea">
@@ -34,43 +31,90 @@
              </div>                   
              <h4>图片（可选）</h4> 
              <div class="upload">
-                
-             </div>
-             
-            
-                            
+                 <cube-upload
+                  action="http://libo5050.tpaper.dev.dodoedu.com/Commonajax/uploadExcel"
+                  :simultaneous-uploads="1"
+                  @file-success="filesUp"
+                  @file-removed="removed"
+                  @files-added="filesAdded"/>
+             </div> 
+             <span class="btn" @click="submit">提交反馈</span>        
           </div>
-       </cube-scroll>  
+      
   	  </div>
      </div>
-     <span class="btn">提交反馈</span>
+     
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
-
+import { FEEDBACK } from '@/api'
 export default {
   name: 'home',
   data(){
      return {
-        options:{
-           click:true,
-           bounce:false           
-        },
         placeholder:"请输入反馈内容",
         placeholder2:"请输入电话号码",
         autoExpand:true,
         maxlength:120,
         maov:"",
-        tell:""
+        tell:"",
+        fileValue:[]
      }
   },
   methods:{
      back(){
        window.history.go(-1);
-     }
+     },
+     filesAdded(files) {
+      let hasIgnore = false
+      const maxSize = 5 * 1024 * 1024 // 1M
+      for (let k in files) {
+        const file = files[k]
+        if (file.size > maxSize) {
+          file.ignore = true
+          hasIgnore = true
+        }
+      }
+      hasIgnore && this.$createToast({
+        type: 'warn',
+        time: 1000,
+        txt: 'You selected >5M files'
+      }).show()
+    },
+    submit(){
+      if(this.tell != "" && this.maov != ""){
+          var obj  = {
+            mobile:this.tell,
+            content:this.maov,
+            content_attach:this.fileValue.join(",")
+         }         
+         FEEDBACK(1,obj).then(data=>{
+                this.$createToast({
+                  type: 'none',
+                  time: 500,
+                  txt: data
+                }).show();
+         })
+      }
+       
+    },
+    filesUp({response}){
+       if(response.type == "success"){
+          var url = response.message.url
+          this.fileValue.push(url);
+          console.log(this.fileValue)
+       }
+    },
+    removed({response}){
+      if(response.type == "success"){
+                var url = response.message.url
+                this.fileValue.splice(this.fileValue.findIndex(item => {item === url}), 1);
+                console.log(this.fileValue);
+             }      
+      }
   },
   components: {
      foot
@@ -101,8 +145,8 @@ export default {
     }
   
    .upload {
-      height: 60px;
-      background-color: #fff;
+      padding: 0 15px;
+      margin-bottom: 140px;
    }
 
    // .btnW {
@@ -126,9 +170,6 @@ export default {
       line-height: 46px;
       font-size: 16px;
       letter-spacing: 2px;
-      position: absolute;
-      bottom:30px;
-      left: 15px;
    }
 
 

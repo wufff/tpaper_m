@@ -13,7 +13,7 @@
      <div class="main">
          <div class="list">
              <div class="content">
-                <input type="text" v-model="passwrod" class="usename" placeholder="请设置密码">     
+                <input type="password" v-model="passwrod" class="usename" placeholder="请设置密码">     
              </div>
              <div class="btn_subimt" @click="submit">
                  确定
@@ -26,7 +26,7 @@
 <script>
 // @ is an alias to /src
 
-import { SETPWD } from '@/api'
+import { RESETPWD } from '@/api'
 
 export default {
   name: 'items',
@@ -47,13 +47,32 @@ export default {
        window.history.go(-1);
      },
      submit(){
-        if(this.passwrod != ""){
+        if(this.passwrod != "" && this.passwrod.length > 5){
             var obj = {
-               user_pwd:this.passwrod
+               user_pwd:this.passwrod,
+               user_id:this.$route.query.user_id
             }
-           SETPWD(3,obj).then((data)=>{
-              console.log(data);
+            // console.log(obj);
+           RESETPWD(3,obj).then((data)=>{
+               if( data == "更新成功"){
+                    var hash = this.$route.query.redr;  
+                    this.$router.push({path:hash}); 
+               }else{
+                   this.$createToast({
+                          type: 'none',
+                          time: 800,
+                          txt: data
+                   }).show();                    
+               }
            })
+        }else if( this.passwrod.length < 6){
+             this.$createToast({
+                          type: 'none',
+                          time: 800,
+                          txt: "密码至少设置6位"
+             }).show();             
+        }else{
+           // console.log(123);
         }
      }  
   },

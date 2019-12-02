@@ -4,7 +4,7 @@
   	 	<span class="moreBt" @click="showStduy">
   	 		<img src="../assets/more.png" alt="">
   	 	</span>
-  	 	{{$local.stage_zh(head_s.stage_code)}} <span class="space">·</span> {{head_s.subject_name}}
+  	 	{{$local.stage_zh(head_s.stage_code)}} <span class="space" v-show="head_s.stage_code">·</span> {{head_s.subject_name}}
   	 </div>
   	 <div class="main">
       <div class="list">
@@ -12,7 +12,7 @@
           ref="scroll" 
           :options="options">        
   	 	    <div class="scrollwrap">
-              <router-link to="/" tag="div" class="goVip" v-show="!vip">
+              <router-link to="/buy" tag="div" class="goVip" v-show="!is_vip">
                       <span class="vipImg img">
                         <img src="../assets/vip.png" alt="">
                       </span>
@@ -96,23 +96,35 @@ export default {
         },
         secetVisb:false,
         paper_list:[],
-        is_vip:1,
         subject_:[],
         head_s:{},
      }
   },
   computed:{
-     vip(){
-        if(this.is_vip == 0){
-            return false;
-        }else{
-           return true;
-        }
-     },
-     ...mapState(['head_']),
+     ...mapState(['is_vip']),
   },
   created(){
-     subList(3).then((res)=>{
+     var code;
+     var url = window.location.href;
+     console.log(url)
+     var parms = url.split("?")[1];
+     console.log(parms)
+     if(!parms){
+        code ="";
+     }else{
+       var pasrm = parms.split("&");
+       for (var i = 0;i<pasrm.length; i++){
+          var key = pasrm[i].split("=")[0];
+           console.log(key)
+          if(key == "code"){
+             code = pasrm[i].split("=")[1]
+          }
+       }
+     }
+
+     console.log(code);
+
+     subList(2).then((res)=>{
         var data = res;
         for(let k in data) {  
             this.subject_.push(data[k]); 
@@ -125,20 +137,18 @@ export default {
               subject_name: this.subject_[0][0].subject_name
            }
           this.$local.save("head_s",this.head_s);
-               
        }else{
           this.head_s = head_save;
        }
-     })
 
-    indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code}).then((res)=>{
-        this.paper_list = res.paper_list;
-        this.is_vip  = res.is_vip;
-        var is = res.is_vip == 1? true : false;
-        var user = {
-            is_vip:is
-        }
-        this.$local.save("user",user);
+        indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code,code:code}).then((res)=>{
+          this.paper_list = res.paper_list;
+          var is = res.is_vip == 1? true : false;
+          var user = {
+              is_vip:is
+          }
+          this.$local.save("user",user);
+       })        
      })
   },
 

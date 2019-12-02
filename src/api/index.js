@@ -13,15 +13,13 @@ const recommend = api.post("/Index/pagePaperList");
 const PaperList = api.post("/Index/pagePaperList");
 
 //试卷详情
-const paperDtail = api.post("/Paper/paperInfo");              
+const paperDtail = api.post("/Paper/paperInfo");  
+const ITEMDTAIL = api.post("/Qtrunk/qtrunkInfo");                    
 
 //在线自测
 const myTest = api.post("/Exam/onlineExam");
 const subimtTest = api.post("/Exam/saveExam");
 
-// 试题篮 添加试题
-
-      
 //测试结果    
 const result = api.post("/Exam/examResult");
 const resultCrad = api.post("/Exam/examResultSheet");
@@ -45,7 +43,6 @@ const history_xz = api.post("/Paper/paperDownloadList")
 const deledown = api.post("/Paper/deletePaperDownload")              
 const history_ct =  api.post("/Papererrorrecord/paperErrorRecordList")        
 
-
 //下载试卷
 const myDwon = api.post("/Paper/downloadPaper");
 const down = api.post("/Paper/postDownloadPaper")
@@ -53,10 +50,22 @@ const down = api.post("/Paper/postDownloadPaper")
 //登录
 const getCode = api.login("/Userlogin/sendCode");
 const LOGIN = api.login("/Userlogin/postCodeLogin");
+const LOGIN_M = api.login("/Userlogin/postPwdLogin");
 const SETPWD = api.post("/Userlogin/postSetPwd");
-const OUT = api.post("/Usercenter/loginOut");
+const FIND = api.login("/Userlogin/findPwd");
+const RESETPWD = api.login("/Userlogin/forgetSetPwd");  
+const OUT = api.post("/Usercenter/loginOut");     
+              
+//会员中心
+const BUY = api.post("/Usercenter/vipCenter");
+const BUYHOS = api.post("/Usercenter/vipOrderList")  
+const PAY = api.post("/Weixinpay/order")  
+
+//反馈
+const FEEDBACK = api.post("/Feedback/postFeedBack")     
 
 
+         
 
 export  {
 	indexApi,
@@ -89,5 +98,13 @@ export  {
     LOGIN,
     MY,
     SETPWD,
-    OUT
+    OUT,
+    LOGIN_M,
+    FIND,
+    RESETPWD,
+    ITEMDTAIL,
+    BUY,
+    BUYHOS,
+    FEEDBACK,
+    PAY
 }

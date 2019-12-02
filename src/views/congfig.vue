@@ -25,7 +25,6 @@
 
 <script>
 // @ is an alias to /src
-
 import { SETPWD } from '@/api'
 
 export default {
@@ -42,19 +41,46 @@ export default {
   mounted(){
   
   },
+
   methods:{
      back(){
        window.history.go(-1);
      },
      submit(){
-        if(this.passwrod != ""){
+        if(this.passwrod != "" && this.passwrod.length > 5){
             var obj = {
                user_pwd:this.passwrod
             }
            SETPWD(3,obj).then((data)=>{
-              var token = data.token;
-              this.$local.save("token",token)
-           })
+              if(data.type == "error"){
+                    this.$createToast({
+                     type: 'none',
+                     time: 800,
+                     txt: data.message
+                  }).show();                    
+              }else{ 
+                  var headUrl = data.header_url;
+                  var token = data.sid;
+                  var hash = this.$route.query.redr;
+                  this.$local.save("token",token);  
+                  this.$router.push({path:hash}); 
+                  if(headUrl){
+                      window.location.href = headUrl;
+                  }else{
+                    if(hash) {
+                       this.$router.push("/")
+                    }else{
+                        this.$router.push({path:hash});
+                    }                      
+                  }                    
+              }
+           })  
+        }else if( this.passwrod.length < 6){
+             this.$createToast({
+                     type: 'none',
+                     time: 800,
+                     txt: "至少设置6位密码"
+              }).show();                            
         }
      }  
   },

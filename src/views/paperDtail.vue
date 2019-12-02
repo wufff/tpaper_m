@@ -13,9 +13,9 @@
       <div class="main">
          <div class="list">
           <cube-scroll
-            ref="scroll"
-            :data="datalist" 
-            :options="options">
+            ref="scroll" 
+            :options="options"
+            >
           <div class="scrollwrap">
            <div class="head-title">
                <h5>{{paperTitle.paper_title}}</h5>
@@ -24,6 +24,7 @@
            </div>
         <div v-show="datalist.length < 1" class="noneData" v-html="text.noneText"></div>
         <div class="test" v-for="(item,index) in datalist">
+           <div class="top" @click="showDtail(item.master_code_crc32)">
             <div class="title"> 
               <span class="sort">{{index+1}}. </span>
               <div v-html="item.context"></div>
@@ -41,14 +42,15 @@
                   <span>{{item2}}</span>
                 </li>                               
             </ul>
-            <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">
+            <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'" >
                <li>
                   <span>对</span>
                </li>
                 <li>
                   <span>错</span>
                </li>                                       
-            </ul>            
+            </ul> 
+            </div>           
             <div class="bottom">
                 <span class="type">{{$local.getQ_Zh(item.qtp_code)}}</span>
                 <span>使用 {{item.usage_count}} 次</span>
@@ -105,11 +107,13 @@
             </span>            
            在线自测
        </div>
-     </div>                          
+     </div>
+     <itemDtail  ref="itemDtail" :data="itemOne"></itemDtail>                          
   </div>
 </template>
 <script>
-import { paperDtail,additem,deleItems } from '@/api'
+import itemDtail from '@/components/itemDtail.vue'
+import { paperDtail,additem,deleItems,ITEMDTAIL } from '@/api'
 import  { mapState }  from 'vuex'
 
 function createBalls (){
@@ -137,19 +141,13 @@ function createBalls (){
         user:this.$local.fetch("user"),
         options: {
           click: true,
-          bounce: false,
-          pullUpLoad: {
-            threshold: 100,
-            txt: {
-              more: '加载更多',
-              noMore: '没有更多的数据啦'
-            }
-          },
+          bounce: false
         },
         head_s: this.$local.fetch("head_s"),
         is_online_qtrunk:1,   //有  没有
         dropBalls:[],
         balls:createBalls(),
+        itemOne:{},
         page: {
           current: 1,
           total: 1
@@ -272,14 +270,25 @@ function createBalls (){
        goDown(){
           var id = this.$route.query.id;
           this.$router.push({path:"/myDown",query:{id:this.$route.query.id}});
-       }      
-    }
+       },
+      showDtail(id){
+            this.$refs.itemDtail.show();
+            ITEMDTAIL(1,{master_code_crc32:id}).then((data)=>{
+                this.itemOne = data[0];
+                this.$refs.itemDtail.ready();
+            })
+      }             
+    },
+    components: {
+         itemDtail
+    }    
   }  
 </script>
 <style scoped lang="less">
  .main {
    padding-top: 49px;
-   padding-bottom: 0;
+   padding-bottom: 52px;
+
  }
 
   .head-title {

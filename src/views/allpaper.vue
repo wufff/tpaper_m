@@ -61,7 +61,7 @@
 
          <router-link class="cart_rk" to="/cart" tag="div">
               <img src="../assets/cart_rk.png" alt="">
-              <span class="num_num">1</span>
+              <span class="num_num" v-show="num_num > 0">{{num_num}}</span>
           </router-link>                  
       </div>
 
@@ -72,7 +72,7 @@
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
 import {PaperList} from '@/api';
-
+import  { mapState }  from 'vuex'
 export default {
   name: 'items',
   data(){
@@ -140,6 +140,9 @@ export default {
   mounted(){
     
   },
+computed:{
+     ...mapState(['num_num']),
+  },  
   methods:{
      back(){
      	   window.history.go(-1);

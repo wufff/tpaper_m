@@ -28,38 +28,40 @@
         <div class="scrollwrap">
         <div v-show="datalist.length < 1" class="noneData" v-html="text.noneText"></div>
         <div class="test" v-for="(item,index) in datalist">
+          <div class="top" @click="showDtail(item.master_code_crc32)">
             <div class="title" v-html = "item.context"> </div>
-           <!--  <div class="fj">
-                <video src="http://images.dev.dodoedu.com/resource/4aaf30161bcff084.mp4" 
-                    width="100%" 
-                    height="180" 
-                    controls>
-                </video>
-            </div> -->
-            <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题' || $local.getQ_Zh(item.qtp_code) == '多选题'">
-               <li v-for="(item2,index2) in item.option">
-                  <span>{{$local.ABC_Zh(index2)}}.</span>
-                  <span>{{item2}}</span>
-                </li>                               
-            </ul>
-            <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">
-               <li>
-                  <span>对</span>
-               </li>
-                <li>
-                  <span>错</span>
-               </li>                                       
-            </ul>            
+             <!--  <div class="fj">
+                  <video src="http://images.dev.dodoedu.com/resource/4aaf30161bcff084.mp4" 
+                      width="100%" 
+                      height="180" 
+                      controls>
+                  </video>
+              </div> -->
+              <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题' || $local.getQ_Zh(item.qtp_code) == '多选题'">
+                 <li v-for="(item2,index2) in item.option">
+                    <span>{{$local.ABC_Zh(index2)}}.</span>
+                    <span>{{item2}}</span>
+                  </li>                               
+              </ul>
+              <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">
+                 <li>
+                    <span>对</span>
+                 </li>
+                  <li>
+                    <span>错</span>
+                 </li>                                       
+              </ul>  
+            </div>          
             <div class="bottom">
                 <span class="type">{{$local.getQ_Zh(item.qtp_code)}}</span>
                 <span>使用 {{item.usage_count}} 次</span>
-                <span class="addItemBt" v-on:click="addNum_num({qtp_code:item.qtp_code,master_code:item.master_code,index:index},$event)" v-show="item.is_add_qtrunk == 1">
+                <span class="addItemBt" v-on:click.stop="addNum_num({qtp_code:item.qtp_code,master_code:item.master_code,index:index},$event)" v-show="item.is_add_qtrunk == 1">
                   <span class="img add-img">
                     <img src="../assets/add.png" alt="">
                   </span> 
                   试题栏
                 </span>
-                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0" v-on:click="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
+                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0" v-on:click.stop="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
                     <span class="img add-img_y">
                       <img src="../assets/yes.png" alt="">
                     </span> 
@@ -73,7 +75,8 @@
      
    </div>
       <foot ref="foot"></foot>	
-      <tree ref="tree" :treeList = "tree" @func="selectTree"></tree>
+      <tree ref="tree" :treeList="tree"  @func="selectTree"></tree>
+      <itemDtail  ref="itemDtail" :data="itemOne"></itemDtail>
        <div class="downlist" v-show="downlistVisble">
             <transition name="up">
               <ul class="content"  v-show="downlistVisble">
@@ -94,7 +97,8 @@
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
 import tree from '@/components/tree.vue'
-import {treeData,fitterData,items,additem,deleItems} from '@/api';
+import itemDtail from '@/components/itemDtail.vue'
+import {treeData,fitterData,items,additem,deleItems,ITEMDTAIL} from '@/api';
 import  { mapState }  from 'vuex'
 
 export default {
@@ -127,6 +131,7 @@ export default {
        downlistData:[],
        tree:[],
        treeValue:{id:"",name:"全部"},
+       itemOne:{},
        page:{
           current:1,
           totle:1
@@ -225,6 +230,14 @@ export default {
         })
       }
     },
+    showDtail(id){
+      this.$refs.itemDtail.show();
+      ITEMDTAIL(1,{master_code_crc32:id}).then((data)=>{
+          this.itemOne = data[0];
+          this.$refs.itemDtail.ready();
+          // console.log(this.itemOne);
+      })
+    },
     deletItem(obj){
          deleItems(3,obj).then((data)=>{
              this.datalist[obj.index].is_add_qtrunk = 1;
@@ -255,6 +268,7 @@ export default {
           if(first){
              this.$refs.scroll.scrollTo(0,0,0);
              this.datalist = data.data;
+             this.initText(); 
           }else{
             this.datalist.push(...data.data);
           }
@@ -262,7 +276,7 @@ export default {
               this.$refs.scroll.forceUpdate();
               return;
           } 
-          this.initText();       
+                
           this.page.totle = data.total_page;
           this.page.current ++;
        })
@@ -283,7 +297,8 @@ export default {
   },
   components: {
      foot,
-     tree
+     tree,
+     itemDtail
   }
 }
 </script>

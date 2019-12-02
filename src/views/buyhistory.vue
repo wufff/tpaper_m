@@ -14,44 +14,28 @@
      	 <div class="list">
 	          <cube-scroll
 		          ref="scroll" 
-		          :options="options">
-              <div class="scrollwrap" v-show="datalist.length < 1">
+		          :options="options"
+              @pulling-up="onPullingUp"
+              >
+              <div class="scrollwrap" v-show="datalist.length < 1" v-if="ready">
                  <div class="noneWarp">
                        <span class="img none_com">
                          <img src="../assets/none_com.png" alt="">
                        </span>
                        <div class="title">暂无购买记录！</div>
-                       <router-link to="/items" class="goItem">
-                          去选题
-                        </router-link>
                    </div>                         
               </div>
 		          <div class="scrollwrap" v-show="datalist.length > 0">
-				          <ul class="oder">
+				          <ul class="oder" v-for="(item,index) in datalist">
                      <li>
                         <div class="number">
-                           <span>订单号：32493000888</span>
-                           <span class="status">交易成功</span>
+                           <span>订单号：{{item.order_id}}</span>
+                           <span class="status">交易{{item.pay_status_descript}}</span>
                         </div>
                         <div class="conetent">
                            <div class="left">
-                              <div class="name">一个月VIP会员</div>
-                              <span>2019-13-03 10:10:10</span>
-                           </div>
-                           <div class="right">
-                                ¥ 9
-                           </div>
-                        </div>
-                     </li>
-                      <li>
-                        <div class="number">
-                           <span>订单号：32493000888</span>
-                           <span>交易成功</span>
-                        </div>
-                        <div class="conetent">
-                           <div class="left">
-                              <div class="name">一个月VIP会员</div>
-                              <span>2019-13-03 10:10:10</span>
+                              <div class="name">{{item.vip_type_descript}}</div>
+                              <span>{{item.add_time}}</span>
                            </div>
                            <div class="right">
                                 ¥ 9
@@ -70,49 +54,73 @@
 <script>
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
-
+import {BUYHOS} from '@/api';
 
 
 export default {
-  name: 'items',
+  name: 'buyhistory',
   data(){
      return {
        options:{
          click:true,
          bounce:false,
+         pullUpLoad: {
+          threshold: 100,
+          txt: {
+            more: '加载更多',
+            noMore: '没有更多的数据啦'
+          }
+        }
        },
        datalist:[],
-       selectValue:[{name:"综合排序",id:0,open:false,current:0},{name:"全部年级",id:0,open:false,current:0}]
+       ready:false,
+       page:{
+          current:1,
+          totle:1
+       }            
      }
   },
   created(){
-   
+     this.renderItems(1,"fisrt")
   },
   mounted(){
     
   },
   methods:{
     back(){
-       	window.history.go(-1);
-       },
-	  select(name,id,tpye,index){
-        this.selectValue[tpye].name = name;
-        this.selectValue[tpye].id = id;
-        this.selectValue[tpye].current = index;
-        this.selectValue[tpye].open = false;
-        this.downlistVisble = false;
-     },
-     selectTitle(index,current){
-        this.selectValue[index].open = true;
-        this.downlistVisble = true;
-        this.downlistData.current = current;
-     },
-     goHistory(){
-        this.$router.push("/buyhistory");
-     }   
+      window.history.go(-1);
+    },
+    renderItems(type,first){
+       var aDate = {
+          page:this.page.current  
+       }
+       BUYHOS(type,aDate).then((data)=>{
+          // console.log(data.vip_order);
+          if(first){
+             this.$refs.scroll.scrollTo(0,0,0);
+             this.datalist = data.vip_order;
+             this.ready = true;
+          }else{
+            this.datalist.push(...data.qtrunk_list);
+          }
+          if(data.length == 0){
+              this.$refs.scroll.forceUpdate();
+              return;
+          } 
+          this.page.totle = data.total_page;
+          this.page.current ++;
+       })
+    },	
+    onPullingUp(){
+       if(this.page.current == this.page.totle+1){
+          this.$refs.scroll.forceUpdate();
+       }else{
+          this.renderItems(3); 
+      }
+    }        
   },
   components: {
-     foot
+     
   }
 }
 </script>

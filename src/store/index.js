@@ -10,11 +10,15 @@ export default new Vuex.Store({
       stage: "",
       subject_code: "",
       subject_name: ""
-    }
+    },
+    is_vip:1
   },
   mutations: {
      setnum(state,paylod){
-          state.num_num = paylod.n;
+         state.num_num = paylod.n;
+     },
+     setvip(state,paylod){
+         state.is_vip = paylod.n;
      },
   	 addnum(state,paylod){
   	 	state.num_num += paylod.n;
@@ -42,6 +46,9 @@ export default new Vuex.Store({
     },
     set_num({commit},data){
        commit("setnum",{n:data})
+    },
+    set_vip({commit},data){
+        commit("setvip",{n:data})
     }
   },
   modules: {

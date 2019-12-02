@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="detailPage" v-show="visble">
     <div class="head">
       <span class="back" @click="back">
         <span class="img back-bt">
@@ -12,39 +12,44 @@
      </div>
      <div class="main">
         <div class="list">
-               <div class="inner">            
-                  <div class="test_title">单选题</div>
+               <div class="inner" v-if="(data.qtp_code)" v-show="readys">            
+                  <div class="test_title">{{$local.getQ_Zh(data.qtp_code)}}</div>
                   <div class="test_test">
                         <div class="title">
-                          <span class="sort">1.</span>
-                          <span class="question">计算: (0-3)x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结果是 计算: x5的结(   )</span>
+                          <!-- <span class="sort">1.</span> -->
+                           <div v-html='data.context'></div>
                         </div>
-                          <ul class="aswerbox">
-                             <li class="active">
-                                <span class="sort">A.</span>
-                                <span class="option">-15-15-15-15-15-15-15-15-15-15-15-15-15</span>
-                             </li>
-                              <li>
-                                <span class="sort">B.</span>
-                                <span class="option">-15</span>
-                             </li> 
-                              <li>
-                                <span class="sort">C.</span>
-                                <span class="option">-15</span>
-                              </li>
-                              <li>
-                                <span class="sort">D.</span>
-                                <span class="option">-15</span>
-                             </li>                                             
-                          </ul>
+                      <ul class="aswerbox" v-if="$local.getQ_Zh(data.qtp_code) == '单选题'">
+                         <li v-for="(item2,index2) in data.option" :class="{active:index2 == data.right_answer}">
+                            <span>{{$local.ABC_Zh(index2)}}.</span>
+                            <span>{{item2}}</span>
+                          </li>                               
+                      </ul>
+                       <ul class="aswerbox" v-if="$local.getQ_Zh(data.qtp_code) == '多选题'">
+                         <li v-for="(item2,index2) in data.option" :class="{active:data.right_answer[index2] == 1}">
+                            <span>{{$local.ABC_Zh(index2)}}.</span>
+                            <span>{{item2}}</span>
+                          </li>                               
+                      </ul>                      
+                      <ul class="aswerbox" v-if="$local.getQ_Zh(data.qtp_code) == '判断题'">
+                         <li v-for="(item2,index2) in option_" :class="{active:index2 == data.right_answer-1}">
+                            <span>{{item2}}</span>
+                         </li>                            
+                      </ul>  
+                       <ul class="aswerbox" v-if="$local.getQ_Zh(data.qtp_code) == '填空题'">
+                         <li v-for="(item2,index2) in data.right_answer">
+                            <span>{{item2}}</span>
+                         </li>                            
+                      </ul>                                                 
                     </div>  
                     <div class="analysis">
-                       <div class="inner">
+                       <div class="inner" v-if="user.is_vip">
                           解析：
-                       <p>)x5的结果是 计算: x5的结果是 计算结果是 
-                       )x5的结果是 计算: x5的结果是 计算结果是 计算: x5的结结计算: x5的结结</p>                           
+                       <p v-html="data.detailed_answer">
+                      
+                       </p>                           
                        </div>
-                       <div class="inner">
+                       <div class="inner" v-if="!user.is_vip" @click="buy">
                           <div class="govip">
                              <span class="img vip">
                                <img src="../assets/vip.png" alt="">
@@ -67,41 +72,44 @@
 
 
 export default {
-  name: 'analysis',
+  name: 'itemDtail',
+  props:{
+     data: {
+       type:Object,
+       default: {}
+    }
+  },    
   data() {
     return {
-        testItems:[{name:1},{name:2}],
-        options:{
-         click:true,
-         bounce:false
-       },
-       user:this.$local.fetch("user"),
-       swiperOption:{
-         speed:180,
-         on:{
-          slideChange: function () {
-            
-            }
-          },
-          cancelable:false
-        }    
+       user:this.$local.fetch("user"), 
+       option_:["错","对"],
+       visble:false,
+       readys:false
     }
   },
   created(){
-   
+     console.log(this.user);
   },
   computed: {
-      swiper() {
-        return this.$refs.mySwiper.swiper
-      }
+    
   },  
   methods:{
      back(){
-       window.history.go(-1);
+       this.visble = false;
+       this.readys = false;
+     }, 
+     show(){
+       this.visble = true;
+     },
+     ready(){
+       this.readys = true;
+     },
+     buy(){
+       this.$router.push("/buy")
      }
   },
   components:{
-   
+      
    
   }
 }
@@ -110,17 +118,19 @@ export default {
 
 <style scoped lang="less">
 
- .page{
-     .main {
-        padding-top:46px;
-     }
-     .list {
-        position: relative;
-
-     }
-     
+ 
+  .detailPage {
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top:0;
+      z-index:999;
+      background: #fff;
+      padding-top: 52px;
   }
-
+   
  
   .sumbitBt {
      height: 50px;
@@ -202,7 +212,7 @@ export default {
    }    
 
     .title {
-       margin-bottom: 8px;
+       margin-bottom: 20px;
     }
      .sort{
            position: absolute;
@@ -233,7 +243,7 @@ export default {
            background: #f6f6f6;
            margin-bottom: 8px;
            &.active {
-             background: #a3d3f6;
+             background: #b9eb79;
 
            }
          }
