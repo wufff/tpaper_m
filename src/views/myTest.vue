@@ -30,13 +30,13 @@
                           <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题'">
                                <li v-for="(item2,index2) in item.option" :class="{active:index2 === item.answer}" @click="asDx(index,index2)">
                                   <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
-                                  <span class="option">{{item2}}</span>
+                                  <span class="option" v-html="item2"></span>
                                 </li>                               
                           </ul>
                            <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '多选题'">
                                 <li v-for="(item2,index2) in item.option" :class="{active:item.answer[index2] == 1}" @click="asDd(index,index2)">
                                   <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
-                                  <span class="option">{{item2}}</span>
+                                  <span class="option" v-html="item2"></span>
                                 </li>                                                               
                           </ul>                                                      
                           <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">

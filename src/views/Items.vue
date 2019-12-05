@@ -40,7 +40,7 @@
               <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题' || $local.getQ_Zh(item.qtp_code) == '多选题'">
                  <li v-for="(item2,index2) in item.option">
                     <span>{{$local.ABC_Zh(index2)}}.</span>
-                    <span>{{item2}}</span>
+                    <span v-html="item2"></span>
                   </li>                               
               </ul>
               <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">

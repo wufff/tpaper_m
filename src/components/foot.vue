@@ -62,6 +62,7 @@ export default {
           var user = {
               is_vip:is
           }
+          console.log(user);
           this.$local.save("user",user);      
      })
   },

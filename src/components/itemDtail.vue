@@ -88,7 +88,7 @@ export default {
     }
   },
   created(){
-     console.log(this.user);
+     // console.log(this.$local.fetch("user"));
   },
   computed: {
     
@@ -131,6 +131,13 @@ export default {
       padding-top: 52px;
   }
    
+  .main {
+     .list{
+       overflow-y: auto;
+     }
+     padding-bottom: 0;
+  }
+
  
   .sumbitBt {
      height: 50px;

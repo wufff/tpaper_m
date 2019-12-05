@@ -106,9 +106,9 @@ export default {
   created(){
      var code;
      var url = window.location.href;
-     console.log(url)
+     // console.log(url)
      var parms = url.split("?")[1];
-     console.log(parms)
+     // console.log(parms)
      if(!parms){
         code ="";
      }else{
@@ -143,11 +143,11 @@ export default {
 
         indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code,code:code}).then((res)=>{
           this.paper_list = res.paper_list;
-          var is = res.is_vip == 1? true : false;
-          var user = {
-              is_vip:is
-          }
-          this.$local.save("user",user);
+          // var is = res.is_vip == 1 ? true : false;
+          // var user = {
+          //     is_vip:is
+          // }
+          // this.$local.save("user",user);
        })        
      })
   },
