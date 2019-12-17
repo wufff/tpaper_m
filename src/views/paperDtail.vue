@@ -38,8 +38,8 @@
             </div> -->
             <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题' || $local.getQ_Zh(item.qtp_code) == '多选题'">
                <li v-for="(item2,index2) in item.option">
-                  <span>{{$local.ABC_Zh(index2)}}.</span>
-                  <span v-html="item2"></span>
+                  <div class="sort">{{$local.ABC_Zh(index2)}}.</div>
+                  <div class="option" v-html="item2"></div>
                 </li>                               
             </ul>
             <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'" >
@@ -73,7 +73,6 @@
          </div>
       </div>
      <div class="control">
-
          <router-link to="/cart" tag="div" class="item">
             <span class="img myCart_rukou">
                <img src="../assets/myCart_rukou.png" alt="">
@@ -130,8 +129,8 @@ function createBalls (){
       return {
         text: {
           noneText: "",
-          dialgText:"在线自测仅支持客观题（单选题、多选题、判断）",
-          dialgText_:"试卷中如含有主观题,点击确定,后系统将会自动过滤掉主观题"
+          dialgText:"在线自测仅支持客观题（单选题、多选题、判断题）",
+          dialgText_:"试卷中如含有主观题,点击确定后,系统将会自动过滤掉主观题"
         },
         datalist: [],
         ball_off:true,
@@ -258,8 +257,7 @@ function createBalls (){
      showAlert() {
           this.$createDialog({
             type: 'confirm',
-            title: this.text.dialgText,
-            content: this.text.dialgText_,
+            content: "<div class='control_head'>"+ this.text.dialgText+"</div><div>"+this.text.dialgText_ +"</div>",
             onConfirm:()=>{
                if(this.is_online_qtrunk == 1) {
                   this.$router.push({path:"/myTest",query:{id:this.$route.query.id}});

@@ -11,14 +11,24 @@
       </div>
      </div>      
      <div class="main">
-         <div class="list">
+              <div class="list">
              <div class="content">
-                <input type="password" v-model="passwrod" class="usename" placeholder="请设置密码">     
+              <ul>
+                <li class="item">
+                     <cube-input 
+                    v-model="passwrod" 
+                    :placeholder="placeholder2" 
+                    :type="type2"
+                     @blur.native.capture="handleBug">
+                     </cube-input>                       
+                </li>
+              </ul>
+                <!-- <input type="password" v-model="passwrod" class="usename" placeholder="请设置密码">  -->         
              </div>
              <div class="btn_subimt" @click="submit">
                  确定
              </div>
-         </div>
+         </div>         
      </div>
   </div>
 </template>
@@ -31,7 +41,9 @@ export default {
   name: 'items',
   data(){
      return {
-       passwrod:""
+       passwrod:"",
+       placeholder2:"请设置密码",
+       type2:"password"
      }
   },
 
@@ -82,7 +94,13 @@ export default {
                      txt: "至少设置6位密码"
               }).show();                            
         }
-     }  
+     },
+    handleBug() {
+        console.log("handleBug")
+        let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+        window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+    }          
+
   },
   components: {
      

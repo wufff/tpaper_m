@@ -13,9 +13,25 @@
      <div class="main">
          <div class="list">
              <div class="content">
-                <input type="text" v-model="usename" class="usename" placeholder="请输入手机号">
+                <!-- <input type="text" v-model="usename" class="usename" placeholder="请输入手机号"> -->
+                <div class="item clearfix">
+                    <cube-input 
+                      v-model="usename" 
+                      @blur.native.capture="handleBug" 
+                      :clearable="clearable"
+                      :placeholder="placeholder1"
+                     ></cube-input>                     
+                </div>                  
                  <div class="item clearfix">
-                   <input type="text" v-model="code" class="code" placeholder="输入验证码">
+                   <!-- <input type="text" v-model="code" class="code" placeholder="输入验证码"> -->
+                   <cube-input 
+                      v-model="code" 
+                      class='code'
+                      @blur.native.capture="handleBug" 
+                      :placeholder="placeholder2"
+                      :autocomplete="autocomplete"
+                      :maxlength = "maxCode"
+                     ></cube-input>                         
                    <span class="codeBtn" v-show="!show" @click="getcode()">获取验证码</span>
                    <span class="codeBtn" v-show="show">( {{startTime}} )</span>
                 </div> 
@@ -41,7 +57,15 @@ export default {
        code:"",
        usename:"",
        passwrod:"",
-       show:false
+       show:false,
+       maxCode:6,
+       autocomplete:false,
+       placeholder1:"请输入手机号",
+       placeholder2:"请输入验证码",
+       clearable:{
+            visible: true, 
+            blurHidden: false          
+       }
      }
   },
   computed:{
@@ -106,6 +130,11 @@ export default {
      goToyz(){
         var id = this.$route.query.redr;
         this.$router.push({path:"/login_ma",query:{redr:id}});
+     },
+     handleBug() {
+        console.log("handleBug")
+        let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+        window.scrollTo(0, Math.max(scrollHeight - 1, 0))
      }
   },
   components: {
@@ -156,7 +185,7 @@ export default {
           font-size: 15px;
           margin-bottom: 20px;
        }     
-     input.code {
+     .code {
         width: 150px;
         float: left;
      }

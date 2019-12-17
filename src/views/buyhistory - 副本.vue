@@ -15,7 +15,6 @@
 	          <cube-scroll
 		          ref="scroll" 
 		          :options="options"
-              :data="datalist"
               @pulling-up="onPullingUp"
               >
             <!--   <div class="scrollwrap" v-show="datalist.length < 1" v-if="ready">

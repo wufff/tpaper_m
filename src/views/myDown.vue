@@ -14,7 +14,7 @@
         <div class="list">
             <div class="head-title">
                <h5>{{title}}</h5>
-               <span>123 共题12123</span>
+               <span>{{paperTitle.stage_subject_descript}} 共 {{paperTitle.paper_q_count}} 题</span>
                <span class="time">{{time}}</span>
            </div> 
            <div class="type">
@@ -53,6 +53,7 @@ export default {
         email:"",
         title:"",
         time:"",
+        paperTitle:"",
         options: [
           {
             label: '附带答案与解析',
@@ -72,6 +73,7 @@ export default {
   created(){
       var id = this.$route.query.id;
       myDwon(1,{paper_id_crc32:id}).then((data)=>{
+         this.paperTitle = data;
          this.title = data.paper_title;
          this.time = data.paper_creation_offset;
          this.email = data.email;
@@ -84,9 +86,9 @@ export default {
      sumbit(){
         if(!this.email){
             this.$createToast({
-                        type: 'none',
-                        time: 800,
-                        txt: `请输入邮箱`
+                type: 'none',
+                time: 800,
+                txt: `请输入邮箱`
             }).show();             
         }else{
             var obj = {
@@ -96,10 +98,13 @@ export default {
             }
             down(3,obj).then((data)=>{
                this.$createToast({
-                        type: 'none',
-                        time: 800,
-                        txt: data
-                 }).show();                 
+                    type: 'none',
+                    time: 1000,
+                    txt: data
+                 }).show();    
+                setTimeout(function(){
+                    window.history.go(-1);
+                },1000)             
             })
 
         }

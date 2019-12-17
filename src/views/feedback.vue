@@ -34,6 +34,7 @@
                  <cube-upload
                   action="http://libo5050.tpaper.dev.dodoedu.com/Commonajax/uploadExcel"
                   :simultaneous-uploads="1"
+                  :max="max"
                   @file-success="filesUp"
                   @file-removed="removed"
                   @files-added="filesAdded"/>
@@ -61,6 +62,7 @@ export default {
         maxlength:120,
         maov:"",
         tell:"",
+        max:4,
         fileValue:[]
      }
   },
@@ -146,7 +148,7 @@ export default {
   
    .upload {
       padding: 0 15px;
-      margin-bottom: 140px;
+      margin-bottom: 70px;
    }
 
    // .btnW {

@@ -21,7 +21,8 @@
         <div>
         </div>  
         <div class="scrollwrap">
-        <span class="pionter" v-show="!user.is_vip">非会员只保留3个月错题记录，请及时整理错题。</span>
+        <span class="pionter" v-show="!user.is_vip" v-if="datalist.length > 0">非会员只保留3个月错题记录，请及时整理错题。</span>
+        <div class="noneData" v-if="datalist.length < 1">{{text.noneText}}</div>
         <div class="test" v-for="(item,index) in datalist">
            <div class="top" @click="showDtail(item.master_code_crc32)">
               <div class="title"> 
@@ -182,7 +183,6 @@ export default {
           page:this.page.current  
        }
        history_ct(type,aDate).then((data)=>{
-            console.log(data);
           if(first){
              this.$refs.scroll.scrollTo(0,0,0);
              this.datalist = data.qtrunk_list;
@@ -194,6 +194,7 @@ export default {
               this.$refs.scroll.forceUpdate();
               return;
           } 
+          this.text.noneText ="暂无下载记录！"
           this.page.totle = data.page;
           this.page.current ++;
        })

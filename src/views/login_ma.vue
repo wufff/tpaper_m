@@ -13,9 +13,21 @@
      <div class="main">
          <div class="list">
              <div class="content">
-                <input type="text" v-model="usename" class="usename" placeholder="请输入手机号">
                 <div class="item clearfix">
-                   <input type="password" v-model="password" class="usename" placeholder="请输入密码">
+                     <cube-input 
+                      v-model="usename" 
+                      @blur.native.capture="handleBug" 
+                      :clearable="clearable"
+                      :placeholder="placeholder1"
+                      ></cube-input>
+                </div>
+                <div class="item clearfix">
+                    <cube-input 
+                    v-model="password" 
+                    :placeholder="placeholder2" 
+                    :type="type2"
+                     @blur.native.capture="handleBug">
+                     </cube-input>
                 </div>
                 <div class="notice">
                     <span  @click="goForgaet">忘记密码</span>
@@ -45,7 +57,14 @@ export default {
   data(){
      return {
        usename:"",
-       password:""
+       password:"",
+       placeholder1:"请输入手机号(账号)",
+       placeholder2:"请输入密码",
+       clearable:{
+            visible: true, 
+            blurHidden: false          
+       },
+       type2:"password"
      }
   },
 
@@ -63,6 +82,11 @@ export default {
         var id = this.$route.query.redr;
         this.$router.push({path:"/login",query:{redr:id}});
      },
+    handleBug() {
+        console.log("handleBug")
+        let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+        window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+     },      
      subimt(){
         if(this.usename != "" && this.password != ""){
            var statTime_ =  Date.parse(new Date());
@@ -85,7 +109,7 @@ export default {
                user_pwd:this.password,
                user_mobile:this.usename,
            }
-            LOGIN_M(3, obj).then((data) => {
+            LOGIN_M(1, obj).then((data) => {
                // console.log(data);
               if (typeof data == 'object') {
                 var token = data.sid;
@@ -95,7 +119,9 @@ export default {
                 if(headUrl){
                    window.location.href = headUrl;
                 }else{
-                   this.$router.push({path:hash});
+                  
+                    this.$router.push({path:hash});
+                                     
                 }
               } else {
                 this.$createToast({
@@ -231,7 +257,7 @@ export default {
       background-color: #37aafd;
       font-size: 17px;
       letter-spacing: 4px;
-      border-radius: 5px;
+      border-radius: 3px;
       margin-bottom: 35px;
    }
 

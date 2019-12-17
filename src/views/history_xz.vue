@@ -19,6 +19,7 @@
           >        
           <div class="scrollwrap">
                <div class="recommend">
+                <div class="noneData" v-if="datalist.length < 1">{{text.noneText}}</div>
                  <ul class="list">
                       <li v-for="(item,index) in datalist">
                          <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="div" class="top">
@@ -63,6 +64,9 @@ export default {
   name: 'home',
   data(){
      return {
+        text:{
+           noneText:""
+        },          
         options:{
            click:true,
            bounce:false,
@@ -104,7 +108,7 @@ export default {
      },
      renderPages(tpye,isfisrt,fun){
          history_xz(tpye,{id:this.lastId}).then((data)=>{
-            
+            this.text.noneText ="暂无下载记录！"
             if(isfisrt){
                this.datalist = data;
             }else{

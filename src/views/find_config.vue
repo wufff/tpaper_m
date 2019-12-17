@@ -13,7 +13,17 @@
      <div class="main">
          <div class="list">
              <div class="content">
-                <input type="password" v-model="passwrod" class="usename" placeholder="请设置密码">     
+              <ul>
+                <li class="item">
+                     <cube-input 
+                    v-model="passwrod" 
+                    :placeholder="placeholder2" 
+                    :type="type2"
+                     @blur.native.capture="handleBug">
+                     </cube-input>                       
+                </li>
+              </ul>
+                <!-- <input type="password" v-model="passwrod" class="usename" placeholder="请设置密码">  -->         
              </div>
              <div class="btn_subimt" @click="submit">
                  确定
@@ -32,7 +42,9 @@ export default {
   name: 'items',
   data(){
      return {
-       passwrod:""
+       passwrod:"",
+       type2:"password",
+       placeholder2:"请设置密码"
      }
   },
 
@@ -54,9 +66,23 @@ export default {
             }
             // console.log(obj);
            RESETPWD(3,obj).then((data)=>{
+               console.log(data);
                if( data == "更新成功"){
                     var hash = this.$route.query.redr;  
-                    this.$router.push({path:hash}); 
+                    var token = data.sid;
+                    this.$local.save("token",token);
+                    var headUrl = data.header_url;
+                    if(headUrl){
+                        window.location.href = headUrl;
+                    }else{
+                      if(hash) {
+                         this.$router.push("/")
+                      }else{
+                        setTimeout(()=>{
+                            this.$router.push({path:hash});
+                        },400)
+                      }                      
+                  }                      
                }else{
                    this.$createToast({
                           type: 'none',
@@ -74,7 +100,12 @@ export default {
         }else{
            // console.log(123);
         }
-     }  
+     },
+     handleBug() {
+        console.log("handleBug")
+        let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+        window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+    }       
   },
   components: {
      
@@ -141,7 +172,7 @@ export default {
         width: 110px;
         background: #37aafd;
         color:#fff;
-        border-radius: 5px;
+        border-radius: 2px;
      }
      .notice{
         padding-left: 32px;

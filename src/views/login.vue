@@ -13,9 +13,23 @@
      <div class="main">
          <div class="list">
              <div class="content">
-                <input type="text" v-model="usename" class="usename" placeholder="请输入手机号">
                 <div class="item clearfix">
-                   <input type="text" v-model="code" class="code" placeholder="输入验证码">
+                    <cube-input 
+                      v-model="usename" 
+                      @blur.native.capture="handleBug" 
+                      :clearable="clearable"
+                      :placeholder="placeholder1"
+                     ></cube-input>                     
+                </div>  
+                <div class="item clearfix">
+                   <cube-input 
+                      v-model="code" 
+                      class='code'
+                      @blur.native.capture="handleBug" 
+                      :placeholder="placeholder2"
+                      :autocomplete="autocomplete"
+                      :maxlength = "maxCode"
+                     ></cube-input>                    
                    <span class="codeBtn" v-show="!show" @click="getcode()">获取验证码</span>
                    <span class="codeBtn" v-show="show">( {{startTime}} )</span>
                 </div>    
@@ -47,7 +61,15 @@ export default {
        code:"",
        usename:"",
        passwrod:"",
-       show:false
+       show:false,
+       clearable:{
+          visible: true, 
+          blurHidden: false          
+       },
+       autocomplete:false,
+       placeholder1:"请输入手机号",
+       placeholder2:"请输入验证码",
+       maxCode:6
      }
   },
   computed:{
@@ -63,6 +85,10 @@ export default {
      back(){
           this.$router.push({path:'/'});
      },
+     handleBug() {
+        let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+        window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+    },      
      timeStart(){
       var time =  setInterval(()=>{
          this.startTime --;
@@ -108,12 +134,15 @@ export default {
                     if(hash) {
                        this.$router.push("/")
                     }else{
-                        this.$router.push({path:hash});
+                      setTimeout(()=>{
+                          this.$router.push({path:hash});
+                      },400)
                     }                      
                   }                 
               }else if (is_pwd == 0 ){
                   var token = data.sid;
                   this.$local.save("token",token)
+
                   this.$router.push({path:'/congfig',query:{redr:hash}});
               }else {
                  this.$createToast({
@@ -178,7 +207,7 @@ export default {
           font-size: 15px;
           margin-bottom: 20px;
        }     
-     input.code {
+     .code {
         width: 150px;
         float: left;
      }
@@ -245,7 +274,7 @@ export default {
       background-color: #37aafd;
       font-size: 17px;
       letter-spacing: 4px;
-      border-radius: 5px;
+      border-radius: 3px;
       margin-bottom: 35px;
    }
 

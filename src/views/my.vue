@@ -2,7 +2,7 @@
   <div class="page">
        <div class="top">
           <img src="http://wufff.static.dev.dodoedu.com/fztkPage/frontend/images/headbj.png" alt="" class="headimg">
-          <span @click="goLogin">{{name}}</span>
+          <span>{{name}}</span>
           <div class="govip" @click="goVip" >
              <span class="img vip">
                <img src="../assets/vip.png" alt="">
@@ -103,16 +103,6 @@ export default {
       this.$router.push({
         path: "/buy"
       });
-    },
-    goLogin() {
-      var url = window.location.href;
-      var hash = url.split("#")[1];
-      this.$router.push({
-        path: "/login",
-        query: {
-          redr: hash
-        }
-      })
     },
     out() {
       OUT(1).then((data) => {

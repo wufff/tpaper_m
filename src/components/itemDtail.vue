@@ -21,8 +21,8 @@
                         </div>
                       <ul class="aswerbox" v-if="$local.getQ_Zh(data.qtp_code) == '单选题'">
                          <li v-for="(item2,index2) in data.option" :class="{active:index2 == data.right_answer}">
-                            <span>{{$local.ABC_Zh(index2)}}.</span>
-                            <span>{{item2}}</span>
+                            <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
+                            <span class="option" v-html="item2"></span>
                           </li>                               
                       </ul>
                        <ul class="aswerbox" v-if="$local.getQ_Zh(data.qtp_code) == '多选题'">
@@ -36,11 +36,18 @@
                             <span>{{item2}}</span>
                          </li>                            
                       </ul>  
-                       <ul class="aswerbox" v-if="$local.getQ_Zh(data.qtp_code) == '填空题'">
-                         <li v-for="(item2,index2) in data.right_answer">
+                      <div class="aswerbox" v-if="$local.getQ_Zh(data.qtp_code) == '填空题'">
+                         <div class="aswer_label">答案：</div>
+                         <div class="aswer_content" v-for="(item2,index2) in data.right_answer">
                             <span>{{item2}}</span>
-                         </li>                            
-                      </ul>                                                 
+                         </div>
+                      </div>
+                       <div class="aswerbox" v-if="$local.getQ_Zh(data.qtp_code) == '简答题'">
+                         <div class="aswer_label">答案：</div>
+                         <div class="aswer_content">
+                            <span v-html='data.right_answer'></span>
+                         </div>
+                      </div>                                                                  
                     </div>  
                     <div class="analysis">
                        <div class="inner" v-if="user.is_vip">
@@ -232,6 +239,13 @@ export default {
            color:#000000;       
       }    
     .aswerbox {
+         padding-left: 0;
+         .aswer_label { 
+            display: inline; 
+          }
+        .aswer_content{
+           display: inline-block; 
+        }
          padding-left:12px; 
          .sort{
            position: absolute;

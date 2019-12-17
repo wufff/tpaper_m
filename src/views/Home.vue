@@ -122,7 +122,7 @@ export default {
        }
      }
 
-     console.log(code);
+     // console.log(code);
 
      subList(2).then((res)=>{
         var data = res;

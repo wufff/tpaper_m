@@ -45,13 +45,13 @@
      	 </div>
      </div>
 
-        <div class="downlist" v-show="downlistVisble">
+        <div class="downlist" v-show="downlistVisble" @click="hidedownList">
                 <transition name="up">
                   <ul class="content"  v-show="downlistVisble">
                       <li class="item" 
                       :class="{active:index == selectdowinIndex[currentSelect]}" 
                       v-for="(item,index) in downlistData"
-                      @click="select(item.name,item.id,index)"
+                      @click.stop="select(item.name,item.id,index)"
                       >
                       {{item.name}}
                     </li>
@@ -146,6 +146,9 @@ computed:{
   methods:{
      back(){
      	   window.history.go(-1);
+     },
+     hidedownList(){
+       this.downlistVisble = false;
      },
     select(name,id,index){
         this.selectValue[this.currentSelect].name = name;

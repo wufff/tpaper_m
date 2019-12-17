@@ -31,6 +31,16 @@ body, html, #app {
     color:#999;
 }
 //===========单件
+
+
+.item input, .item .cube-input,  .item.cube-input-clear {
+    background: #f6f6f6;
+}
+.item input{
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+}
 .head {
     height: 50px;
     background-color: #37aafd;
@@ -183,7 +193,7 @@ h3{
       margin-right: 3px;
    }    
     .title {
-       margin-bottom: 8px;
+       margin-bottom: 18px;
        position: relative;
        .sort {
          position: absolute;
@@ -225,7 +235,7 @@ h3{
         .addItemBt{
            position: absolute;
            right: 0;
-           bottom: 0;
+           bottom: -7px;
            border:1px solid #919191;
            border-radius: 2px;
            padding: 6px  9px;
@@ -233,7 +243,7 @@ h3{
         .addItemBt_y{
            position: absolute;
            right: 0;
-           bottom: 0;
+           bottom: -7px;
            background-color: #37aafd;
            color: #fff;
            border-radius: 2px;
@@ -353,4 +363,33 @@ body .cube-radio_selected .cube-radio-ui {
 .moveLeft-enter, .moveLeft-leave-to /* .fade-leave-active below version 2.1.8 */ {
     transform:translateX(100%);
 }
+
+body .cube-upload-def .cube-upload-file {
+    margin: 0 3px 2px 3px;
+}
+
+
+#del {
+   position:absolute;
+   right: 20px;
+   z-index: 999999;
+   top: 80px;
+   font-size: 24px;
+   color:#999;
+   font-weight: bold;
+}
+
+.cube-dialog-content-def .control_head {
+   color:#000;
+   padding-bottom: 5px;
+   font-size: 16px;
+}
+
+
+.cube-textarea-wrapper::after {
+   border:none;
+}
+// .cube-input {
+//    z-index: 9999;
+// }
 </style>

@@ -18,6 +18,7 @@
           @pulling-up="onPullingUp"
           >        
   	 	    <div class="scrollwrap">
+               <div class="noneData" v-if="datalist.length < 1">{{text.noneText}}</div>
                <div class="recommend">
                  <ul class="list">
                       <li v-for="(item,index) in datalist">
@@ -25,7 +26,7 @@
                             <h4>{{item.paper_title}}</h4>
                             <div class="info">
                                 <span>{{item.stage_descript}} {{item.subject_name}}</span>
-                                <span>共 6 题</span>
+                                <span>共 {{item.paper_q_count}} 题</span>
                             </div>
                             <span class="time">{{item.paper_creation_offset}}</span>                             
                          </router-link>
@@ -63,6 +64,9 @@ export default {
   name: 'home',
   data(){
      return {
+        text:{
+           noneText:""
+        },        
         options:{
            click:true,
            bounce:false,
@@ -75,7 +79,8 @@ export default {
            }                      
         },
         datalist:[],
-        hasNext:true
+        hasNext:true,
+        user:this.$local.fetch("user")
      }
   },
   computed:{
@@ -93,18 +98,25 @@ export default {
   methods:{
      back(){
        window.history.go(-1);
+
      },
      goDown(id){
-        this.$router.push({path:"/mydown",query:{id:id}})
+        // console.log(this.user);
+        var is_vip = this.user.is_vip;
+        if(is_vip){
+           this.$router.push({path:"/mydown",query:{id:id}})
+        }else{
+           this.$router.push({path:"/buy"})
+        }
      },
      delet(obj,index){
          delePaper(3,obj).then((data)=>{
-               this.datalist.splice(index,1)
+            this.datalist.splice(index,1)
         })
      },
      renderPages(tpye,isfisrt,fun){
          history_zj(tpye,{id:this.lastId}).then((data)=>{
-            
+            this.text.noneText = '暂无组卷记录！'
             if(isfisrt){
                this.datalist = data;
             }else{

@@ -35,7 +35,7 @@
                              <ul class="aswerbox" v-if="$local.getQ_Zh(key) == '单选题' || $local.getQ_Zh(key) == '多选题'">
                                <li v-for="(item2,index2) in item.option">
                                   <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
-                                  <span class="option">{{item2}}</span>
+                                  <div class="option" v-html="item2"></div>
                                 </li>                               
                             </ul>
                             <ul class="aswerbox" v-if="$local.getQ_Zh(key) == '判断题'">
@@ -73,7 +73,7 @@
          下载试卷
           <span class="border-right"></span>
          </div>
-         <div class="item"  @click="saveAll">
+         <div class="item"  @click="saveAll1">
             <span class="img save_b">
                <img src="../assets/save_b.png" alt="">
             </span>            
@@ -82,12 +82,30 @@
      </div>
      <itemDtail  ref="itemDtail" :data="itemOne"></itemDtail>
      <foot></foot>
+      <div class="buy-mark" v-show="dialog">
+               <transition name="up">
+                    <div class="buy-dialge" v-show="dialog">
+                          <h4>请输入试卷名称</h4>
+                          <cube-input v-model="value"  @blur.native.capture="handleBug" :clearable="clearable"></cube-input>
+                          <div class="bottomWrap">
+                             <div @click="centrol">取消</div>
+                             <div @click="save" class="subitbtn">确定</div>
+                          </div>
+                     </div>  
+              </transition>
+      </div>     
   </div>
 </template>
 <script>
 import foot from '@/components/foot.vue';
 import itemDtail from '@/components/itemDtail.vue'
 import { cart,deleItems,deleAll,savaCart,ITEMDTAIL} from '@/api';
+var date = new Date();
+var month = date.getMonth()+1;
+var day = date .getDate();
+
+
+
 export default {
   name: 'cart',
   data() {
@@ -97,14 +115,25 @@ export default {
          click:true,
          bounce:false,
        },     
+       clearable:{
+            visible: true, 
+            blurHidden: false          
+       },
        ready:false,   
        datalist:{},
        itemOne:{},
        head_s:this.$local.fetch("head_s"),
-       open:[true,true,true,true,true,true]
+       user:this.$local.fetch("user"),
+       open:[true,true,true,true,true,true],
+       paperTitle:"",
+       value:"",
+       dialog:false,
+       url:"/myDown"
     }
   },
   created(){
+    var str = month + "月"+ day + "日"+this.$local.stage_zh(this.head_s.stage_code) + this.head_s.subject_name + "试卷"
+    this.value = str;
     cart(1).then((data)=>{
        console.log(data);
        this.datalist = data;
@@ -137,53 +166,42 @@ export default {
       })
     },     
     delAll(){
-       deleAll(3).then((data)=>{
-           this.datalist = {};
-           this.$store.dispatch("set_num",0);
-       })
+       this.$createDialog({
+           type: 'confirm',
+           title:'您将清空所有试题',
+           content: '是否确定？',
+           onConfirm: () =>{
+           deleAll(1).then((data)=>{
+                   this.datalist = {};
+                  this.$store.dispatch("set_num",0);
+               })                
+           }
+       }).show()
     },
     downLoad_b(){
-       this.dialog = this.$createDialog({
-        type: 'prompt',
-        title: '请输入试卷标题',
-        prompt: {
-          value: '',
-          placeholder: '输入试卷标题'
-        },
-        onConfirm: (e, promptValue) => {
-          if(!promptValue){
-             this.dialog.show();
-             return false;
-          }
-           var obj = {
-              paper_title:promptValue,
-              ...this.head_s
-           }
-           savaCart(3,obj).then((data)=>{
-                var id = data.paper_id;
-                this.$router.push({path:"/myDown",query:{id:id}})  
-           })
-        }
-      }).show()        
+      this.url = "/myDown";
+      if(this.user.is_vip){
+          this.dialog = true;
+      }else{
+         this.$router.push({path:"/buy"})    
+      }
     },
-    saveAll(){
-       this.dialog = this.$createDialog({
-        type: 'prompt',
-        title: '请输入试卷标题',
-        prompt: {
-          value: '',
-          placeholder: '输入试卷标题'
-        },
-        onConfirm: (e, promptValue) => {
-          if(!promptValue){
-             this.dialog.show();
-             return false;
-          }
-           var obj = {
-              paper_title:promptValue,
+    saveAll1(){
+      this.url = "/paperDtail";
+      this.dialog = true;
+    }, 
+    save(){
+       this.subit(this.url)
+    },
+    subit(url){
+       if(!this.value){
+            return
+       }else{
+          var obj = {
+              paper_title:this.value,
               ...this.head_s
-           }
-          savaCart(3,obj).then((data)=>{
+           }   
+        savaCart(3,obj).then((data)=>{
               this.$createToast({
                         type: 'none',
                         time: 500,
@@ -191,11 +209,19 @@ export default {
                }).show();  
                this.datalist  = {};  
                var id = data.paper_id;
-               this.$router.push({path:"/paperDtail",query:{id:id}})        
-          })
-        }
-      }).show()
-    }
+               this.dialog = false;
+               this.$router.push({path:url,query:{id:id}})        
+          })                   
+       }
+    },
+    centrol(){
+      this.dialog = false;
+    },
+    handleBug() {
+        console.log(123);
+        let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
+        window.scrollTo(0, Math.max(scrollHeight - 1, 0))
+    } 
   },
   computed:{
      lengths(){
@@ -242,6 +268,13 @@ export default {
        }
      }
   }
+
+
+  #del {
+     position: absolute;
+     bottom:0; 
+  }
+
 
   .itemClassfiy {
      background: #fff;
@@ -325,6 +358,71 @@ export default {
 
 
 
+.buy-mark {
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top:0;
+      z-index:999;
+      background: rgba(0,0,0,0.4);     
+      .buy-dialge {
+           width: 280px;
+           height: 144px;
+           border-radius: 3px;
+           background-color: #fff;
+           position: absolute;
+           margin-left: -140px;
+           margin-top: -72px;
+
+           left:50%;
+           top: 50%;
+           padding: 20px 15px 0 15px;
+           .nitco {
+              text-align: center;
+              color:#7c5724;
+              font-size: 16px;
+              margin-bottom: 20px;
+           }
+          .buyBt {
+              width: 252px;
+              color:#fff;
+              background-color: #a05f38;
+              text-align: center;
+              height: 43px;
+              line-height: 43px;
+              border-radius: 5px;
+              font-size: 16px;
+              margin: 0 auto;
+              letter-spacing: 2px;
+           }  
+         h4 {
+             text-align: center;
+         }  
+         .bottomWrap {
+            height: 50px;
+            position: absolute;
+            bottom: 0;
+            left:0;
+            right:0;
+            > div{
+               height: 50px;
+               width: 50%;
+               float: left;
+               line-height: 50px;
+               text-align: center;
+               color:#999;
+            }
+            > div.subitbtn {
+                 color:#37aafd;
+                 font-size: 16px;
+            }
+         }                
+      }
+ }
+
+
 
 
  .noneWarp {
@@ -384,3 +482,37 @@ export default {
   
  
 </style>
+<!-- var _this = this;
+       this.dialog = this.$createDialog({
+        type: 'prompt',
+        title: '请输入试卷标题',
+        prompt: {
+          value: this.mrTitle,
+          placeholder: '输入试卷标题'
+        },
+        onConfirm: (e, promptValue) => {
+          if(!promptValue){
+             this.dialog.show();
+             return false;
+          }
+         
+           var obj = {
+              paper_title:promptValue,
+              ...this.head_s
+           }
+           savaCart(3,obj).then((data)=>{
+                var id = data.paper_id;
+                this.$router.push({path:"/myDown",query:{id:id}})  
+           })
+        }
+       }).show()      
+
+      setTimeout(()=>{
+            document.querySelector('.cube-input-field').addEventListener(
+            'blur',
+            function(){
+              window.scrollTo(0,0);
+              this.$refs.scroll.scrollTo(0,0,0);
+            },false)                 
+      },10) 
+ -->

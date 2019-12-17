@@ -9,7 +9,7 @@ import 'amfe-flexible';
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import Utile from "./lib/utils"
 
-FastClick.attach(document.body);
+// FastClick.attach(document.body);
 Vue.use(VueAwesomeSwiper)
 Vue.use(Utile);
 

@@ -77,13 +77,13 @@
       <foot ref="foot"></foot>	
       <tree ref="tree" :treeList="tree"  @func="selectTree"></tree>
       <itemDtail  ref="itemDtail" :data="itemOne"></itemDtail>
-       <div class="downlist" v-show="downlistVisble">
+       <div class="downlist" v-show="downlistVisble" @click="hide">
             <transition name="up">
               <ul class="content"  v-show="downlistVisble">
                   <li class="item" 
                   :class="{active:index == selectdowinIndex[currentSelect]}" 
                   v-for="(item,index) in downlistData"
-                  @click="select(item.name,item.id,index)"
+                  @click.stop="select(item.name,item.id,index)"
                   >
                   {{item.name}}
                 </li>
@@ -230,11 +230,15 @@ export default {
         })
       }
     },
+    hide(){
+      this.downlistVisble = false;
+    },
     showDtail(id){
       this.$refs.itemDtail.show();
       ITEMDTAIL(1,{master_code_crc32:id}).then((data)=>{
           this.itemOne = data[0];
           this.$refs.itemDtail.ready();
+          console.log(data);
           // console.log(this.itemOne);
       })
     },
@@ -368,58 +372,7 @@ export default {
      }
    }
 
-   .test {
-    padding: 16px;
-    margin-top: 10px;
-    background-color: #fff;
-    .title {
-       margin-bottom: 8px;
-    }
-    .aswerbox {
-         padding-left:12px; 
-         .sort{
-           position: absolute;
-           left:2px;
-         }
-         .option {
-           padding-left: 20px;
-           display: block;
-         }
-         li {
-           border-radius: 2px;
-           // background-color: #a3d3f6;
-           padding: 6px;
-           position: relative;
-         }
-         margin-bottom: 30px;
-       }     
-     .bottom {
-        padding-left: 15px;
-        color:#919191;
-        position: relative;
-         .type{ 
-            margin-right: 20px;
-          }
-        .addItemBt{
-           position: absolute;
-           right: 0;
-           bottom: 0;
-           border:1px solid #919191;
-           border-radius: 2px;
-           padding: 6px  9px;
-        }
-        .addItemBt_y{
-           position: absolute;
-           right: 0;
-           bottom: 0;
-           background-color: #37aafd;
-           color: #fff;
-           border-radius: 2px;
-           padding: 6px  9px;           
-        }
-     }
 
-   }
 
 
 
