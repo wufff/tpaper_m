@@ -14,13 +14,9 @@
         <div class="list">
             <div class="head-title">
                <h5>{{title}}</h5>
-               <span>{{paperTitle.stage_subject_descript}} 共 {{paperTitle.paper_q_count}} 题</span>
+               <span> 共 {{paperTitle.view_count}} 题</span>
                <span class="time">{{time}}</span>
            </div> 
-           <div class="type" v-show="this.selectVisb">
-              <h5>试卷类型</h5>
-              <cube-radio-group v-model="selected" :options="options"/>
-           </div>
            <div class="email">
               <h5>邮箱</h5>
               <div class="content">
@@ -43,7 +39,7 @@
 
 <script>
 // @ is an alias to /src
-import { myDwon, down } from '@/api'
+import { myDwon, down,VEREMAL,DOWNDOC } from '@/api'
 
 export default {
   name: 'myDwon',
@@ -54,41 +50,24 @@ export default {
         title:"",
         time:"",
         paperTitle:"",
-        selectVisb:true,
-        options: [
-          {
-            label: '附带答案与解析',
-            value: 3
-          },
-          {
-            label: '附带答案',
-            value: 1
-          },
-          {
-            label: '附带解析',
-            value: 2
-          }
-       ]
+        selectVisb:true
      }
   },
   created(){
       var id = this.$route.query.id;
-      var sel = this.$route.query.sel;
-      if(sel == 1){
-          this.selectVisb = false;
-      }
-      myDwon(1,{paper_id_crc32:id}).then((data)=>{
+      VEREMAL(1,{paper_id:id}).then((res)=>{
+         var data = res.paper_info;
          this.paperTitle = data;
          this.title = data.paper_title;
-         this.time = data.paper_creation_offset;
-         this.email = data.email;
-      })
+         this.time = data.add_time;
+         this.email = data.email;          
+      })      
   },
   methods:{
      back(){
        window.history.go(-1);
      },
-     sumbit(){
+      sumbit(){
         if(!this.email){
             this.$createToast({
                 type: 'none',
@@ -96,31 +75,23 @@ export default {
                 txt: `请输入邮箱`
             }).show();             
         }else{
-            var obj = {};
-            if(sel == 1){
-               obj = {
-                 paper_id_crc32:this.$route.query.id,
-                 type:this.selected,
-                 email:this.email
-              }               
-            }else{
-                 obj = {
-                 paper_id_crc32:this.$route.query.id,
-                 email:this.email
-              }                   
+            let  obj = {
+                paper_id:this.$route.query.id,
+                email:this.email
             }
-           
-            down(3,obj).then((data)=>{
+            DOWNDOC(1,obj).then((data)=>{
+
                this.$createToast({
                     type: 'none',
                     time: 1000,
                     txt: data
-                 }).show();    
-                setTimeout(function(){
-                    window.history.go(-1);
-                },1000)             
+                 }).show();
+               if( data == "发送成功" ){
+                   setTimeout(function(){
+                       window.history.go(-1);
+                   },1000)
+               }
             })
-
         }
      }
   },
@@ -141,7 +112,7 @@ export default {
    	   padding:0 15px;
    	   background:url("../assets/arrow_right_z.png") no-repeat #dcaf72;
    	   background-size:  6px 15px;
-   	   background-position: 97% 10px;;
+   	   background-position: 97% 10px;
    	   .vipImg { 
           width: 16px;
           height: 14px;

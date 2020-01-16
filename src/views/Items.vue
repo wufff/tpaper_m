@@ -59,7 +59,7 @@
                   <span class="img add-img">
                     <img src="../assets/add.png" alt="">
                   </span> 
-                  试题栏
+                  试题篮
                 </span>
                 <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0" v-on:click.stop="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
                     <span class="img add-img_y">

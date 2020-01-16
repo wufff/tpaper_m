@@ -22,6 +22,7 @@ import congfig from "../views/congfig"
 import login_ma from "../views/login_ma"
 import find from "../views/find"
 import myDown from "../views/myDown"
+import myDown_doc from "../views/myDown_doc"
 import find_config from '../views/find_config'
 
 Vue.use(VueRouter);
@@ -133,6 +134,11 @@ const routes = [
       path: '/myDown',
       name: 'myDown',
       component:myDown
+  },
+  { 
+      path: '/myDown_doc',
+      name: 'myDown_doc',
+      component:myDown_doc
   },
   { 
     path: '/find_config',

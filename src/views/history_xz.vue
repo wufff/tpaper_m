@@ -2,10 +2,10 @@
   <div class="page">
       <div class="head">
         <span class="back" @click="back" >
-          <span class="img back-bt">
-            <img src="../assets/arrow_left_b.png" alt="">
-          </span>
-        </span>
+              <span class="img back-bt">
+                <img src="../assets/arrow_left_b.png" alt="">
+              </span>
+           </span>
           <div class="inner">
              下载记录
           </div>
@@ -25,10 +25,9 @@
                          <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="div" class="top">
                             <h4>{{item.paper_title}}</h4>
                             <div class="info">
-                                <span>{{item.stage_descript}} {{item.subject_name}}</span>
-                                <span>共 6 题</span>
+                                <span>共 {{item.paper_q_count}} 题</span>
                             </div>
-                            <span class="time">{{item.paper_creation_offset}}</span>                             
+                            <span class="time">{{item.add_time.slice(0,11)}}</span>                             
                          </router-link>
                          <div class="bottom clearfix">
                              <div class="tab" @click="delet({paper_code_crc32:item.paper_code_crc32},index)">
@@ -51,7 +50,6 @@
           </div>
        </cube-scroll>  
       </div>
-      
      </div>
   </div>
 </template>
@@ -108,9 +106,11 @@ export default {
      },
      renderPages(tpye,isfisrt,fun){
          history_xz(tpye,{id:this.lastId}).then((data)=>{
+            console.log(data);
             this.text.noneText ="暂无下载记录！"
             if(isfisrt){
                this.datalist = data;
+               console.log(this.datalist);
             }else{
                this.datalist.push(...data);
             }
@@ -136,7 +136,7 @@ export default {
       }    
   },  
   components: {
-   
+     
   }
 }
 </script>

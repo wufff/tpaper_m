@@ -30,8 +30,8 @@ body, html, #app {
 .before-trigger {
     color:#999;
 }
-//===========单件
 
+//===========单件
 
 .item input, .item .cube-input,  .item.cube-input-clear {
     background: #f6f6f6;
@@ -99,7 +99,7 @@ h3{
      height: 100%;
    }
  }
-  .downlist {
+.downlist {
       width: 100%;
       height: 100%;
        position: fixed;
@@ -124,6 +124,36 @@ h3{
        }
   }
 
+
+  .downbox {
+       width: 100%;
+       height: 100%;
+       position: fixed;
+       left:0;
+       right:0;
+       top:0;
+       z-index: 100;
+       background-color: rgba(0,0,0,0.5);   
+       padding-bottom: 50px;  
+       .downcontent {
+          background-color: #fff;
+          height: 140px;
+          position: absolute;
+          bottom:2px;
+          width: 100%;
+          text-align: center;
+          .h3{
+             padding-left: 10px;
+             padding-top: 15px;
+             text-align: left;
+             margin-bottom: 15px;
+             color:#777;
+          }
+          .vipBt {
+             color:#37aafd;;
+          }
+       }
+  }
 
 
  .back {
@@ -174,9 +204,7 @@ h3{
         color:#37aafd;
         font-size: 17px;
     }
- } 
-
-
+ }
 
 
  .test {
@@ -207,7 +235,7 @@ h3{
          padding-left: 15px;
       }
     }
-    .aswerbox {
+    .answerbox {
          padding-left:12px; 
          .sort{
            position: absolute;

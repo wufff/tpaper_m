@@ -83,7 +83,7 @@ export default {
         this.$router.push({path:"/login",query:{redr:id}});
      },
     handleBug() {
-        console.log("handleBug")
+        // console.log("handleBug")
         let scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0
         window.scrollTo(0, Math.max(scrollHeight - 1, 0))
      },      
@@ -92,7 +92,6 @@ export default {
            var statTime_ =  Date.parse(new Date());
            var statTime =  statTime_ / 1000;
            var overTime = statTime + 300;
-
            // var str = 'user_mobile='+this.usename + '&start_time=' + statTime +'&end_time=' + overTime;
            var obj = {
               user_mobile:this.usename,

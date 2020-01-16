@@ -38,14 +38,22 @@
                     <router-link to="/allpaper" tag="span" class="more">更多</router-link>
                  </h3>
                  <ul class="list">
-                      <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="li" v-for="(item,index) in paper_list" :key="index">
+                     <!--  <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="li" v-for="(item,index) in paper_list" :key="index">
                           <h4>{{item.paper_title}}</h4>
                           <div class="info">
                               <span>浏览：{{item.view_count}}</span>
                               <span>下载：{{item.download_count}}</span>
                           </div>
                           <span class="time">{{item.paper_creation_offset}}</span>
-                      </router-link>                                                                         
+                      </router-link>      -->   
+                      <li  v-for="(item,index) in paper_list" :key="index" @click="godown(item.id)">
+                          <h4>{{item.paper_title}}</h4>
+                          <div class="info">
+                              <span>类型：{{item.paper_extent_name}}</span>
+                              <span>大小：{{item.paper_size}}</span>
+                          </div>
+                          <span class="time">{{item.add_time}}</span>
+                      </li>                                                                                    
                  </ul>
                </div>             
           </div>
@@ -56,27 +64,37 @@
      <div class="selectBox" v-show="secetVisb">
        <div class="list">
         <cube-scroll
-          ref="scroll" 
-          :options="options">        
-          <div class="scrollwrap">  
-            <transition name="up">        
-                 <div class="content" v-show="secetVisb">
-                    <div class="item" v-for="(item,index) in subject_" >
-                        <h5>{{$local.stage_zh(index+1)}}</h5>
-                        <div class="inner clearfix">
-                           <span 
-                           v-for="(item1,index2) in item" 
-                           :class="{active:head_s.subject_code == item1.subject_code && head_s.stage_code == index+1}" 
-                           @click="selectSub(item1.subject_code,item1.subject_name,index)"
-                           >{{item1.subject_name}}</span>         
-                        </div>
-                    </div>           
-                 </div>
-            </transition>
-          </div>
-         
+              ref="scroll" 
+              :options="options">        
+              <div class="scrollwrap">  
+                <transition name="up">        
+                     <div class="content" v-show="secetVisb">
+                        <div class="item" v-for="(item,index) in subject_" >
+                            <h5>{{$local.stage_zh(index+1)}}</h5>
+                            <div class="inner clearfix">
+                               <span 
+                               v-for="(item1,index2) in item" 
+                               :class="{active:head_s.subject_code == item1.subject_code && head_s.stage_code == index+1}" 
+                               @click="selectSub(item1.subject_code,item1.subject_name,index)"
+                               >{{item1.subject_name}}</span>         
+                            </div>
+                        </div>           
+                     </div>
+                </transition>
+              </div>
            </cube-scroll>          
         </div>
+     </div>
+     <div class="downbox" v-show="downVisb" @click="hidedonw">
+         <transition name="up">
+            <div class="downcontent" v-show="downVisb">
+                 <div class="h3">将试卷发送至</div>
+                 <span class="img youxiang" @click="goitems()">
+                   <img src="../assets/youxiang.png" alt="">
+                   <span class="text">我的邮箱</span>
+                </span>
+            </div>
+        </transition>       
      </div>
   </div>
 </template>
@@ -84,7 +102,7 @@
 <script>
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
-import { indexApi, subList } from '@/api';
+import { indexApi, subList,VEREMAL } from '@/api';
 import  { mapState }  from 'vuex'
 export default {
   name: 'home',
@@ -94,10 +112,12 @@ export default {
            click:true,
            bounce:false           
         },
+        downVisb:false,
         secetVisb:false,
         paper_list:[],
         subject_:[],
         head_s:{},
+        godownId:""
      }
   },
   computed:{
@@ -142,6 +162,7 @@ export default {
        }
 
         indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code,code:code}).then((res)=>{
+          console.log(res);
           this.paper_list = res.paper_list;
           // var is = res.is_vip == 1 ? true : false;
           // var user = {
@@ -153,6 +174,13 @@ export default {
   },
 
   methods:{
+    hidedonw(){
+        this.downVisb = false;
+    },
+    godown(id){
+      this.downVisb = true;
+      this.godownId = id;
+    },
     showStduy(){
        this.secetVisb =  !this.secetVisb;
     },
@@ -170,6 +198,16 @@ export default {
       indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code}).then((res)=>{
           this.paper_list = res.paper_list;
       })       
+    },
+    goitems(){
+       console.log(this.godownId)
+       VEREMAL(1,{paper_id:this.godownId}).then((res)=>{
+         if(res.is_vip == 1){
+              this.$router.push({path:"/mydown_doc",query:{id:this.godownId}})
+         }else{
+              this.$router.push({path:"/buy"})
+         }
+       })
     }
   },
   components: {
@@ -180,6 +218,15 @@ export default {
 <style scoped lang="less">
     .main {
        padding-top: 50px;
+    }
+
+    .youxiang {
+        width: 48px;
+        height: 40px;
+        display: inline-block;
+        .text {
+           font-size: 12px;
+        }
     }
    .goVip {
    	   height: 34px;
@@ -216,6 +263,7 @@ export default {
    	  }
    }
 
+
    .recommend {
    	 background-color: #fff;
    	 padding: 6px 15px;
@@ -238,9 +286,16 @@ export default {
              right: 0;
              bottom:16px;
               color:#919191;
+              font-size: 14px;
            }        
      }
    }
+
+
+
+
+
+
 
    //下拉框
   .selectBox {

@@ -11,6 +11,7 @@ const items = api.post("/Commonajax/searchQtrunk")
 //更多试卷
 const recommend = api.post("/Index/pagePaperList");
 const PaperList = api.post("/Index/pagePaperList");
+const GETSUBJECT = api.post("/Index/bookSubjectList"); 
 
 //试卷详情
 const paperDtail = api.post("/Paper/paperInfo");  
@@ -44,8 +45,12 @@ const deledown = api.post("/Paper/deletePaperDownload")
 const history_ct =  api.post("/Papererrorrecord/paperErrorRecordList")        
 
 //下载试卷
+
+const VEREMAL = api.post("/Index/bookPaperSendEmail");
 const myDwon = api.post("/Paper/downloadPaper");
-const down = api.post("/Paper/postDownloadPaper")
+const down = api.post("/Paper/postDownloadPaper");
+const DOWNDOC = api.post("/Index/postPaperSendEmail");
+
 
 //登录
 const getCode = api.login("/Userlogin/sendCode");
@@ -106,5 +111,8 @@ export  {
     BUY,
     BUYHOS,
     FEEDBACK,
-    PAY
+    PAY,
+    VEREMAL,
+    GETSUBJECT,
+    DOWNDOC
 }

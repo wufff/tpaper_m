@@ -67,7 +67,7 @@ export default {
             // console.log(obj);
            RESETPWD(3,obj).then((data)=>{
                console.log(data);
-               if( data == "更新成功"){
+               if( typeof data == 'object'){
                     var hash = this.$route.query.redr;  
                     var token = data.sid;
                     this.$local.save("token",token);
