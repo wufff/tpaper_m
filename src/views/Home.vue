@@ -25,7 +25,7 @@
                 </router-link>
                 <router-link to="/allpaper" tag="div">
                   <img src="../assets/selects.png" alt="">
-                  <div class="name">试卷选题</div>
+                  <div class="name">试卷下载</div>
                 </router-link>
                 <router-link to="/my/history_ct" tag="div">
                   <img src="../assets/wrongs.png" alt="">

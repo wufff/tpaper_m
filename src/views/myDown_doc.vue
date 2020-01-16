@@ -14,8 +14,9 @@
         <div class="list">
             <div class="head-title">
                <h5>{{title}}</h5>
-               <span> 共 {{paperTitle.view_count}} 题</span>
-               <span class="time">{{time}}</span>
+                <span>类型：{{paper_extent_name}}</span>
+                <span>大小：{{paper_size}}</span>
+                <span class="time">{{time}}</span>
            </div> 
            <div class="email">
               <h5>邮箱</h5>
@@ -50,7 +51,9 @@ export default {
         title:"",
         time:"",
         paperTitle:"",
-        selectVisb:true
+        selectVisb:true,
+         paper_extent_name:"",
+         paper_size:""
      }
   },
   created(){
@@ -60,7 +63,10 @@ export default {
          this.paperTitle = data;
          this.title = data.paper_title;
          this.time = data.add_time;
-         this.email = data.email;          
+         this.email = data.email;
+         this.paper_extent_name = data.paper_extent_name;
+         this.paper_size = data.paper_size;
+
       })      
   },
   methods:{
@@ -283,10 +289,11 @@ export default {
     span {
        font-size: 14px;
        color:#919191;
+        margin-right: 10px;
     }
     .time {
        position: absolute;
-       bottom:10;
+       bottom:10px;
        right: 15px;
     }
   }   

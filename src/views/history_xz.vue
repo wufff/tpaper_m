@@ -32,7 +32,7 @@
                                 <h4>{{item.paper_title}}</h4>
                                 <div class="info">
                                     <span v-if="paper_type === 1">共 {{item.paper_q_count}} 题</span>
-                                    <span v-if="paper_type === 2">类型：{{item.paper_extent_name}}</span>
+                                    <span v-if="paper_type === 2" >类型：{{item.paper_extent_name}}</span>
                                     <span v-if="paper_type === 2">大小：{{item.paper_size}}</span>
                                 </div>
                                 <span class="time">{{item.add_time.slice(0,11)}}</span>
@@ -102,7 +102,17 @@ export default {
      }
   },
   created(){
-     this.renderPages(1,true);
+      let downTab = this.$local.fetch("downTab");
+      console.log(downTab);
+      if(downTab){
+          this.paper_type = downTab + 1;
+          this.current = downTab;
+      }else{
+          this.paper_type = 1;
+          this.current = 0;
+      }
+      console.log(this.current);
+      this.renderPages(1,true);
   },  
   methods:{
      back(){

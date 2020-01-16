@@ -140,7 +140,8 @@ export default {
   created(){
       var obj = {
           // sort_type:this.selectValue[0].id,
-          grade_code:this.selectValue[1].id,
+          grade_code:this.selectValue[0].id,
+          subject_code:this.selectValue[1].id,
           page:this.page.current,
       };
       PaperList(1,obj).then((data)=>{
@@ -203,7 +204,8 @@ computed:{
                 this.selectValue[1].id = "";
                 this.renderItems(1,"first");   
                 this.downlist[1] =  [{id:"",name:"全部学科",open: false}];
-                this.selectdowinIndex[1] = 0;         
+                this.selectdowinIndex[1] = 0;
+                this.renderItems(1,"first");
             }else{
                GETSUBJECT(1,{grade_code:id}).then((res)=>{
                              console.log(res);
@@ -212,7 +214,7 @@ computed:{
                                        id: item.sub_code,
                                        name:item.sub_name
                                    }
-                             })
+                             });
                             mapAryy.unshift({id:"",name:"全部学科"});
                             this.downlist[1] =  mapAryy;
                             console.log(this.downlist);
@@ -234,7 +236,8 @@ computed:{
      renderItems(type,fisrt){
        var obj = {
             // sort_type:this.selectValue[0].id,
-            grade_code:this.selectValue[1].id,
+            grade_code:this.selectValue[0].id,
+            subject_code:this.selectValue[1].id,
             page:this.page.current
         }
        PaperList(type,obj).then((data)=>{

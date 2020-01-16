@@ -5,7 +5,7 @@ let local = {
    },
    fetch(key){
       var str = localStorage.getItem(key)
-    	return JSON.parse(str) || {};
+    	return JSON.parse(str) || "";
    },
    stage_zh(str){
    	 if(str == 1){
