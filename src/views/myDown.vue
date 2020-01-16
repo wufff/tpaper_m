@@ -96,20 +96,10 @@ export default {
                 txt: `请输入邮箱`
             }).show();             
         }else{
-            var obj = {};
-            if(sel == 1){
-               obj = {
-                 paper_id_crc32:this.$route.query.id,
-                 type:this.selected,
-                 email:this.email
-              }               
-            }else{
-                 obj = {
-                 paper_id_crc32:this.$route.query.id,
-                 email:this.email
-              }                   
+            var obj = {
+                paper_id_crc32: this.$route.query.id,
+                email: this.email
             }
-           
             down(3,obj).then((data)=>{
                this.$createToast({
                     type: 'none',

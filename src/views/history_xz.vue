@@ -9,7 +9,12 @@
           <div class="inner">
              下载记录
           </div>
-     </div>       
+     </div>
+      <div class="tab_nav">
+          <div class="tab_item"
+               :class="{active:index == current}"
+               @click="changeTab(index)" v-for="(item,index) in tabData">{{item.name}}</div>
+      </div>
      <div class="main">
       <div class="list">
        <cube-scroll
@@ -22,13 +27,17 @@
                 <div class="noneData" v-if="datalist.length < 1">{{text.noneText}}</div>
                  <ul class="list">
                       <li v-for="(item,index) in datalist">
-                         <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="div" class="top">
-                            <h4>{{item.paper_title}}</h4>
-                            <div class="info">
-                                <span>共 {{item.paper_q_count}} 题</span>
-                            </div>
-                            <span class="time">{{item.add_time.slice(0,11)}}</span>                             
-                         </router-link>
+
+                             <div class="top" @click="goDetail(item.paper_code_crc32)">
+                                <h4>{{item.paper_title}}</h4>
+                                <div class="info">
+                                    <span v-if="paper_type === 1">共 {{item.paper_q_count}} 题</span>
+                                    <span v-if="paper_type === 2">类型：{{item.paper_extent_name}}</span>
+                                    <span v-if="paper_type === 2">大小：{{item.paper_size}}</span>
+                                </div>
+                                <span class="time">{{item.add_time.slice(0,11)}}</span>
+                             </div>
+
                          <div class="bottom clearfix">
                              <div class="tab" @click="delet({paper_code_crc32:item.paper_code_crc32},index)">
                                 <span class="img dele_h">
@@ -56,7 +65,7 @@
 
 <script>
 // @ is an alias to /src
-
+// <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="div" >
 import { history_xz,deledown} from '@/api'
 export default {
   name: 'home',
@@ -76,8 +85,11 @@ export default {
               }
            }                      
         },
+         current:0,
         datalist:[],
-        hasNext:true
+         tabData:[{id:1,name:"用户生成"},{id:2,name:"精选试卷"}],
+        hasNext:true,
+         paper_type:2
      }
   },
   computed:{
@@ -96,37 +108,48 @@ export default {
      back(){
        window.history.go(-1);
      },
+      changeTab(index){
+         this.current = index;
+         this.paper_type = index + 1;
+         this.datalist = [];
+         this.renderPages(1,true)
+      },
      goDown(id){
         this.$router.push({path:"/mydown",query:{id:id}})
      },
      delet(obj,index){
          deledown(3,obj).then((data)=>{
-               this.datalist.splice(index,1)
+             this.datalist.splice(index,1)
         })
      },
      renderPages(tpye,isfisrt,fun){
-         history_xz(tpye,{id:this.lastId}).then((data)=>{
+         history_xz(tpye,{id:this.lastId,paper_type:this.paper_type}).then((data)=>{
             console.log(data);
-            this.text.noneText ="暂无下载记录！"
+            this.text.noneText ="暂无下载记录！";
             if(isfisrt){
                this.datalist = data;
                console.log(this.datalist);
             }else{
                this.datalist.push(...data);
             }
-            if( data.length == 0 ){
+            if( data.length === 0 ){
                 this.$refs.scroll.forceUpdate();
-            }   
-            this.hasNext =  data.length == 0 ?  true : false ; 
+            }
             if(fun){
                fun(this.hasNext);
             }
         })       
      },
+      goDetail(id){
+         let type = this.paper_type
+          if(type === 1){
+              this.$router.push({path:"/paperDtail",query:{id:id}});
+          }
+      },
      onPullingUp(){
         var _this  = this;
         this.renderPages(3,false,function(has){
-            console.log(has);
+            // console.log(has);
             if(!has){
                 _this.$refs.scroll.forceUpdate();
             }else{
@@ -142,8 +165,26 @@ export default {
 </script>
 <style scoped lang="less">
     .main {
-       padding-top: 35px;
-       padding-bottom: 0px;
+       padding-top: 80px;
+       padding-bottom: 0;
+    }
+    .tab_nav{
+        width: 100%;
+        height: 45px;
+        line-height: 45px;
+        position: fixed;
+        left:0;
+        top:50px;
+        .tab_item {
+             width:50%;
+             float:left;
+             height: 45px;
+             text-align: center;
+             line-height: 45px;
+            &.active{
+                 color:#37aafd;
+            }
+        }
     }
    .goVip {
        height: 34px;

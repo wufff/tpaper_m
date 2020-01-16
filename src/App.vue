@@ -235,7 +235,7 @@ h3{
          padding-left: 15px;
       }
     }
-    .answerbox {
+    .aswerbox {
          padding-left:12px; 
          .sort{
            position: absolute;
