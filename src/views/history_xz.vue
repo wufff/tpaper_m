@@ -12,7 +12,7 @@
      </div>
       <div class="tab_nav">
           <div class="tab_item"
-               :class="{active:index == current}"
+               :class="{active:index === current}"
                @click="changeTab(index)" v-for="(item,index) in tabData">{{item.name}}</div>
       </div>
      <div class="main">
@@ -64,9 +64,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// <router-link :to="{path:'/paperDtail',query:{id:item.paper_code_crc32}}" tag="div" >
-import { history_xz,deledown} from '@/api'
+import { history_xz,deledown} from "@/api"
 export default {
   name: 'home',
   data(){
@@ -87,14 +85,14 @@ export default {
         },
          current:0,
         datalist:[],
-         tabData:[{id:1,name:"用户生成"},{id:2,name:"精选试卷"}],
+         tabData:[{id:1,name:"我的组卷"},{id:2,name:"精选试卷"}],
         hasNext:true,
          paper_type:2
      }
   },
   computed:{
      lastId(){
-        if(this.datalist.length == 0) {
+        if(this.datalist.length === 0) {
            return 0;
         }else{
           return this.datalist[this.datalist.length-1].id;
@@ -119,22 +117,27 @@ export default {
        window.history.go(-1);
      },
       changeTab(index){
+          this.$local.save("downTab",index);
          this.current = index;
          this.paper_type = index + 1;
          this.datalist = [];
          this.renderPages(1,true)
       },
      goDown(id){
-        this.$router.push({path:"/mydown",query:{id:id}})
+         let type = this.paper_type;
+         if(type === 1){
+             this.$router.push({path:"/mydown",query:{id:id}});
+         }else{
+             this.$router.push({path:"/mydown_doc",query:{id:id}})
+         }
      },
      delet(obj,index){
-         deledown(3,obj).then((data)=>{
+         deledown(3,obj).then(()=>{
              this.datalist.splice(index,1)
         })
      },
      renderPages(tpye,isfisrt,fun){
          history_xz(tpye,{id:this.lastId,paper_type:this.paper_type}).then((data)=>{
-            console.log(data);
             this.text.noneText ="暂无下载记录！";
             if(isfisrt){
                this.datalist = data;
@@ -151,13 +154,13 @@ export default {
         })       
      },
       goDetail(id){
-         let type = this.paper_type
+         let type = this.paper_type;
           if(type === 1){
               this.$router.push({path:"/paperDtail",query:{id:id}});
           }
       },
      onPullingUp(){
-        var _this  = this;
+        let _this  = this;
         this.renderPages(3,false,function(has){
             // console.log(has);
             if(!has){
@@ -201,9 +204,11 @@ export default {
        color:#7f5010;
        line-height: 35px;
        padding:0 15px;
-       background:url("../assets/arrow_right_z.png") no-repeat #dcaf72;
+       background-image:url("../assets/arrow_right_z.png");
        background-size:  6px 15px;
-       background-position: 97% 10px;;
+       background-position: 97% 10px;
+       background-color: #dcaf72;
+       background-repeat: no-repeat;
        .vipImg { 
           width: 16px;
           height: 14px;
@@ -273,7 +278,6 @@ export default {
            .tab {
               width: 50%;
               float: left;
-              color:#919191;
               font-size: 14px;
               color:#919191;
               text-align: center;

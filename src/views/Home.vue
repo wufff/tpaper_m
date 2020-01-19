@@ -74,7 +74,7 @@
                             <div class="inner clearfix">
                                <span 
                                v-for="(item1,index2) in item" 
-                               :class="{active:head_s.subject_code == item1.subject_code && head_s.stage_code == index+1}" 
+                               :class="{active:head_s.subject_code == item1.subject_code && head_s.stage_code == index+1}"
                                @click="selectSub(item1.subject_code,item1.subject_name,index)"
                                >{{item1.subject_name}}</span>         
                             </div>
