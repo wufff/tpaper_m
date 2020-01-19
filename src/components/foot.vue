@@ -36,7 +36,7 @@
 // v-on:enter="enter"（动画进入时）
 // v-on:after-enter="afterEnter" （动画进入完后）
 import  { mapState ,mapGetters }  from 'vuex'
-import  { cartNum }  from  '@/api'
+import  { cartNum }  from  '../api'
 
 function createBalls (){
     let ret = [];

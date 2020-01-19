@@ -101,8 +101,8 @@
 
 <script>
 // @ is an alias to /src
-import foot from '@/components/foot.vue'
-import { indexApi, subList,VEREMAL } from '@/api';
+import foot from '../components/foot.vue'
+import { indexApi, subList,VEREMAL } from '../api';
 import  { mapState }  from 'vuex'
 export default {
   name: 'home',
@@ -135,7 +135,7 @@ export default {
        var pasrm = parms.split("&");
        for (var i = 0;i<pasrm.length; i++){
           var key = pasrm[i].split("=")[0];
-           console.log(key)
+           //console.log(key)
           if(key == "code"){
              code = pasrm[i].split("=")[1]
           }
@@ -145,24 +145,25 @@ export default {
      // console.log(code);
 
      subList(2).then((res)=>{
-        var data = res;
-        for(let k in data) {  
-            this.subject_.push(data[k]); 
+        let data = res;
+        for(let k in data) {
+            if(!data.hasOwnProperty(k)) continue;
+            this.subject_.push(data[k]);
         } 
-       var head_save = this.$local.fetch("head_s"); 
+       let head_save = this.$local.fetch("head_s");
        if(!head_save.stage_code){
            this.head_s  = {
               stage_code:1,
               subject_code: this.subject_[0][0].subject_code,
               subject_name: this.subject_[0][0].subject_name
-           }
+           };
           this.$local.save("head_s",this.head_s);
        }else{
           this.head_s = head_save;
        }
 
         indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code,code:code}).then((res)=>{
-          console.log(res);
+          //console.log(res);
           this.paper_list = res.paper_list;
           // var is = res.is_vip == 1 ? true : false;
           // var user = {
@@ -200,9 +201,9 @@ export default {
       })       
     },
     goitems(){
-       console.log(this.godownId)
+       //console.log(this.godownId)
        VEREMAL(1,{paper_id:this.godownId}).then((res)=>{
-         if(res.is_vip == 1){
+         if(res.is_vip === 1){
               this.$router.push({path:"/mydown_doc",query:{id:this.godownId}})
          }else{
               this.$router.push({path:"/buy"})
@@ -233,9 +234,8 @@ export default {
    	   color:#7f5010;
    	   line-height: 35px;
    	   padding:0 15px;
-   	   background:url("../assets/arrow_right_z.png") no-repeat #dcaf72;
-   	   background-size:  6px 10px;
-   	   background-position: 97% 11px;;
+   	   background:url("../assets/arrow_right_z.png") no-repeat #dcaf72 97% 11px;
+   	   background-size:6px 10px;
    	   .vipImg { 
           width: 16px;
           height: 14px;
