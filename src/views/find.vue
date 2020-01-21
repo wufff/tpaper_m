@@ -9,32 +9,32 @@
           <div class="inner">
             找回密码
       </div>
+
      </div>      
      <div class="main">
          <div class="list">
              <div class="content">
                 <!-- <input type="text" v-model="usename" class="usename" placeholder="请输入手机号"> -->
-                <div class="item clearfix">
-                    <cube-input 
-                      v-model="usename" 
-                      @blur.native.capture="handleBug" 
-                      :clearable="clearable"
-                      :placeholder="placeholder1"
-                     ></cube-input>                     
-                </div>                  
-                 <div class="item clearfix">
-                   <!-- <input type="text" v-model="code" class="code" placeholder="输入验证码"> -->
-                   <cube-input 
-                      v-model="code" 
-                      class='code'
-                      @blur.native.capture="handleBug" 
-                      :placeholder="placeholder2"
-                      :autocomplete="autocomplete"
-                      :maxlength = "maxCode"
-                     ></cube-input>                         
-                   <span class="codeBtn" v-show="!show" @click="getcode()">获取验证码</span>
-                   <span class="codeBtn" v-show="show">( {{startTime}} )</span>
-                </div> 
+               <div class="item clearfix">
+                 <cube-input
+                         v-model="usename"
+                         @blur.native.capture="handleBug"
+                         :clearable="clearable"
+                         :placeholder="placeholder1"
+                 ></cube-input>
+
+                 <!-- <input type="text" v-model="code" class="code" placeholder="输入验证码"> -->
+                 <cube-input
+                         v-model="code"
+                         class='code'
+                         @blur.native.capture="handleBug"
+                         :placeholder="placeholder2"
+                         :autocomplete="autocomplete"
+                         :maxlength="maxCode"
+                 ></cube-input>
+                 <span class="codeBtn" v-show="!show" @click="getcode()">获取验证码</span>
+                 <span class="codeBtn" v-show="show">( {{startTime}} )</span>
+               </div>
                <div class="notice">
                     若该手机号未注册，我们会自动为您注册
                 </div>                                 

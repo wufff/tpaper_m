@@ -39,7 +39,7 @@
 
 <script>
 // @ is an alias to /src
-import foot from '@/components/foot.vue'
+import foot from '../components/foot.vue'
 
 
 

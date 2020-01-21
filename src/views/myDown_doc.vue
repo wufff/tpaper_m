@@ -57,16 +57,15 @@ export default {
      }
   },
   created(){
-      var id = this.$route.query.id;
+      let id = this.$route.query.id;
       VEREMAL(1,{paper_id:id}).then((res)=>{
-         var data = res.paper_info;
+         let data = res["paper_info"];
          this.paperTitle = data;
          this.title = data.paper_title;
-         this.time = data.add_time;
+         this.time = data["add_time"];
          this.email = data.email;
          this.paper_extent_name = data.paper_extent_name;
          this.paper_size = data.paper_size;
-
       })      
   },
   methods:{
@@ -84,9 +83,8 @@ export default {
             let  obj = {
                 paper_id:this.$route.query.id,
                 email:this.email
-            }
+            };
             DOWNDOC(1,obj).then((data)=>{
-
                this.$createToast({
                     type: 'none',
                     time: 1000,

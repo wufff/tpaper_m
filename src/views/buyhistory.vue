@@ -30,8 +30,8 @@
 				          <ul class="oder" v-for="(item,index) in datalist">
                      <li>
                         <div class="number">
-                           <span>订单号：{{item.order_id}}</span>
-                           <span class="status">{{item.pay_status_descript}}</span>
+                           <span>订单号：{{item["order_id"]}}</span>
+                           <span class="status">{{item.pay_status_descipt}}</span>
                         </div>
                         <div class="conetent">
                            <div class="left">
@@ -39,7 +39,7 @@
                               <span>{{item.add_time}}</span>
                            </div>
                            <div class="right">
-                                ¥ {{item.order_amount}}
+                             ¥ {{item["order_amount"]}}
                            </div>
                         </div>
                      </li>                             

@@ -74,10 +74,12 @@ export default {
   created(){
       var id = this.$route.query.id;
       var sel = this.$route.query.sel;
-      if(sel == 1){
+      if(sel === 1){
           this.selectVisb = false;
       }
-      myDwon(1,{paper_id_crc32:id}).then((data)=>{
+      myDwon(1,
+          {paper_id_crc32:id})
+          .then((data)=>{
          this.paperTitle = data;
          this.title = data.paper_title;
          this.time = data.paper_creation_offset;
@@ -96,7 +98,7 @@ export default {
                 txt: `请输入邮箱`
             }).show();             
         }else{
-            var obj = {
+            let obj = {
                 paper_id_crc32: this.$route.query.id,
                 email: this.email
             }
@@ -131,7 +133,7 @@ export default {
    	   padding:0 15px;
    	   background:url("../assets/arrow_right_z.png") no-repeat #dcaf72;
    	   background-size:  6px 15px;
-   	   background-position: 97% 10px;;
+   	   background-position: 97% 10px;
    	   .vipImg { 
           width: 16px;
           height: 14px;
@@ -274,7 +276,7 @@ export default {
           .dele_h {
               width: 18px;
               height: 18px;
-             position: relative;
+              position: relative;
               top:2px;
               margin-right: 2px;              
 
@@ -305,7 +307,7 @@ export default {
     }
     .time {
        position: absolute;
-       bottom:10;
+       bottom:10px;
        right: 15px;
     }
   }   

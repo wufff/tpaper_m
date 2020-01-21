@@ -11,7 +11,7 @@
         </div>
      </div> 
      <div class="timebox">
-         已用时：{{time}}</span>
+       <span>已用时：{{time}}</span>
          <span class="img img-time"  @click="showCard">
              <img src="../assets/time.png" alt="">
          </span>
@@ -25,26 +25,26 @@
                   <div class="test_test">
                         <div class="title">
                           <span class="sort">{{index + 1}}.</span>
-                          <span class="question" v-html="item.context"></span>
-                         </div> 
-                          <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题'">
+                          <span class="question" v-html="item.context"/>
+                         </div>
+                          <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) === '单选题'">
                                <li v-for="(item2,index2) in item.option" :class="{active:index2 === item.answer}" @click="asDx(index,index2)">
                                   <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
-                                  <span class="option" v-html="item2"></span>
+                                 <span class="option" v-html="item2"/>
                                 </li>                               
                           </ul>
-                           <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '多选题'">
-                                <li v-for="(item2,index2) in item.option" :class="{active:item.answer[index2] == 1}" @click="asDd(index,index2)">
+                           <ul class="aswerbox" v-if="'多选题'=== $local.getQ_Zh(item.qtp_code)">
+                                <li v-for="(item2,index2) in item.option" :class="{active:item.answer[index2] === 1}" @click="asDd(index,index2)">
                                   <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
-                                  <span class="option" v-html="item2"></span>
+                                  <span class="option" v-html="item2"/>
                                 </li>                                                               
                           </ul>                                                      
-                          <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">
+                          <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) === '判断题'">
                                <li v-for="(item2,index2) in pdoption" :class="{active:index2 === item.answer}" @click="asPd(index,index2)">
                                    <span>{{item2}}</span>
-                                </li>                               
-                          </ul>                            
-                    </div>                    
+                               </li>
+                          </ul>
+                    </div>
                </div>
             </swiper-slide>
             <!-- <div class="swiper-pagination" slot="pagination"></div> -->
@@ -56,18 +56,18 @@
                 上一题
                 <span class="border-right"></span>
               </div> -->
-            <div class="item disabled" v-show="currut == 0">
+            <div class="item disabled" v-show="currut === 0">
                 上一题
-                <span class="border-right"></span>
+              <span class="border-right"/>
             </div>
             <div class="item" v-show="currut > 0" @click="preSile">
                 上一题
-                <span class="border-right"></span>
+              <span class="border-right"/>
             </div>            
             <div class="item" @click="nextSile" v-show="datalist.length > currut + 1">                  
                下一题
             </div>
-             <div class="item disabled" v-show="datalist.length == currut + 1 ">                  
+             <div class="item disabled" v-show="datalist.length === currut + 1 ">
                下一题
             </div>            
       </div>
@@ -87,11 +87,10 @@
   </div>
 </template>
 <script>
-import foot from '@/components/foot.vue'; 
-import { swiper, swiperSlide } from 'vue-awesome-swiper';  
-import { myTest,subimtTest } from '@/api';
+import foot from '../components/foot.vue';
+import { swiper,swiperSlide } from 'vue-awesome-swiper';
+import { myTest,subimtTest } from '../api';
 import 'swiper/dist/css/swiper.css'
-
 
 export default {
   name: 'myTest',
@@ -123,7 +122,8 @@ export default {
         this.startTime();
         this.cardData = data;
         this.initCart();
-        for (var x in data){
+        for (let x in data){
+            if(!data.hasOwnProperty(x)) continue;
            this.datalist.push(...data[x]);
         }
      })

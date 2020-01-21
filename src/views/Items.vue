@@ -4,7 +4,7 @@
           <span class="moreBt" @click="showTree">
             <img src="../assets/more.png" alt="">
           </span>
-          知识点： <span class="space"></span>{{treeValue.name}}
+          知识点： <span class="space"/>{{treeValue.name}}
      </div>  	 
   	 <div class="filter clearfix">
          <div class="item" v-for="(item,index) in selectValue"  @click="selectTitle(index,item.current)">
@@ -13,7 +13,7 @@
               <img src="../assets/filter_up.png" v-show="item.open" alt="">
               <img src="../assets/filter_down.png" v-show="!item.open" alt="">
             </span>
-            <span class="border-right" v-show="index < 2"></span>
+           <span class="border-right" v-show="index < 2"/>
          </div>
      </div>
    <div class="main">
@@ -40,7 +40,7 @@
               <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题' || $local.getQ_Zh(item.qtp_code) == '多选题'">
                  <li v-for="(item2,index2) in item.option">
                     <span>{{$local.ABC_Zh(index2)}}.</span>
-                    <span v-html="item2"></span>
+                   <span v-html="item2"/>
                   </li>                               
               </ul>
               <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">
@@ -54,14 +54,14 @@
             </div>          
             <div class="bottom">
                 <span class="type">{{$local.getQ_Zh(item.qtp_code)}}</span>
-                <span>使用 {{item.usage_count}} 次</span>
-                <span class="addItemBt" v-on:click.stop="addNum_num({qtp_code:item.qtp_code,master_code:item.master_code,index:index},$event)" v-show="item.is_add_qtrunk == 1">
+                <span>使用 {{item["usage_count"]}} 次</span>
+                <span class="addItemBt" v-on:click.stop="addNum_num({qtp_code:item.qtp_code,master_code:item.master_code,index:index},$event)" v-show="item.is_add_qtrunk === 1">
                   <span class="img add-img">
                     <img src="../assets/add.png" alt="">
                   </span> 
                   试题篮
                 </span>
-                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0" v-on:click.stop="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
+                <span class="addItemBt_y" v-show="item.is_add_qtrunk === 0" v-on:click.stop="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
                     <span class="img add-img_y">
                       <img src="../assets/yes.png" alt="">
                     </span> 
@@ -74,7 +74,7 @@
       </div>
      
    </div>
-      <foot ref="foot"></foot>	
+      <foot ref="foot"/>
       <tree ref="tree" :treeList="tree"  @func="selectTree"></tree>
       <itemDtail  ref="itemDtail" :data="itemOne"></itemDtail>
        <div class="downlist" v-show="downlistVisble" @click="hide">
@@ -94,6 +94,7 @@
 </template>
 
 <script>
+
 // @ is an alias to /src
 import foot from '@/components/foot.vue'
 import tree from '@/components/tree.vue'

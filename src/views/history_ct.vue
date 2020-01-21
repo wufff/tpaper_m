@@ -54,13 +54,13 @@
             <div class="bottom">
                 <span class="type">{{$local.getQ_Zh(item.qtp_code)}}</span>
                 <span>使用 {{item.usage_count}} 次</span>
-                <span class="addItemBt" v-on:click="addNum_num({qtp_code:item.qtp_code,master_code:item.master_code,index:index},$event)" v-show="item.is_add_qtrunk == 1">
+                <span class="addItemBt" v-on:click="addNum_num({qtp_code:item.qtp_code,master_code:item.master_code,index:index},$event)" v-show="item.is_add_qtrunk === 1">
                   <span class="img add-img">
                     <img src="../assets/add.png" alt="">
                   </span> 
                   试题篮
                 </span>
-                <span class="addItemBt_y" v-show="item.is_add_qtrunk == 0" v-on:click="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
+                <span class="addItemBt_y" v-show="item.is_add_qtrunk === 0" v-on:click="deletItem({qtp_code:item.qtp_code,master_code:item.master_code,index:index})">
                     <span class="img add-img_y">
                       <img src="../assets/yes.png" alt="">
                     </span> 
@@ -77,8 +77,8 @@
        <router-link class="cart_rk" to="/cart" tag="div">
               <img src="../assets/cart_rk.png" alt="">
               <span class="num_num">{{num_num}}</span>
-      </router-link>  
-      <itemDtail  ref="itemDtail" :data="itemOne"></itemDtail>       
+      </router-link>
+    <itemDtail ref="itemDtail" :data="itemOne"/>
   </div>
 </template>
 
@@ -130,7 +130,7 @@ export default {
     },
     addNum_num(obj, event) {
       if(!this.user.is_vip){
-          if(this.num_num == 30){
+          if(this.num_num === 30){
               this.$createDialog({
                 type: 'confirm',
                 content: '<p class="vipContent">您的试题篮最多只能装30道试题，VIP用户可选50道试题，<br/>快开通VIP吧～</p>',
@@ -146,7 +146,7 @@ export default {
           }
       }
       if(this.user.is_vip){
-           if(this.num_num == 50){
+           if(this.num_num === 50){
                this.$createDialog({
                 type: 'alert',
                 content: '<p class="vipContent">您的试题篮最多只能装50道试题，请组卷下载后再添加吧。</p>',
@@ -190,17 +190,17 @@ export default {
           }else{
             this.datalist.push(...data.qtrunk_list);
           }
-          if(data.qtrunk_list.length == 0){
+          if(data.qtrunk_list.length === 0){
               this.$refs.scroll.forceUpdate();
               return;
           } 
-          this.text.noneText ="暂无下载记录！"
+          this.text.noneText ="暂无下载记录！";
           this.page.totle = data.page;
           this.page.current ++;
        })
     },
     onPullingUp(){
-       if(this.page.current == this.page.totle+1){
+       if(this.page.current === this.page.totle+1){
           this.$refs.scroll.forceUpdate();
        }else{
           this.renderItems(3); 

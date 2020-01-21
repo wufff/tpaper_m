@@ -14,20 +14,20 @@
          <div class="list">
              <div class="content">
                 <div class="item clearfix">
-                     <cube-input 
-                      v-model="usename" 
-                      @blur.native.capture="handleBug" 
-                      :clearable="clearable"
-                      :placeholder="placeholder1"
-                      ></cube-input>
+                  <cube-input
+                          v-model="usename"
+                          @blur.native.capture="handleBug"
+                          :clearable="clearable"
+                          :placeholder="placeholder1"
+                  />
                 </div>
                 <div class="item clearfix">
                     <cube-input 
                     v-model="password" 
                     :placeholder="placeholder2" 
                     :type="type2"
-                     @blur.native.capture="handleBug">
-                     </cube-input>
+                     @blur.native.capture="handleBug"
+                     />
                 </div>
                 <div class="notice">
                     <span  @click="goForgaet">忘记密码</span>
@@ -80,7 +80,7 @@ export default {
      },
      goToyz(){
         var id = this.$route.query.redr;
-        this.$router.push({path:"/login",query:{redr:id}});
+
      },
     handleBug() {
         // console.log("handleBug")

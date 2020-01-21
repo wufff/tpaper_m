@@ -14,12 +14,12 @@
          <div class="list">
              <div class="content">
                 <div class="item clearfix">
-                    <cube-input 
-                      v-model="usename" 
-                      @blur.native.capture="handleBug" 
+                    <cube-input
+                      v-model="usename"
+                      @blur.native.capture="handleBug"
                       :clearable="clearable"
                       :placeholder="placeholder1"
-                     ></cube-input>                     
+                     ></cube-input>
                 </div>  
                 <div class="item clearfix">
                    <cube-input 

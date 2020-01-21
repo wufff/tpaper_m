@@ -59,7 +59,7 @@
           </div>
        </cube-scroll>  
   	  </div>
-      <foot></foot>	
+       <foot/>
      </div>
      <div class="selectBox" v-show="secetVisb">
        <div class="list">
@@ -162,9 +162,9 @@ export default {
           this.head_s = head_save;
        }
 
-        indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code,code:code}).then((res)=>{
+        indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code,code:code}).then(({paper_list})=>{
           //console.log(res);
-          this.paper_list = res.paper_list;
+          this.paper_list = paper_list;
           // var is = res.is_vip == 1 ? true : false;
           // var user = {
           //     is_vip:is
@@ -190,26 +190,28 @@ export default {
           stage_code:index + 1,
           subject_code: code,
           subject_name: name
-       }        
+       }
        this.$local.save("head_s",this.head_s)
        this.showStduy();
        this.refList();
     },
     refList(){
-      indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code}).then((res)=>{
-          this.paper_list = res.paper_list;
+      indexApi(1,{stage_code:this.head_s.stage_code,subject_code:this.head_s.subject_code}).then(({paper_list})=>{
+          this.paper_list = paper_list;
       })       
     },
-    goitems(){
-       //console.log(this.godownId)
-       VEREMAL(1,{paper_id:this.godownId}).then((res)=>{
-         if(res.is_vip === 1){
-              this.$router.push({path:"/mydown_doc",query:{id:this.godownId}})
-         }else{
-              this.$router.push({path:"/buy"})
-         }
-       })
-    }
+      goitems() {
+          //console.log(this.godownId)
+          VEREMAL(1,
+              {paper_id: this.godownId})
+              .then(({is_vip}) => {
+                  if (is_vip === 1) {
+                      this.$router.push({path: "/mydown_doc", query: {id: this.godownId}})
+                  } else {
+                      this.$router.push({path: "/buy"})
+                  }
+              })
+      }
   },
   components: {
      foot
