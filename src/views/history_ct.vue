@@ -36,13 +36,13 @@
                       controls>
                   </video>
               </div> -->
-              <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '单选题' || $local.getQ_Zh(item.qtp_code) == '多选题'">
+              <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) === '单选题' || $local.getQ_Zh(item.qtp_code) === '多选题'">
                  <li v-for="(item2,index2) in item.option">
                     <span>{{$local.ABC_Zh(index2)}}.</span>
                     <span>{{item2}}</span>
                   </li>                               
               </ul>
-              <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) == '判断题'">
+              <ul class="aswerbox" v-if="$local.getQ_Zh(item.qtp_code) === '判断题'">
                  <li>
                     <span>对</span>
                  </li>
@@ -50,10 +50,10 @@
                     <span>错</span>
                  </li>                                       
               </ul>   
-            </div>         
+            </div>
             <div class="bottom">
                 <span class="type">{{$local.getQ_Zh(item.qtp_code)}}</span>
-                <span>使用 {{item.usage_count}} 次</span>
+                <span>使用 {{item["usage_count"]}} 次</span>
                 <span class="addItemBt" v-on:click="addNum_num({qtp_code:item.qtp_code,master_code:item.master_code,index:index},$event)" v-show="item.is_add_qtrunk === 1">
                   <span class="img add-img">
                     <img src="../assets/add.png" alt="">
