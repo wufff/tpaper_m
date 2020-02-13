@@ -3,7 +3,8 @@ import qs from 'qs';
 let storage = window.localStorage;
 let loading = document.getElementById("loading");
 let instance = axios.create({
-    baseURL: 'http://libo5050.tpaper.dev.dodoedu.com/',
+    // baseURL: 'http://libo5050.tpaper.dev.dodoedu.com/',
+    baseURL: 'https://tpaper.dodoedu.com/',
     timeout: 10000,
     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 });

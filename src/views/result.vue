@@ -36,19 +36,19 @@
                           <ul class="aswerbox" v-if=" key == 'QTP_OBJ_003'">
                              <li :class="{active:index2 == item.select_answer}" v-for="(item2,index2) in item.option">
                                 <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
-                                <span class="option">{{item2}}</span>    
+                                <span class="option" v-html="item2"></span>
                              </li>                                      
                           </ul>
                           <ul class="aswerbox" v-if=" key == 'QTP_OBJ_004'">
                              <li :class="{active:item.select_answer[index2] == 1}"  v-for="(item2,index2) in item.option">
                                 <span class="sort">{{$local.ABC_Zh(index2)}}.</span>
-                                <span class="option">{{item2}}</span>    
+                                <span class="option" v-html="item2"></span>
                              </li>                                      
                           </ul>
                           <ul class="aswerbox" v-if=" key == 'QTP_OBJ_006'">
                              <li :class="{active:index2 == item.select_answer }"   v-for="(item2,index2) in pdda">
                                 <span class="sort"></span>
-                                <span >{{item2}}</span>    
+                                <span v-html="item2"></span>
                              </li>                                      
                           </ul>                                                        
                           <div class="rightbox">正确答案： <span class="ringtSpan">{{item.right_answer}}</span></div>

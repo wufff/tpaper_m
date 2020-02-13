@@ -275,6 +275,7 @@ export default {
              this.datalist = data.data;
              this.initText(); 
           }else{
+              console.log(data);
             this.datalist.push(...data.data);
           }
           if(data.data.length == 0){

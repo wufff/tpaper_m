@@ -22,7 +22,8 @@
                          :clearable="clearable"
                          :placeholder="placeholder1"
                  ></cube-input>
-
+               </div>
+                   <div class="item clearfix">
                  <!-- <input type="text" v-model="code" class="code" placeholder="输入验证码"> -->
                  <cube-input
                          v-model="code"

@@ -151,7 +151,7 @@ export default {
             this.subject_.push(data[k]);
         } 
        let head_save = this.$local.fetch("head_s");
-       if(!head_save.stage_code){
+       if(!head_save){
            this.head_s  = {
               stage_code:1,
               subject_code: this.subject_[0][0].subject_code,

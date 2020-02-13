@@ -1,7 +1,7 @@
 <template>
   <div class="detailPage" v-show="visble">
     <div class="head">
-      <span class="back" @click="back">
+      <span class="back" @click.stop="back">
         <span class="img back-bt">
           <img src="../assets/arrow_left_b.png" alt="">
         </span>
@@ -13,7 +13,7 @@
      <div class="main">
         <div class="list">
                <div class="inner" v-if="(data.qtp_code)" v-show="readys">            
-                  <div class="test_title">{{$local.getQ_Zh(data.qtp_code)}}</div>
+                  <div class="test_title">  {{$local.getQ_Zh(data.qtp_code)}}</div>
                   <div class="test_test">
                         <div class="title">
                           <!-- <span class="sort">1.</span> -->
@@ -102,8 +102,10 @@ export default {
   },  
   methods:{
      back(){
-       this.visble = false;
-       this.readys = false;
+       setTimeout( ()=> {
+           this.visble = false;
+           this.readys = false;
+       },400)
      }, 
      show(){
        this.visble = true;
