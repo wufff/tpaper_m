@@ -70,7 +70,6 @@ const PAY = api.post("/Weixinpay/order")
 const FEEDBACK = api.post("/Feedback/postFeedBack")     
 
 
-         
 
 export  {
 	indexApi,
