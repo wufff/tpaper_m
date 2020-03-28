@@ -270,6 +270,7 @@ export default {
           page:this.page.current  
        }
        items(type,aDate).then((data)=>{
+          console.log(data)
           if(first){
              this.$refs.scroll.scrollTo(0,0,0);
              this.datalist = data.data;
